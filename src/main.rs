@@ -166,6 +166,7 @@ fn bouncing_spheres() -> SceneInfo {
     )
 }
 
+#[allow(unused_variables)]
 fn perlin_spheres() -> SceneInfo {
     let perlin_texture =
         Texture::Perlin(PerlinTexture::new(1., Colour::new(1., 1., 1.)));
@@ -176,8 +177,8 @@ fn perlin_spheres() -> SceneInfo {
         Material::new_no_refract(0., Colour::new(0., 0., 1.).to_texture());
     let world = [
         Sphere::new_still(Point3::new(0., -1000., 0.), 1000., material.clone()),
-        Sphere::new_still(Point3::new(10., 0., 0.), 0.5, red),
-        Sphere::new_still(Point3::new(0., 0., 10.), 0.5, blue), // Sphere::new_still(Point3::new(0., 2., 0.), 2., material),
+        // Sphere::new_still(Point3::new(10., 0., 0.), 0.5, red),
+        // Sphere::new_still(Point3::new(0., 0., 10.), 0.5, blue), // Sphere::new_still(Point3::new(0., 2., 0.), 2., material),
     ];
 
     (
