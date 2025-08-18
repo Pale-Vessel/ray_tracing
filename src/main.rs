@@ -169,7 +169,7 @@ fn bouncing_spheres() -> SceneInfo {
 fn perlin_spheres() -> SceneInfo {
     let perlin_texture =
         Texture::Perlin(PerlinTexture::new(1., Colour::new(1., 1., 1.)));
-    let material = Material::new_no_refract(0., perlin_texture);
+    let material = Material::new_no_refract(1., perlin_texture);
     let red =
         Material::new_no_refract(0., Colour::new(1., 0., 0.).to_texture());
         let blue =
