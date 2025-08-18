@@ -100,17 +100,17 @@ impl Camera {
         if let Some(data) =
             world.did_hit(ray, Interval::new(0.001, f64::INFINITY))
         {
-            let (u, v, p) = (data.u, data.v, data.collision_point);
+            let (u, v) = (data.u, data.v);
 
             let material = data.clone().material;
             let mut rng = rng();
             if rng.random_bool(material.refraction_chance) {
                 let refracted_ray = material.refract(ray, data);
-                return material.texture.get_colour(u, v, p)
+                return material.texture.get_colour(u, v)
                     * self.ray_colour(refracted_ray, world, depth + 1);
             }
             let scattered_ray = material.lerp_reflect(ray, data);
-            return material.texture.get_colour(u, v, p)
+            return material.texture.get_colour(u, v)
                 * self.ray_colour(scattered_ray, world, depth + 1);
         }
 

@@ -6,7 +6,7 @@ use crate::{
 };
 
 pub trait GetTexture {
-    fn get_colour(&self, u: f64, v: f64, point: Point3) -> Colour;
+    fn get_colour(&self, u: f64, v: f64) -> Colour;
 }
 
 #[derive(Debug, Clone)]
@@ -23,16 +23,16 @@ impl Default for Texture {
 }
 
 impl GetTexture for Texture {
-    fn get_colour(&self, u: f64, v: f64, point: Point3) -> Colour {
+    fn get_colour(&self, u: f64, v: f64) -> Colour {
         match self {
             Texture::Solid(solid_texture) => {
-                solid_texture.get_colour(u, v, point)
+                solid_texture.get_colour(u, v)
             }
             Texture::Checker(checker_texture) => {
-                checker_texture.get_colour(u, v, point)
+                checker_texture.get_colour(u, v)
             }
             Texture::Perlin(perlin_texture) => {
-                perlin_texture.get_colour(u, v, point)
+                perlin_texture.get_colour(u, v)
             }
         }
     }
@@ -44,7 +44,7 @@ pub struct SolidTexture {
 }
 
 impl GetTexture for SolidTexture {
-    fn get_colour(&self, _: f64, _: f64, _: Point3) -> Colour {
+    fn get_colour(&self, _u: f64, _v: f64) -> Colour {
         self.colour
     }
 }
@@ -57,7 +57,7 @@ pub struct CheckerTexture {
 }
 
 impl GetTexture for CheckerTexture {
-    fn get_colour(&self, u: f64, v: f64, point: Point3) -> Colour {
+    fn get_colour(&self, u: f64, v: f64) -> Colour {
         let u_pos = (u * self.inv_scale).round() as u16;
         let v_pos = (v * self.inv_scale).round() as u16;
 
@@ -67,17 +67,7 @@ impl GetTexture for CheckerTexture {
             self.odd_texture.clone()
         };
 
-        match *sampled_texture {
-            Texture::Solid(solid_texture) => {
-                solid_texture.get_colour(u, v, point)
-            }
-            Texture::Checker(checker_texture) => {
-                checker_texture.get_colour(u, v, point)
-            }
-            Texture::Perlin(perlin_texture) => {
-                perlin_texture.get_colour(u, v, point)
-            }
-        }
+        sampled_texture.get_colour(u, v)
     }
 }
 
@@ -98,8 +88,8 @@ pub struct PerlinTexture {
 }
 
 impl GetTexture for PerlinTexture {
-    fn get_colour(&self, _: f64, _: f64, point: Point3) -> Colour {
-        let point = Point3::new(point.x, 0., point.z);
+    fn get_colour(&self, u: f64, v: f64) -> Colour {
+        let point = Point3::new(u, 0.,v);
         let origin_corner = Point3::new(
             self.floor_to_scale(point.x),
             self.floor_to_scale(point.y),
