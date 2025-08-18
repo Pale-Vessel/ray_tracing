@@ -169,16 +169,17 @@ fn bouncing_spheres() -> SceneInfo {
 #[allow(unused_variables)]
 fn perlin_spheres() -> SceneInfo {
     let perlin_texture =
-        Texture::Perlin(PerlinTexture::new(1., Colour::new(1., 1., 1.)));
-    let material = Material::new_no_refract(1., perlin_texture);
-    let red =
-        Material::new_no_refract(0., Colour::new(1., 0., 0.).to_texture());
-        let blue =
-        Material::new_no_refract(0., Colour::new(0., 0., 1.).to_texture());
+        Texture::Perlin(PerlinTexture::new(5., Colour::new(1., 1., 1.)));
+    let smooth_material =
+        Material::new_no_refract(0.5, Colour::new(0.7, 0.7, 0.5).to_texture());
+    let perlin_material = Material::new_no_refract(0., perlin_texture);
     let world = [
-        Sphere::new_still(Point3::new(0., -1000., 0.), 1000., material.clone()),
-        // Sphere::new_still(Point3::new(10., 0., 0.), 0.5, red),
-        // Sphere::new_still(Point3::new(0., 0., 10.), 0.5, blue), // Sphere::new_still(Point3::new(0., 2., 0.), 2., material),
+        Sphere::new_still(
+            Point3::new(0., -1000.0, 0.),
+            1000.0,
+            smooth_material,
+        ),
+        Sphere::new_still(Point3::new(5., 3., 0.), 3., perlin_material),
     ];
 
     (
