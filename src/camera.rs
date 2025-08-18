@@ -94,7 +94,6 @@ impl Camera {
     }
 
     fn ray_colour(&self, ray: Ray, world: &HittableList, depth: u16) -> Colour {
-       // println!("{ray:?}\n");
         if depth > self.max_ray_bounces {
             return Colour::new(0., 0., 0.);
         }
