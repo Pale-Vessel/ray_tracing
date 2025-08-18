@@ -145,7 +145,7 @@ impl GetTexture for PerlinTexture {
 
         let value =
             Self::smoothstep(interpolated_y[0], interpolated_y[1], x_position);
-        self.colour * if value > 0.5 {1.} else {0.}
+        self.colour * value
     }
 }
 
@@ -158,16 +158,13 @@ impl PerlinTexture {
         };
         // https://www.shadertoy.com/view/4djSRW#
         let mut point = Self::fract(point * Vec3::new(0.1031, 0.1030, 0.0973));
-        point += point.dot(Vec3::new(point.x, point.y, point.z));
+        point += point.dot(Vec3::new(point.y, point.x, point.z) + 33.33);
         point = Point3::from_vector(
             (Vec3::new(point.x, point.x, point.y)
                 + Vec3::new(point.y, point.x, point.x))
                 * Vec3::new(point.z, point.y, point.x),
         );
-        let result = Self::fract(point).unit();
-
-        // Normalise from [0, 1] to [-1, 1]
-        (result - 0.5) * 2.
+        (*Self::fract(point) - 0.5).unit()
     }
 
     fn fract(point: Point3) -> Point3 {
