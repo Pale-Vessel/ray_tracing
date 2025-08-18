@@ -187,8 +187,8 @@ fn perlin_spheres() -> SceneInfo {
             .map(|sphere| HittableObject::Sphere(sphere.clone()))
             .collect::<HittableList>()
             .optimise(),
-        Point3::new(0., 15., 0.),
-        Point3::new(0., 0., 0.),
-        90.,
+        Point3::new(13., 2., 3.),
+        Point3::new(0., 1., 0.),
+        50.,
     )
 }
