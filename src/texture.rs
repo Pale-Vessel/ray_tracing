@@ -145,7 +145,7 @@ impl GetTexture for PerlinTexture {
 
         let value =
             Self::smoothstep(interpolated_y[0], interpolated_y[1], x_position);
-        self.colour * value
+        self.colour * if value > 0.5 {1.} else {0.}
     }
 }
 
