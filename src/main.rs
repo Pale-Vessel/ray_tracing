@@ -54,12 +54,10 @@ fn main() -> Result<()> {
         fov,
         look_from,
         look_at,
-        Vec3::new(0., 0., 1.),
+        Vec3::new(0., 1., 0.0000001),
         10.,
         0.,
     );
-    print!("{camera:?}");
-    println!("About to start rendering");
     let image = camera.render(world);
     let mut output = File::create("image.ppm")?;
     write!(output, "{}", image)
