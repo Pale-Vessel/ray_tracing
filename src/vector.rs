@@ -101,9 +101,9 @@ impl Vec3 {
     }
 
     pub const fn near_zero(&self) -> bool {
-        self.x < Self::EPSILON
-            && self.y < Self::EPSILON
-            && self.z < Self::EPSILON
+        self.x.abs() < Self::EPSILON
+            && self.y.abs() < Self::EPSILON
+            && self.z.abs() < Self::EPSILON
     }
 
     pub const fn dot(&self, other: Self) -> f64 {
