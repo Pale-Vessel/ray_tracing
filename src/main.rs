@@ -48,7 +48,7 @@ fn main() -> Result<()> {
         Profile::Release => (800, 100, 50),
         Profile::Insane => (1920, 500, 50),
     };
-    let (world, look_from, look_at, fov) = triangle();
+    let (world, look_from, look_at, fov) = tinted_glass();
     let camera = Camera::initialise(
         image_width,
         rays_per_pixel,
@@ -225,5 +225,27 @@ fn triangle() -> SceneInfo {
         Point3::new(0., 10., 0.0000001),
         Point3::new(0., 0., 0.),
         90.,
+    )
+}
+
+#[allow(dead_code)]
+fn tinted_glass() -> SceneInfo {
+    let ground_material =
+        Material::new_no_refract(1., Colour::new(0.4, 0.4, 0.4).to_texture());
+    let shaded_glass =
+        Material::new_glass(1., Colour::new(1., 0., 0.).to_texture());
+    let world = [
+        Sphere::new_still(Point3::new(0., -1000., 0.), 1000., ground_material),
+        Sphere::new_still(Point3::new(5., 1., 0.), 1., shaded_glass),
+    ];
+    (
+        world
+            .into_iter()
+            .map(HittableObject::Sphere)
+            .collect::<HittableList>()
+            .optimise(),
+        Point3::new(13., 2., 3.),
+        Point3::new(0., 0., 0.),
+        20.,
     )
 }
