@@ -8,8 +8,14 @@ derive_more = { version = "2.0.1", features = ["constructor", "add", "add_assign
 rand = "0.9.2"
 rand_distr = "0.5.1"
 
-[profile.release]
-codegen-units = 1
+[profile.dev] 
+opt-level = 3
+debug = false
+debug-assertions = false
+overflow-checks = false
 lto = true
-strip = true
+panic = 'unwind'
 incremental = true
+codegen-units = 1
+rpath = false
+strip = true
