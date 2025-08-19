@@ -73,9 +73,9 @@ fn checkered_spheres() -> SceneInfo {
 
     let material = Material::new_no_refract(1., checkered_texture);
 
-    let world = vec![
+    let world = [
         Sphere::new_still(Point3::new(0., -10., 0.), 10., material.clone()),
-        // Sphere::new_still(Point3::new(0., 10., 0.), 10., material),
+        Sphere::new_still(Point3::new(0., 10., 0.), 10., material),
     ];
 
     (
