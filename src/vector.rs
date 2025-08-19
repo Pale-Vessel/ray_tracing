@@ -96,7 +96,7 @@ impl Vec3 {
         self.length_squared().sqrt()
     }
 
-    pub fn abs(&self) -> Self {
+    pub const fn abs(&self) -> Self {
         Self::new(self.x.abs(), self.y.abs(), self.z.abs())
     }
 
@@ -126,7 +126,7 @@ impl Vec3 {
         Self::new(self.x.floor(), self.y.floor(), self.z.floor())
     }
 
-    pub fn clamp(&self, min: f64, max: f64) -> Self {
+    pub const fn clamp(&self, min: f64, max: f64) -> Self {
         Self::new(
             self.x.clamp(min, max),
             self.y.clamp(min, max),
