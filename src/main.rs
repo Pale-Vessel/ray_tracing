@@ -231,7 +231,7 @@ fn triangle() -> SceneInfo {
 #[allow(dead_code)]
 fn tinted_glass() -> SceneInfo {
     let ground_material =
-        Material::new_no_refract(1., Colour::new(0.4, 0.4, 0.4).to_texture());
+        Material::new_glass(1., Colour::new(0.4, 0.4, 0.4).to_texture());
     let shaded_glass =
         Material::new_glass(1., Colour::new(1., 0., 0.).to_texture());
     let world = [
