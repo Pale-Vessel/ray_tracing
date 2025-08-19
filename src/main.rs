@@ -1,11 +1,14 @@
 mod bounding_box;
 mod bvh;
 mod camera;
+mod checker_texture;
 mod colour;
 mod hittable;
 mod interval;
 mod material;
+mod perlin_texture;
 mod ray;
+mod solid_texture;
 mod sphere;
 mod texture;
 mod triangle;
@@ -21,14 +24,7 @@ use std::{
 use rand::{Rng, rng};
 
 use crate::{
-    camera::Camera,
-    colour::Colour,
-    hittable::{HittableList, HittableObject},
-    material::Material,
-    sphere::Sphere,
-    texture::{CheckerTexture, PerlinTexture, Texture},
-    triangle::Triangle,
-    vector::{Point3, Vec3},
+    camera::Camera, checker_texture::CheckerTexture, colour::Colour, hittable::{HittableList, HittableObject}, material::Material, perlin_texture::PerlinTexture, sphere::Sphere, texture::Texture, triangle::Triangle, vector::{Point3, Vec3}
 };
 
 type SceneInfo = (HittableList, Point3, Point3, f64);
@@ -230,13 +226,11 @@ fn triangle() -> SceneInfo {
 
 #[allow(dead_code)]
 fn tinted_glass() -> SceneInfo {
-    let ground_material =
-        Material::new_glass(1., Colour::new(0.4, 0.4, 0.4).to_texture());
-    let shaded_glass =
-        Material::new_glass(1., Colour::new(1., 0., 0.).to_texture());
+    let noise = PerlinTexture::new(1., Colour::new(0.4, 0.4, 0.4));
+    let glass = Material::new_glass(1., Texture::Perlin(noise));
     let world = [
-        Sphere::new_still(Point3::new(0., -1000., 0.), 1000., ground_material),
-        Sphere::new_still(Point3::new(5., 1., 0.), 1., shaded_glass),
+        // Sphere::new_still(Point3::new(0., -1000., 0.), 1000., ground_material),
+        Sphere::new_still(Point3::new(0., 0., 0.), 1., glass),
     ];
     (
         world
@@ -244,7 +238,7 @@ fn tinted_glass() -> SceneInfo {
             .map(HittableObject::Sphere)
             .collect::<HittableList>()
             .optimise(),
-        Point3::new(13., 2., 3.),
+        Point3::new(10., 0., 0.),
         Point3::new(0., 0., 0.),
         20.,
     )

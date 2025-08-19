@@ -1,6 +1,6 @@
 use std::{
     fmt::Display,
-    ops::{Add, AddAssign, Sub, SubAssign, Index, Mul},
+    ops::{Add, AddAssign, Index, Mul, Sub, SubAssign},
 };
 
 use derive_more::{
@@ -57,11 +57,7 @@ impl Mul<Vec3> for Vec3 {
     type Output = Self;
 
     fn mul(self, rhs: Self) -> Self::Output {
-        Self::new(
-            self.x * rhs.x,
-            self.y * rhs.y,
-            self.z * rhs.z,
-        )
+        Self::new(self.x * rhs.x, self.y * rhs.y, self.z * rhs.z)
     }
 }
 impl Mul<Vec3> for f64 {
@@ -130,7 +126,7 @@ impl Vec3 {
         Self::new(
             self.x.clamp(min, max),
             self.y.clamp(min, max),
-            self.z.clamp(min, max)
+            self.z.clamp(min, max),
         )
     }
 

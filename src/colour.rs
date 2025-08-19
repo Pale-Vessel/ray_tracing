@@ -1,8 +1,7 @@
 use std::fmt::Write;
 
 use crate::{
-    interval::Interval,
-    texture::{SolidTexture, Texture},
+    interval::Interval, solid_texture::SolidTexture, texture::Texture,
     vector::Vec3,
 };
 
