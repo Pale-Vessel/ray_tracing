@@ -198,22 +198,36 @@ fn perlin_spheres() -> SceneInfo {
 
 #[allow(dead_code)]
 fn triangle() -> SceneInfo {
-    let material =
+    let red =
         Material::new_no_refract(0., Colour::new(1., 0., 0.).to_texture());
+    let blue =
+        Material::new_no_refract(0., Colour::new(0., 0., 1.).to_texture());
     let triangle = Triangle::new(
-        Point3::new(-1., 0., 0.),
-        Point3::new(1., 0., 0.),
-        Point3::new(1., 0., 1.),
-        material,
+        Point3::new(-5., 0., 0.),
+        Point3::new(5., 0., 0.),
+        Point3::new(5., 0., 5.),
+        red,
     );
-    let world = [triangle];
-    (world
+    let spheres = [
+        Sphere::new_still(Point3::new(-5., 0., 0.), 0.5, blue.clone()),
+        Sphere::new_still(Point3::new(5., 0., 0.), 0.5, blue.clone()),
+        Sphere::new_still(Point3::new(5., 0., 5.), 0.5, blue)
+    ];
+    let world = [triangle]
         .iter()
         .map(|tri| HittableObject::Triangle(tri.clone()))
+        .chain(
+            spheres
+                .iter()
+                .map(|sphere| HittableObject::Sphere(sphere.clone())),
+        )
         .collect::<HittableList>()
-        .optimise(),
-        Point3::new(0., 5., 0.0000001),
+        .optimise();
+
+    (
+        world,
+        Point3::new(0., 10., 0.0000001),
         Point3::new(0., 0., 0.),
-        90.
+        90.,
     )
 }
