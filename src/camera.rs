@@ -41,6 +41,7 @@ impl Camera {
         focus_distance: f64,
         defocus_angle: f64,
     ) -> Camera {
+        #[allow(clippy::cast_possible_truncation)]
         let image_height =
             (f64::from(image_width) / Self::IDEAL_ASPECT_RATIO).floor() as i32;
         let pixel_sample_scale = 1. / f64::from(rays_per_pixel);
@@ -106,7 +107,7 @@ impl Camera {
             let material = data.clone().material;
             let mut rng = rng();
             if rng.random_bool(material.refraction_chance) {
-                let refracted_ray = material.refract(ray, data);
+                let refracted_ray = material.refract(ray, &data);
                 return material.texture.get_colour(u, v)
                     * self.ray_colour(refracted_ray, world, depth + 1);
             }

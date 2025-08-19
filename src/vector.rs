@@ -49,7 +49,7 @@ impl Add<f64> for Vec3 {
 
 impl AddAssign<f64> for Vec3 {
     fn add_assign(&mut self, rhs: f64) {
-        *self = *self + rhs
+        *self = *self + rhs;
     }
 }
 
