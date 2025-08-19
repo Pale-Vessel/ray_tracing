@@ -1,8 +1,6 @@
 use crate::{
-    checker_texture::CheckerTexture,
-    colour::Colour,
-    perlin_texture::PerlinTexture,
-    solid_texture::SolidTexture,
+    checker_texture::CheckerTexture, colour::Colour,
+    perlin_texture::PerlinTexture, solid_texture::SolidTexture,
 };
 
 pub trait GetTexture {

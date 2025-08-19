@@ -24,7 +24,16 @@ use std::{
 use rand::{Rng, rng};
 
 use crate::{
-    camera::Camera, checker_texture::CheckerTexture, colour::Colour, hittable::{HittableList, HittableObject}, material::Material, perlin_texture::PerlinTexture, sphere::Sphere, texture::Texture, triangle::Triangle, vector::{Point3, Vec3}
+    camera::Camera,
+    checker_texture::CheckerTexture,
+    colour::Colour,
+    hittable::{HittableList, HittableObject},
+    material::Material,
+    perlin_texture::PerlinTexture,
+    sphere::Sphere,
+    texture::Texture,
+    triangle::Triangle,
+    vector::{Point3, Vec3},
 };
 
 type SceneInfo = (HittableList, Point3, Point3, f64);
