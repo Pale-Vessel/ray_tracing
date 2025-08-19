@@ -211,16 +211,12 @@ fn triangle() -> SceneInfo {
     let spheres = [
         Sphere::new_still(Point3::new(-5., 0., 0.), 0.5, blue.clone()),
         Sphere::new_still(Point3::new(5., 0., 0.), 0.5, blue.clone()),
-        Sphere::new_still(Point3::new(5., 0., 5.), 0.5, blue)
+        Sphere::new_still(Point3::new(5., 0., 5.), 0.5, blue),
     ];
     let world = [triangle]
-        .iter()
-        .map(|tri| HittableObject::Triangle(tri.clone()))
-        .chain(
-            spheres
-                .iter()
-                .map(|sphere| HittableObject::Sphere(sphere.clone())),
-        )
+        .into_iter()
+        .map(HittableObject::Triangle)
+        .chain(spheres.into_iter().map(HittableObject::Sphere))
         .collect::<HittableList>()
         .optimise();
 
