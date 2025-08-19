@@ -3,13 +3,7 @@ use std::ops::Index;
 use derive_more::Constructor;
 
 use crate::{
-    bounding_box::BoundingBox,
-    bvh::BVHNode,
-    interval::Interval,
-    material::Material,
-    ray::Ray,
-    sphere::Sphere,
-    vector::{Point3, Vec3},
+    bounding_box::BoundingBox, bvh::BVHNode, interval::Interval, material::Material, ray::Ray, sphere::Sphere, triangle::Triangle, vector::{Point3, Vec3}
 };
 
 #[derive(Clone, Debug, Default, Constructor)]
@@ -46,6 +40,7 @@ pub trait Hittable {
 pub enum HittableObject {
     Sphere(Sphere),
     BVHNode(BVHNode),
+    Triangle(Triangle)
 }
 
 impl Hittable for HittableObject {
@@ -53,6 +48,7 @@ impl Hittable for HittableObject {
         match self {
             HittableObject::Sphere(sphere) => sphere.did_hit(ray, interval),
             HittableObject::BVHNode(bvhnode) => bvhnode.did_hit(ray, interval),
+            HittableObject::Triangle(triangle) => triangle.did_hit(ray, interval)
         }
     }
 
@@ -60,6 +56,7 @@ impl Hittable for HittableObject {
         match self {
             HittableObject::Sphere(sphere) => sphere.get_bounding_box(),
             HittableObject::BVHNode(bvhnode) => bvhnode.get_bounding_box(),
+            HittableObject::Triangle(triangle) => triangle.get_bounding_box(),
         }
     }
 }

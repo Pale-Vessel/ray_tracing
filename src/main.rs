@@ -8,6 +8,7 @@ mod material;
 mod ray;
 mod sphere;
 mod texture;
+mod triangle;
 mod vector;
 
 use core::f64;
@@ -26,6 +27,7 @@ use crate::{
     material::Material,
     sphere::Sphere,
     texture::{CheckerTexture, PerlinTexture, Texture},
+    triangle::Triangle,
     vector::{Point3, Vec3},
 };
 
@@ -46,7 +48,7 @@ fn main() -> Result<()> {
         Profile::Release => (800, 100, 50),
         Profile::Insane => (1920, 500, 50),
     };
-    let (world, look_from, look_at, fov) = checkered_spheres();
+    let (world, look_from, look_at, fov) = triangle();
     let camera = Camera::initialise(
         image_width,
         rays_per_pixel,
@@ -89,7 +91,6 @@ fn checkered_spheres() -> SceneInfo {
         50.,
     )
 }
-
 
 #[allow(dead_code)]
 fn bouncing_spheres() -> SceneInfo {
@@ -167,7 +168,7 @@ fn bouncing_spheres() -> SceneInfo {
     )
 }
 
-#[allow(unused_variables, dead_code)]
+#[allow(dead_code)]
 fn perlin_spheres() -> SceneInfo {
     let perlin_texture =
         Texture::Perlin(PerlinTexture::new(5., Colour::new(1., 1., 1.)));
@@ -192,5 +193,27 @@ fn perlin_spheres() -> SceneInfo {
         Point3::new(13., 2., 3.),
         Point3::new(0., 1., 0.),
         50.,
+    )
+}
+
+#[allow(dead_code)]
+fn triangle() -> SceneInfo {
+    let material =
+        Material::new_no_refract(0., Colour::new(1., 0., 0.).to_texture());
+    let triangle = Triangle::new(
+        Point3::new(-1., 0., 0.),
+        Point3::new(1., 0., 0.),
+        Point3::new(1., 0., 1.),
+        material,
+    );
+    let world = [triangle];
+    (world
+        .iter()
+        .map(|tri| HittableObject::Triangle(tri.clone()))
+        .collect::<HittableList>()
+        .optimise(),
+        Point3::new(0., 5., 0.0000001),
+        Point3::new(0., 0., 0.),
+        90.
     )
 }
