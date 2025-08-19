@@ -61,13 +61,13 @@ fn main() -> Result<()> {
         fov,
         look_from,
         look_at,
-        Vec3::new(0., 1., 0.0000001),
+        Vec3::new(0., 1., 0.000_000_1),
         10.,
         0.,
     );
-    let image = camera.render(world);
+    let image = camera.render(&world);
     let mut output = File::create("image.ppm")?;
-    write!(output, "{}", image)
+    write!(output, "{image}")
 }
 
 #[allow(dead_code)]
@@ -117,9 +117,9 @@ fn bouncing_spheres() -> SceneInfo {
     for a in -5..5 {
         for b in -5..3 {
             let center = Point3::new(
-                a as f64 + 0.9 * rng.random::<f64>(),
+                f64::from(a) + 0.9 * rng.random::<f64>(),
                 0.2,
-                b as f64 + 0.9 * rng.random::<f64>(),
+                f64::from(b) + 0.9 * rng.random::<f64>(),
             );
 
             if (center - Point3::new(4., 0.2, 0.)).length() > 0.9 {
@@ -130,9 +130,9 @@ fn bouncing_spheres() -> SceneInfo {
         }
         for b in 3..5 {
             let center = Point3::new(
-                a as f64 + 0.9 * rng.random::<f64>(),
+                f64::from(a) + 0.9 * rng.random::<f64>(),
                 0.2,
-                b as f64 + 0.9 * rng.random::<f64>(),
+                f64::from(b) + 0.9 * rng.random::<f64>(),
             );
 
             if (center - Point3::new(4., 0.2, 0.)).length() > 0.9 {
@@ -227,7 +227,7 @@ fn triangle() -> SceneInfo {
 
     (
         world,
-        Point3::new(0., 10., 0.0000001),
+        Point3::new(0., 10., 0.000_000_1),
         Point3::new(0., 0., 0.),
         90.,
     )

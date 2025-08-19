@@ -57,7 +57,7 @@ impl AxisAlignedBoundingBox {
     }
 
     pub fn grow_to_box(&mut self, other: &Self) {
-        *self = Self::new_from_boxes(self, other)
+        *self = Self::new_from_boxes(self, other);
     }
 
     pub fn did_hit(&self, ray: Ray, ray_time: Interval) -> bool {

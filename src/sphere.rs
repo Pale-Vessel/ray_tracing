@@ -24,18 +24,18 @@ impl Hittable for Sphere {
         let current_center = self.center.at(ray.time);
         let oc = *(current_center - ray.origin);
         // a, b, and c are coefficients in the derived quadratic equation
-        let a = ray.direction.length_squared();
-        let h = ray.direction.dot(oc);
-        let c = oc.length_squared() - self.radius * self.radius;
-        let discriminant = h * h - a * c;
+        let a_coefficient = ray.direction.length_squared();
+        let h_coefficient = ray.direction.dot(oc);
+        let c_coefficient = oc.length_squared() - self.radius * self.radius;
+        let discriminant = h_coefficient * h_coefficient - a_coefficient * c_coefficient;
         if discriminant < 0. {
             return None;
         }
         let discriminant_root = discriminant.sqrt();
         //println!("{ray:?} {discriminant_root}\n");
-        let mut collision_time = (h - discriminant_root) / a;
+        let mut collision_time = (h_coefficient - discriminant_root) / a_coefficient;
         if !interval.surrounds(collision_time) {
-            collision_time = (h + discriminant_root) / a;
+            collision_time = (h_coefficient + discriminant_root) / a_coefficient;
             if !interval.surrounds(collision_time) {
                 return None;
             }

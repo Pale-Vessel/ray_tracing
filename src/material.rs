@@ -17,7 +17,7 @@ impl Material {
         refraction_chance: f64,
         refractive_index: f64,
     ) -> Self {
-        let refractive_index = refractive_index.max(0.0000001);
+        let refractive_index = refractive_index.max(0.000_000_1);
         Material {
             smoothness,
             texture,
@@ -34,7 +34,7 @@ impl Material {
         Self::new(0., texture, 1., refractive_index)
     }
 
-    pub fn diffuse_reflection(&self, ray: Ray, record: &HitRecord) -> Ray {
+    pub fn diffuse_reflection(ray: Ray, record: &HitRecord) -> Ray {
         let scatter_direction =
             record.normal_vector + vector::Vec3::rand_unit_vector();
         let scatter_direction = if scatter_direction.near_zero() {
@@ -46,14 +46,14 @@ impl Material {
         Ray::new(record.collision_point, scatter_direction, ray.time)
     }
 
-    pub fn specular_reflection(&self, ray: Ray, record: &HitRecord) -> Ray {
+    pub fn specular_reflection(ray: Ray, record: &HitRecord) -> Ray {
         let reflected = ray.direction.reflect(record.normal_vector);
         Ray::new(record.collision_point, reflected, ray.time)
     }
 
-    pub fn lerp_reflect(&self, ray: Ray, record: HitRecord) -> Ray {
-        let diffuse_ray = self.diffuse_reflection(ray, &record);
-        let specular_ray = self.specular_reflection(ray, &record);
+    pub fn lerp_reflect(&self, ray: Ray, record: &HitRecord) -> Ray {
+        let diffuse_ray = Self::diffuse_reflection(ray, record);
+        let specular_ray = Self::specular_reflection(ray, record);
         let direction = self.smoothness * specular_ray.direction
             + (1. - self.smoothness) * diffuse_ray.direction;
         Ray::new(diffuse_ray.origin, direction.unit(), ray.time)

@@ -193,7 +193,7 @@ impl Add<f64> for Point3 {
 
 impl AddAssign<f64> for Point3 {
     fn add_assign(&mut self, rhs: f64) {
-        *self = *self + rhs
+        *self = *self + rhs;
     }
 }
 
@@ -207,7 +207,7 @@ impl Sub<f64> for Vec3 {
 
 impl SubAssign<f64> for Vec3 {
     fn sub_assign(&mut self, rhs: f64) {
-        *self = *self - rhs
+        *self = *self - rhs;
     }
 }
 

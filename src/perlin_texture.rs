@@ -26,9 +26,9 @@ impl GetTexture for PerlinTexture {
             for y in 0..=1 {
                 for z in 0..=1 {
                     let corner_point = Point3::new(
-                        origin_corner.x + x as f64 * self.scale,
-                        origin_corner.y + y as f64 * self.scale,
-                        origin_corner.z + z as f64 * self.scale,
+                        origin_corner.x + f64::from(x) * self.scale,
+                        origin_corner.y + f64::from(y) * self.scale,
+                        origin_corner.z + f64::from(z) * self.scale,
                     );
                     let grid_vector = Self::hash_point_to_vec(corner_point);
                     let offset_vector = point - corner_point;
@@ -61,7 +61,7 @@ impl GetTexture for PerlinTexture {
         let value =
             Self::smoothstep(interpolated_y[0], interpolated_y[1], x_position);
         self.colour * value
-    }
+    }   
 }
 
 impl PerlinTexture {

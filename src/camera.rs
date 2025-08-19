@@ -12,7 +12,7 @@ use rand::{Rng, rng};
 pub struct Camera {
     image_width: i32,
     image_height: i32,
-    camera_center: Point3,
+    center: Point3,
     pixel_upper_left: Point3,
     horizontal_pixel_delta: Vec3,
     vertical_pixel_delta: Vec3,
@@ -42,16 +42,16 @@ impl Camera {
         defocus_angle: f64,
     ) -> Camera {
         let image_height =
-            (image_width as f64 / Self::IDEAL_ASPECT_RATIO) as i32;
-        let pixel_sample_scale = 1. / (rays_per_pixel as f64);
+            (f64::from(image_width) / Self::IDEAL_ASPECT_RATIO).floor() as i32;
+        let pixel_sample_scale = 1. / f64::from(rays_per_pixel);
 
         let camera_center = look_from;
 
         let theta = fov.to_radians();
         let h = (theta / 2.).tan();
         let viewport_height = 2. * h * focus_distance;
-        let viewport_width =
-            viewport_height * (image_width as f64 / image_height as f64);
+        let viewport_width = viewport_height
+            * (f64::from(image_width) / f64::from(image_height));
 
         let w = (look_from - look_at).unit();
         let u = up_vector.cross(w).unit();
@@ -60,8 +60,9 @@ impl Camera {
         let viewport_horizontal = viewport_width * u;
         let viewport_vertical = viewport_height * -v;
 
-        let horizontal_pixel_delta = viewport_horizontal / (image_width as f64);
-        let vertical_pixel_delta = viewport_vertical / (image_height as f64);
+        let horizontal_pixel_delta =
+            viewport_horizontal / f64::from(image_width);
+        let vertical_pixel_delta = viewport_vertical / f64::from(image_height);
 
         let viewport_upper_left = camera_center
             - Point3::from_vector(focus_distance * w)
@@ -80,7 +81,7 @@ impl Camera {
         Camera {
             image_width,
             image_height,
-            camera_center,
+            center: camera_center,
             pixel_upper_left,
             horizontal_pixel_delta,
             vertical_pixel_delta,
@@ -109,7 +110,7 @@ impl Camera {
                 return material.texture.get_colour(u, v)
                     * self.ray_colour(refracted_ray, world, depth + 1);
             }
-            let scattered_ray = material.lerp_reflect(ray, data);
+            let scattered_ray = material.lerp_reflect(ray, &data);
             return material.texture.get_colour(u, v)
                 * self.ray_colour(scattered_ray, world, depth + 1);
         }
@@ -121,7 +122,7 @@ impl Camera {
             + vert_ratio * Self::SKY_TOP_COLOUR
     }
 
-    pub fn render(&self, world: HittableList) -> String {
+    pub fn render(&self, world: &HittableList) -> String {
         let mut buffer =
             format!("P3\n{} {}\n255\n", self.image_width, self.image_height);
 
@@ -130,7 +131,7 @@ impl Camera {
                 let colour: Vec3 = (0..self.rays_per_pixel)
                     .map(|_| {
                         let ray = self.get_ray(i, j);
-                        self.ray_colour(ray, &world, 0)
+                        self.ray_colour(ray, world, 0)
                     })
                     .sum();
                 write_colour(&mut buffer, &(colour * self.pixel_sample_scale));
@@ -148,7 +149,7 @@ impl Camera {
             + offset.x * self.horizontal_pixel_delta
             + offset.y * self.vertical_pixel_delta;
         let ray_origin = if self.defocus_angle <= 0. {
-            self.camera_center
+            self.center
         } else {
             self.defocus_disk_sample()
         };
@@ -165,15 +166,15 @@ impl Camera {
         let horiz_offset = rng.random_range(-0.5..0.5);
         let vert_offset = rng.random_range(-0.5..0.5);
         Vec3::new(
-            horiz_position as f64 + horiz_offset,
-            vert_position as f64 + vert_offset,
+            f64::from(horiz_position) + horiz_offset,
+            f64::from(vert_position) + vert_offset,
             0.,
         )
     }
 
     fn defocus_disk_sample(&self) -> Point3 {
         let point = Vec3::random_on_unit_disk();
-        self.camera_center
+        self.center
             + Point3::from_vector(point.x * self.defocus_disk_horiz_radius)
             + Point3::from_vector(point.y * self.defocus_disk_vert_radius)
     }

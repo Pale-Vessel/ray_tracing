@@ -80,7 +80,7 @@ impl FromIterator<HittableObject> for HittableList {
     fn from_iter<T: IntoIterator<Item = HittableObject>>(iter: T) -> Self {
         let mut bounds = BoundingBox::default();
         let mut data = Vec::new();
-        for item in iter.into_iter() {
+        for item in iter {
             data.push(item.clone());
             bounds =
                 BoundingBox::new_from_boxes(&bounds, &item.get_bounding_box());
@@ -106,7 +106,7 @@ impl Hittable for HittableList {
                 object.did_hit(ray, Interval::new(interval.min, closest))
             {
                 closest = data.collision_time;
-                out_data = Some(data)
+                out_data = Some(data);
             }
         });
         out_data

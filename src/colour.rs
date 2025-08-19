@@ -21,6 +21,8 @@ pub fn write_colour(buffer: &mut String, colour: &Colour) {
     );
 
     let colour_interval = Interval::new(0., 0.9999);
+    #[allow(clippy::cast_possible_truncation)]
+    #[allow(clippy::cast_sign_loss)]
     let (rbyte, gbyte, bbyte) = (
         (colour_interval.clamp(r) * 255.) as u8,
         (colour_interval.clamp(g) * 255.) as u8,
