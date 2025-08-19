@@ -84,11 +84,15 @@ impl Material {
     }
 
     fn reflectance(cosine: f64, refractive_index: f64) -> f64 {
-        if refractive_index == 1. {
-            return 0.;
+        match refractive_index {
+            0. => 1.,
+            1. => 0.,
+            _ => {
+                // Schlick approximation
+                let r0 = ((1. - refractive_index) / (1. + refractive_index))
+                    .powf(2.);
+                r0 + (1. - r0) * (1. - cosine).powf(5.)
+            }
         }
-        // Schlick approximation
-        let r0 = ((1. - refractive_index) / (1. + refractive_index)).powf(2.);
-        r0 + (1. - r0) * (1. - cosine).powf(5.)
     }
 }
