@@ -46,7 +46,7 @@ fn main() -> Result<()> {
         Profile::Release => (800, 100, 50),
         Profile::Insane => (1920, 500, 50),
     };
-    let (world, look_from, look_at, fov) = perlin_spheres();
+    let (world, look_from, look_at, fov) = checkered_spheres();
     let camera = Camera::initialise(
         image_width,
         rays_per_pixel,
@@ -75,7 +75,7 @@ fn checkered_spheres() -> SceneInfo {
 
     let world = vec![
         Sphere::new_still(Point3::new(0., -10., 0.), 10., material.clone()),
-        Sphere::new_still(Point3::new(0., 10., 0.), 10., material),
+        // Sphere::new_still(Point3::new(0., 10., 0.), 10., material),
     ];
 
     (
@@ -89,6 +89,7 @@ fn checkered_spheres() -> SceneInfo {
         50.,
     )
 }
+
 
 #[allow(dead_code)]
 fn bouncing_spheres() -> SceneInfo {
@@ -166,7 +167,7 @@ fn bouncing_spheres() -> SceneInfo {
     )
 }
 
-#[allow(unused_variables)]
+#[allow(unused_variables, dead_code)]
 fn perlin_spheres() -> SceneInfo {
     let perlin_texture =
         Texture::Perlin(PerlinTexture::new(5., Colour::new(1., 1., 1.)));
