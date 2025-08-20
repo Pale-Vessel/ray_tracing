@@ -372,20 +372,6 @@ fn cornell_box() -> SceneInfo {
         None,
     );
 
-    let floor_one = Triangle::new(
-        Point3::new(-1., -1., -1.),
-        Point3::new(-1., -1., 1.),
-        Point3::new(1., -1., -1.),
-        white_walls.clone(),
-    );
-
-    let floor_two = Triangle::new(
-        Point3::new(-1., -1., 1.),
-        Point3::new(1., -1., -1.),
-        Point3::new(1., -1., 1.),
-        white_walls.clone(),
-    );
-
     let (back_wall_one, back_wall_two) = Triangle::new_quad(
         (
             Point3::new(-1., -1., -1.),
