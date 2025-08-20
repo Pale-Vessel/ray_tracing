@@ -319,14 +319,14 @@ fn basic_light() -> SceneInfo {
     let glass = Material::new_glass(1.5, Colour::new(1., 1., 1.).to_texture());
     let air =
         Material::new_glass(1. / 1.5, Colour::new(1., 1., 1.).to_texture());
-    let rough =
+    let lamp =
         Material::new_light((50. * Colour::new(0.4, 0.2, 0.1)).to_texture());
     let smooth =
         Material::new_no_refract(1., Colour::new(1., 0.6, 0.5).to_texture());
 
     world.push(Sphere::new_still(Point3::new(0., 2., 1.), 1., glass));
     world.push(Sphere::new_still(Point3::new(0., 2., 1.), 0.5, air));
-    world.push(Sphere::new_still(Point3::new(-4., 1., 0.), 1., rough));
+    world.push(Sphere::new_still(Point3::new(-4., 1., 0.), 0.2, lamp));
     world.push(Sphere::new_still(
         // Point3::new(4., 0.5, 0.),
         Point3::new(4., 1.0, 0.),
