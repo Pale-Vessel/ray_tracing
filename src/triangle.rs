@@ -19,31 +19,8 @@ pub struct Triangle {
 
 impl Hittable for Triangle {
     fn did_hit(&self, ray: Ray, interval: Interval) -> Option<HitRecord> {
-        // https://en.wikipedia.org/wiki/Möller-Trumbore_intersection_algorithm#Rust_implementation
-        let e1 = self.corner_two - self.corner_one;
-        let e2 = self.corner_three - self.corner_one;
-
-        let ray_cross_e2 = ray.direction.cross(*e2);
-        let det = e1.dot(ray_cross_e2);
-
-        if det.abs() < f64::EPSILON {
-            return None;
-        }
-
-        let inv_det = 1. / det;
-        let s = ray.origin - self.corner_one;
-        let u = inv_det * s.dot(ray_cross_e2);
-        if !(0. ..=1.).contains(&u) {
-            return None;
-        }
-
-        let s_cross_e1 = s.cross(*e1);
-        let v = inv_det * ray.direction.dot(s_cross_e1);
-        if !(0. ..=1.).contains(&v) {
-            return None;
-        }
-
-        let collision_time = inv_det * e2.dot(s_cross_e1);
+        let (collision_time, u, v) =
+            self.moller_trumbore_intersection(ray.origin, ray.direction)?;
 
         if !interval.surrounds(collision_time) {
             return None;
@@ -100,6 +77,44 @@ impl Triangle {
             material,
             normal,
             bounds,
+        }
+    }
+
+    fn moller_trumbore_intersection(
+        &self,
+        origin: Point3,
+        direction: Vec3,
+    ) -> Option<(f64, f64, f64)> {
+        let e1 = self.corner_two - self.corner_one;
+        let e2 = self.corner_three - self.corner_one;
+
+        let ray_cross_e2 = direction.cross(*e2);
+        let det = e1.dot(ray_cross_e2);
+
+        if det > -f64::EPSILON && det < f64::EPSILON {
+            return None // This ray is parallel to this self.
+        }
+
+        let inv_det = 1.0 / det;
+        let s = origin - self.corner_one;
+        let u = inv_det * s.dot(ray_cross_e2);
+        if !(0.0..=1.0).contains(&u) {
+            return None
+        }
+
+        let s_cross_e1 = s.cross(*e1);
+        let v = inv_det * direction.dot(s_cross_e1);
+        if v < 0.0 || u + v > 1.0 {
+            return None
+        }
+        // At this stage we can compute t to find out where the intersection point is on the line.
+        let collision_time = inv_det * e2.dot(s_cross_e1);
+
+        if collision_time > f64::EPSILON {
+            Some((collision_time, u, v))
+        } else {
+            // This means that there is a line intersection but not a ray intersection.
+            None
         }
     }
 }
