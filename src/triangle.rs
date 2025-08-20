@@ -93,20 +93,20 @@ impl Triangle {
         let det = e1.dot(ray_cross_e2);
 
         if det > -f64::EPSILON && det < f64::EPSILON {
-            return None // This ray is parallel to this self.
+            return None; // This ray is parallel to this self.
         }
 
         let inv_det = 1.0 / det;
         let s = origin - self.corner_one;
         let u = inv_det * s.dot(ray_cross_e2);
         if !(0.0..=1.0).contains(&u) {
-            return None
+            return None;
         }
 
         let s_cross_e1 = s.cross(*e1);
         let v = inv_det * direction.dot(s_cross_e1);
         if v < 0.0 || u + v > 1.0 {
-            return None
+            return None;
         }
         // At this stage we can compute t to find out where the intersection point is on the line.
         let collision_time = inv_det * e2.dot(s_cross_e1);
@@ -117,5 +117,18 @@ impl Triangle {
             // This means that there is a line intersection but not a ray intersection.
             None
         }
+    }
+
+    pub fn new_quad(
+        points: (Point3, Point3, Point3, Point3),
+        material_one: Material,
+        material_two: Option<Material>,
+    ) -> (Self, Self) {
+        let (a, b, c, d) = points;
+        let material_two = material_two.unwrap_or(material_one.clone());
+        (
+            Self::new(a, b, c, material_one),
+            Self::new(b, c, d, material_two),
+        )
     }
 }
