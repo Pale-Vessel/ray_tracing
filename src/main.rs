@@ -27,7 +27,10 @@ use crate::{
     camera::Camera,
     checker_texture::CheckerTexture,
     colour::Colour,
-    hittable::{HittableList, HittableObject},
+    hittable::{
+        HittableList,
+        HittableObject::{Sphere as SpheHit, Triangle as TriHit},
+    },
     material::Material,
     perlin_texture::PerlinTexture,
     sphere::Sphere,
@@ -45,7 +48,7 @@ enum Profile {
     Insane,
 }
 
-const PROFILE: Profile = Profile::Debug;
+const PROFILE: Profile = Profile::Release;
 
 fn main() -> Result<()> {
     let (image_width, rays_per_pixel, max_ray_bounces) = match PROFILE {
@@ -53,7 +56,7 @@ fn main() -> Result<()> {
         Profile::Release => (800, 100, 50),
         Profile::Insane => (1920, 500, 50),
     };
-    let (world, look_from, look_at, fov) = basic_light();
+    let (world, look_from, look_at, fov) = cornell_box();
     let camera = Camera::initialise(
         image_width,
         rays_per_pixel,
@@ -107,7 +110,7 @@ fn basic_spheres() -> SceneInfo {
     (
         world
             .iter()
-            .map(|sphere| HittableObject::Sphere(sphere.clone()))
+            .map(|sphere| SpheHit(sphere.clone()))
             .collect::<HittableList>()
             .optimise(),
         Point3::new(13., 2., 3.),
@@ -183,7 +186,7 @@ fn bouncing_spheres() -> SceneInfo {
     (
         world
             .iter()
-            .map(|sphere| HittableObject::Sphere(sphere.clone()))
+            .map(|sphere| SpheHit(sphere.clone()))
             .collect::<HittableList>()
             .optimise(),
         Point3::new(13., 2., 3.),
@@ -210,7 +213,7 @@ fn checkered_spheres() -> SceneInfo {
     (
         world
             .iter()
-            .map(|sphere| HittableObject::Sphere(sphere.clone()))
+            .map(|sphere| SpheHit(sphere.clone()))
             .collect::<HittableList>()
             .optimise(),
         Point3::new(13., 2., 3.),
@@ -238,7 +241,7 @@ fn perlin_spheres() -> SceneInfo {
     (
         world
             .iter()
-            .map(|sphere| HittableObject::Sphere(sphere.clone()))
+            .map(|sphere| SpheHit(sphere.clone()))
             .collect::<HittableList>()
             .optimise(),
         Point3::new(13., 2., 3.),
@@ -267,8 +270,8 @@ fn triangle() -> SceneInfo {
     ];
     let world = [triangle]
         .into_iter()
-        .map(HittableObject::Triangle)
-        .chain(spheres.into_iter().map(HittableObject::Sphere))
+        .map(TriHit)
+        .chain(spheres.into_iter().map(SpheHit))
         .collect::<HittableList>()
         .optimise();
 
@@ -291,7 +294,7 @@ fn tinted_glass() -> SceneInfo {
     (
         world
             .into_iter()
-            .map(HittableObject::Sphere)
+            .map(SpheHit)
             .collect::<HittableList>()
             .optimise(),
         Point3::new(0., 10., 0.),
@@ -319,8 +322,7 @@ fn basic_light() -> SceneInfo {
     let glass = Material::new_glass(1.5, Colour::new(1., 1., 1.).to_texture());
     let air =
         Material::new_glass(1. / 1.5, Colour::new(1., 1., 1.).to_texture());
-    let lamp =
-        Material::new_light((5. * Colour::new(1., 0., 0.)).to_texture());
+    let lamp = Material::new_light((5. * Colour::new(1., 0., 0.)).to_texture());
     let smooth =
         Material::new_no_refract(1., Colour::new(1., 0.6, 0.5).to_texture());
 
@@ -337,11 +339,110 @@ fn basic_light() -> SceneInfo {
     (
         world
             .iter()
-            .map(|sphere| HittableObject::Sphere(sphere.clone()))
+            .map(|sphere| SpheHit(sphere.clone()))
             .collect::<HittableList>()
             .optimise(),
         Point3::new(13., 2., 3.),
         Point3::new(0., 0., 0.),
         20.,
+    )
+}
+
+#[allow(dead_code)]
+fn cornell_box() -> SceneInfo {
+    let white_texture = Colour::new(1., 1., 1.).to_texture();
+    let white_walls = Material::new_no_refract(0., white_texture.clone());
+    let white_light =
+        Material::new_light((Colour::new(1., 1., 1.) * 50.).to_texture());
+    let red_walls =
+        Material::new_no_refract(0., Colour::new(1., 0., 0.).to_texture());
+    let green_walls =
+        Material::new_no_refract(0., Colour::new(0., 1., 0.).to_texture());
+
+    let (floor_one, floor_two) = Triangle::new_quad(
+        (
+            Point3::new(-1., -1., -1.),
+            Point3::new(-1., -1., 1.),
+            Point3::new(1., -1., -1.),
+            Point3::new(1., -1., 1.),
+        ),
+        white_walls.clone(),
+        None,
+    );
+
+    let (back_wall_one, back_wall_two) = Triangle::new_quad(
+        (
+            Point3::new(-1., -1., -1.),
+            Point3::new(-1., 1., -1.),
+            Point3::new(1., -1., -1.),
+            Point3::new(1., 1., -1.),
+        ),
+        white_walls.clone(),
+        None,
+    );
+
+    let (left_wall_one, left_wall_two) = Triangle::new_quad(
+        (
+            Point3::new(-1., -1., -1.),
+            Point3::new(-1., -1., 1.),
+            Point3::new(-1., 1., -1.),
+            Point3::new(-1., 1., 1.),
+        ),
+        red_walls,
+        None,
+    );
+
+    let (right_wall_one, right_wall_two) = Triangle::new_quad(
+        (
+            Point3::new(1., -1., -1.),
+            Point3::new(1., -1., 1.),
+            Point3::new(1., 1., -1.),
+            Point3::new(1., 1., 1.),
+        ),
+        green_walls,
+        None,
+    );
+
+    let (ceiling_one, ceiling_two) = Triangle::new_quad(
+        (
+            Point3::new(-1., 1., -1.),
+            Point3::new(-1., 1., 1.),
+            Point3::new(1., 1., -1.),
+            Point3::new(1., 1., 1.),
+        ),
+        white_walls,
+        None,
+    );
+
+    let (ceiling_light_one, ceiling_light_two) = Triangle::new_quad(
+        (
+            Point3::new(-0.5, 0.99, -0.5),
+            Point3::new(-0.5, 0.99, 0.5),
+            Point3::new(0.5, 0.99, -0.5),
+            Point3::new(0.5, 0.99, 0.5),
+        ),
+        white_light,
+        None,
+    );
+
+    let world = [
+        TriHit(floor_one),
+        TriHit(floor_two),
+        TriHit(back_wall_one),
+        TriHit(back_wall_two),
+        TriHit(left_wall_one),
+        TriHit(left_wall_two),
+        TriHit(right_wall_one),
+        TriHit(right_wall_two),
+        TriHit(ceiling_one),
+        TriHit(ceiling_two),
+        TriHit(ceiling_light_one),
+        TriHit(ceiling_light_two),
+    ];
+    (
+        world.into_iter().collect::<HittableList>().optimise(),
+        Point3::new(0., 0., 2.5),
+        Point3::new(0., 0., 0.),
+        90.,
     )
 }
