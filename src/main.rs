@@ -48,7 +48,7 @@ enum Profile {
     OvernightRender,
 }
 
-const PROFILE: Profile = Profile::InsaneRays;
+const PROFILE: Profile = Profile::Debug;
 
 fn main() -> ImageResult<()> {
     let (image_width, rays_per_pixel, max_ray_bounces) = match PROFILE {
