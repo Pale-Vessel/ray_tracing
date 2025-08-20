@@ -1,0 +1,7 @@
+/target
+cargo.lock
+image.ppm
+image2.ppm
+rustfmt.toml
+big_image.ppm
+image.png

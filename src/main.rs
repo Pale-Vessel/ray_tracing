@@ -63,7 +63,7 @@ fn main() -> Result<()> {
         0.,
     );
     let image = camera.render(&world);
-    let mut output = File::create("image.png")?;
+    let mut output = File::create("image.ppm")?;
     write!(output, "{image}")
 }
 
