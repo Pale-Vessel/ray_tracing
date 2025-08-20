@@ -55,7 +55,7 @@ fn main() -> Result<()> {
     let (image_width, rays_per_pixel, max_ray_bounces) = match PROFILE {
         Profile::Debug => (800, 10, 10),
         Profile::Release => (800, 100, 50),
-        Profile::InsaneRays => (800, 500, 100),
+        Profile::InsaneRays => (800, 1000, 100),
         Profile::Insane => (1920, 500, 100),
     };
     let (world, look_from, look_at, fov) = cornell_box();
@@ -370,6 +370,20 @@ fn cornell_box() -> SceneInfo {
         ),
         white_walls.clone(),
         None,
+    );
+
+    let floor_one = Triangle::new(
+        Point3::new(-1., -1., -1.),
+        Point3::new(-1., -1., 1.),
+        Point3::new(1., -1., -1.),
+        white_walls.clone(),
+    );
+
+    let floor_two = Triangle::new(
+        Point3::new(-1., -1., 1.),
+        Point3::new(1., -1., -1.),
+        Point3::new(1., -1., 1.),
+        white_walls.clone(),
     );
 
     let (back_wall_one, back_wall_two) = Triangle::new_quad(
