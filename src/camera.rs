@@ -105,6 +105,11 @@ impl Camera {
             let (u, v) = (data.u, data.v);
 
             let material = data.clone().material;
+
+            if material.is_light {
+                return material.texture.get_colour(u, v)
+            }
+
             let mut rng = rng();
             if rng.random_bool(material.refraction_chance) {
                 let refracted_ray = material.refract(ray, &data);

@@ -1,37 +1,29 @@
+use derive_more::Constructor;
 use rand::{Rng, rng};
 
 use crate::{hittable::HitRecord, ray::Ray, texture::Texture, vector};
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, Constructor)]
 pub struct Material {
     smoothness: f64,
     pub texture: Texture,
     pub refraction_chance: f64,
     refractive_index: f64,
+    pub is_light: bool,
 }
 
 impl Material {
-    pub const fn new(
-        smoothness: f64,
-        texture: Texture,
-        refraction_chance: f64,
-        refractive_index: f64,
-    ) -> Self {
-        let refractive_index = refractive_index.max(0.000_000_1);
-        Material {
-            smoothness,
-            texture,
-            refraction_chance,
-            refractive_index,
-        }
-    }
-
     pub const fn new_no_refract(smoothness: f64, texture: Texture) -> Self {
-        Self::new(smoothness, texture, 0., 0.)
+        Self::new(smoothness, texture, 0., 0., false)
     }
 
     pub const fn new_glass(refractive_index: f64, texture: Texture) -> Self {
-        Self::new(0., texture, 1., refractive_index)
+        let refractive_index = refractive_index.max(0.000_000_1);
+        Self::new(0., texture, 1., refractive_index, false)
+    }
+
+    pub const fn new_light(texture: Texture) -> Self {
+        Self::new(0., texture, 0., 0., true)
     }
 
     pub fn diffuse_reflection(ray: Ray, record: &HitRecord) -> Ray {
