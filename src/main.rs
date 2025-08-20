@@ -203,22 +203,17 @@ fn perlin_spheres() -> SceneInfo {
 
 #[allow(dead_code)]
 fn triangle() -> SceneInfo {
-    let red =
-        Material::new_no_refract(0., Colour::new(1., 0., 0.).to_texture());
     let blue =
         Material::new_no_refract(0., Colour::new(0., 0., 1.).to_texture());
-    let checks = Material::new_no_refract(
-        0.,
-        Texture::Checker(CheckerTexture::new(
-            red.clone().texture,
-            blue.clone().texture,
-            0.1,
-        )),
+    let triangle_texture = Material::new_no_refract(
+        1.,
+        PerlinTexture::new(10., Colour::new(1., 1., 1.)).wrap(),
     );
     let corner_one = Point3::new(0., 0., 0.);
     let corner_two = Point3::new(5., 0., 0.);
     let corner_three = Point3::new(0., 0., 5.);
-    let triangle = Triangle::new(corner_one, corner_two, corner_three, checks);
+    let triangle =
+        Triangle::new(corner_one, corner_two, corner_three, triangle_texture);
     let spheres = [
         Sphere::new_still(corner_one, 0.5, blue.clone()),
         Sphere::new_still(corner_two, 0.5, blue.clone()),

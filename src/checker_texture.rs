@@ -35,4 +35,8 @@ impl CheckerTexture {
             inv_scale: 1. / size,
         }
     }
+
+    pub fn wrap(self) -> Texture {
+        Texture::Checker(self)
+    }
 }

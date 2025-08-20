@@ -2,7 +2,7 @@ use derive_more::Constructor;
 
 use crate::{
     colour::Colour,
-    texture::GetTexture,
+    texture::{GetTexture, Texture},
     vector::{Point3, Vec3},
 };
 
@@ -96,5 +96,9 @@ impl PerlinTexture {
 
     fn lerp(a: f64, b: f64, t: f64) -> f64 {
         a * (1. - t) + b * t
+    }
+
+    pub fn wrap(self) -> Texture {
+        Texture::Perlin(self)
     }
 }
