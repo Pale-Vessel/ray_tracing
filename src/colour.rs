@@ -1,4 +1,4 @@
-use std::fmt::Write;
+use image::{Pixel, RgbImage};
 
 use crate::{
     interval::Interval, solid_texture::SolidTexture, texture::Texture,
@@ -13,7 +13,7 @@ impl Colour {
     }
 }
 
-pub fn write_colour(buffer: &mut String, colour: &Colour) {
+pub fn write_colour(i: u32, j: u32, buffer: &mut RgbImage, colour: &Colour) {
     let (r, g, b) = (
         linear_to_gamma(colour.x),
         linear_to_gamma(colour.y),
@@ -28,7 +28,7 @@ pub fn write_colour(buffer: &mut String, colour: &Colour) {
         (colour_interval.clamp(g) * 255.) as u8,
         (colour_interval.clamp(b) * 255.) as u8,
     );
-    _ = buffer.write_str(&format!("{rbyte} {gbyte} {bbyte}\n"));
+    buffer.put_pixel(i, j, *Pixel::from_slice(&[rbyte, gbyte, bbyte]));
 }
 
 fn linear_to_gamma(linear_component: f64) -> f64 {

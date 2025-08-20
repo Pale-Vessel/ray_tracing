@@ -4,18 +4,21 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-derive_more = { version = "2.0.1", features = ["constructor", "add", "add_assign", "mul", "mul_assign", "sum", "not", "deref"] }
+derive_more = { version = "2.0.1", features = [
+    "constructor",
+    "add",
+    "add_assign",
+    "mul",
+    "mul_assign",
+    "sum",
+    "not",
+    "deref",
+] }
+image = "0.25.6"
 rand = "0.9.2"
 rand_distr = "0.5.1"
 
-[profile.dev] 
-opt-level = 3
-debug = false
-debug-assertions = false
-overflow-checks = false
+[profile.release]
 lto = true
-panic = 'unwind'
-incremental = true
-codegen-units = 1
 rpath = false
 strip = true
