@@ -53,7 +53,7 @@ fn main() -> Result<()> {
         Profile::Release => (800, 100, 50),
         Profile::Insane => (1920, 500, 50),
     };
-    let (world, look_from, look_at, fov) = tinted_glass();
+    let (world, look_from, look_at, fov) = triangle();
     let camera = Camera::initialise(
         image_width,
         rays_per_pixel,
@@ -61,7 +61,7 @@ fn main() -> Result<()> {
         fov,
         look_from,
         look_at,
-        Vec3::new(0., 1., 0.000_000_1),
+        Vec3::new(1., 0., 1.),
         10.,
         0.,
     );
