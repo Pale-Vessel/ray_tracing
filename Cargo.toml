@@ -21,3 +21,4 @@ rand_distr = "0.5.1"
 lto = true
 rpath = false
 strip = true
+codegen-units = 1
