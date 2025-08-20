@@ -15,10 +15,8 @@ mod triangle;
 mod vector;
 
 use core::f64;
-use std::{
-    fs::File,
-    io::{Result, Write},
-};
+use std::path::Path;
+use image::ImageResult;
 
 #[allow(unused_imports)]
 use rand::{Rng, rng};
@@ -47,12 +45,12 @@ enum Profile {
     Release,
     InsaneRays,
     Insane,
-    OvernightRender
+    OvernightRender,
 }
 
-const PROFILE: Profile = Profile::Release;
+const PROFILE: Profile = Profile::InsaneRays;
 
-fn main() -> Result<()> {
+fn main() -> ImageResult<()> {
     let (image_width, rays_per_pixel, max_ray_bounces) = match PROFILE {
         Profile::Debug => (800, 10, 10),
         Profile::Release => (800, 100, 50),
@@ -73,8 +71,8 @@ fn main() -> Result<()> {
         0.,
     );
     let image = camera.render(&world);
-    let mut output = File::create("image.ppm")?;
-    write!(output, "{image}")
+    let output = Path::new("image.ppm");
+    image.save(output)
 }
 
 #[allow(dead_code)]
@@ -430,11 +428,7 @@ fn cornell_box() -> SceneInfo {
         None,
     );
 
-    let ball = Sphere::new_still(
-        Point3::new(0., 0., 0.),
-        1. / 2.,
-        glass
-    );
+    let ball = Sphere::new_still(Point3::new(0., 0., 0.), 1. / 2., glass);
 
     let world = [
         TriHit(floor_one),
@@ -449,7 +443,7 @@ fn cornell_box() -> SceneInfo {
         TriHit(ceiling_two),
         TriHit(ceiling_light_one),
         TriHit(ceiling_light_two),
-        SpheHit(ball)
+        SpheHit(ball),
     ];
     (
         world.into_iter().collect::<HittableList>().optimise(),

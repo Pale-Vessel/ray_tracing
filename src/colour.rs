@@ -11,7 +11,7 @@ impl Colour {
     }
 }
 
-pub fn write_colour(buffer: &mut String, colour: &Colour) {
+pub fn map_colours(colour: &Colour) -> (u8, u8, u8) {
     let (r, g, b) = (
         linear_to_gamma(colour.x),
         linear_to_gamma(colour.y),
@@ -26,7 +26,7 @@ pub fn write_colour(buffer: &mut String, colour: &Colour) {
         (colour_interval.clamp(g) * 255.) as u8,
         (colour_interval.clamp(b) * 255.) as u8,
     );
-    buffer.push_str(&format!("{rbyte} {gbyte} {bbyte}\n"));
+    (rbyte, gbyte, bbyte)
 }
 
 fn linear_to_gamma(linear_component: f64) -> f64 {

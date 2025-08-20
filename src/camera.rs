@@ -1,12 +1,14 @@
 use crate::{
-    colour::{Colour, write_colour},
+    colour::{Colour, map_colours},
     hittable::{Hittable, HittableList},
     interval::Interval,
     ray::Ray,
     texture::GetTexture,
     vector::{Point3, Vec3},
 };
+use image::{Rgb, RgbImage};
 use rand::{Rng, rng};
+use rayon::prelude::*;
 
 #[derive(Debug)]
 pub struct Camera {
@@ -107,7 +109,7 @@ impl Camera {
             let material = data.clone().material;
 
             if material.is_light {
-                return material.texture.get_colour(u, v)
+                return material.texture.get_colour(u, v);
             }
 
             let mut rng = rng();
@@ -128,24 +130,19 @@ impl Camera {
             + vert_ratio * Self::SKY_TOP_COLOUR
     }
 
-    pub fn render(&self, world: &HittableList) -> String {
-        let mut buffer = format!("P3\n{} {}\n255\n", self.image_width, self.image_height);
-
-        for j in 0..self.image_height {
-            for i in 0..self.image_width {
-                let colour: Vec3 = (0..self.rays_per_pixel)
-                    .map(|_| {
-                        let ray = self.get_ray(i, j);
-                        self.ray_colour(ray, world, 0)
-                    })
-                    .sum();
-                write_colour(&mut buffer, &(colour * self.pixel_sample_scale));
-            }
-            if j % 40 == 0 {
-                println!("{j}");
-            }
-        }
-        buffer
+    pub fn render(&self, world: &HittableList) -> RgbImage {
+        RgbImage::from_par_fn(self.image_width, self.image_height, |i, j| {
+            let colour = (0..self.rays_per_pixel)
+                .into_par_iter()
+                .map(|_| {
+                    let ray = self.get_ray(i, j);
+                    self.ray_colour(ray, world, 0)
+                })
+                .sum::<Colour>()
+                / self.pixel_sample_scale;
+            let (r, g, b) = map_colours(&colour);
+            Rgb([r, g, b])
+        })
     }
 
     fn get_ray(&self, horiz_position: u32, vert_position: u32) -> Ray {
