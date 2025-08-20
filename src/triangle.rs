@@ -127,7 +127,7 @@ impl Triangle {
         let material_two = material_two.unwrap_or(material_one.clone());
         (
             Self::new(a, b, c, material_one),
-            Self::new(b, c, d, material_two),
+            Self::new(d, c, b, material_two),
         )
     }
 }
