@@ -92,7 +92,7 @@ impl Triangle {
         let ray_cross_e2 = direction.cross(*e2);
         let det = e1.dot(ray_cross_e2);
 
-        if det > -f64::EPSILON && det < f64::EPSILON {
+        if det.abs() < f64::EPSILON {
             return None; // This ray is parallel to this self.
         }
 
