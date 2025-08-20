@@ -6,7 +6,6 @@ use crate::{
     texture::GetTexture,
     vector::{Point3, Vec3},
 };
-use image::RgbImage;
 use rand::{Rng, rng};
 
 #[derive(Debug)]
@@ -124,8 +123,8 @@ impl Camera {
             + vert_ratio * Self::SKY_TOP_COLOUR
     }
 
-    pub fn render(&self, world: &HittableList) -> RgbImage {
-        let mut buffer = RgbImage::new(self.image_width, self.image_height);
+    pub fn render(&self, world: &HittableList) -> String {
+        let mut buffer = format!("P3\n{} {}\n255\n", self.image_width, self.image_height);
 
         for j in 0..self.image_height {
             for i in 0..self.image_width {
@@ -135,7 +134,7 @@ impl Camera {
                         self.ray_colour(ray, world, 0)
                     })
                     .sum();
-                write_colour(i, j, &mut buffer, &(colour * self.pixel_sample_scale));
+                write_colour(&mut buffer, &(colour * self.pixel_sample_scale));
             }
             if j % 40 == 0 {
                 println!("{j}");

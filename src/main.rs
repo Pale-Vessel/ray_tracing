@@ -15,7 +15,7 @@ mod triangle;
 mod vector;
 
 use core::f64;
-use std::path::Path;
+use std::{fs::File, io::{Result, Write}};
 
 #[allow(unused_imports)]
 use rand::{Rng, rng};
@@ -44,7 +44,7 @@ enum Profile {
 
 const PROFILE: Profile = Profile::Debug;
 
-fn main() {
+fn main() -> Result<()> {
     let (image_width, rays_per_pixel, max_ray_bounces) = match PROFILE {
         Profile::Debug => (800, 10, 10),
         Profile::Release => (800, 100, 50),
@@ -63,8 +63,8 @@ fn main() {
         0.,
     );
     let image = camera.render(&world);
-    let output = Path::new("image.png");
-    let _ = image.save(output);
+    let mut output = File::create("image.png")?;
+    write!(output, "{image}")
 }
 
 #[allow(dead_code)]
