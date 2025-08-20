@@ -80,6 +80,7 @@ impl Triangle {
         }
     }
 
+    //https://en.wikipedia.org/wiki/Möller-Trumbore_intersection_algorithm#Rust_implementation
     fn moller_trumbore_intersection(
         &self,
         origin: Point3,
