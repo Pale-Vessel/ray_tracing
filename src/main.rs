@@ -45,7 +45,7 @@ enum Profile {
     Insane,
 }
 
-const PROFILE: Profile = Profile::Debug;
+const PROFILE: Profile = Profile::Release;
 
 fn main() -> Result<()> {
     let (image_width, rays_per_pixel, max_ray_bounces) = match PROFILE {
