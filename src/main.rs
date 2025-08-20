@@ -15,7 +15,10 @@ mod triangle;
 mod vector;
 
 use core::f64;
-use std::{fs::File, io::{Result, Write}};
+use std::{
+    fs::File,
+    io::{Result, Write},
+};
 
 #[allow(unused_imports)]
 use rand::{Rng, rng};
@@ -58,7 +61,7 @@ fn main() -> Result<()> {
         fov,
         look_from,
         look_at,
-        Vec3::new(0., 0., 1.),
+        Vec3::new(1., 0., 1e-9),
         10.,
         0.,
     );
@@ -204,16 +207,14 @@ fn triangle() -> SceneInfo {
         Material::new_no_refract(1., Colour::new(1., 0., 0.).to_texture());
     let blue =
         Material::new_no_refract(1., Colour::new(0., 0., 1.).to_texture());
-    let triangle = Triangle::new(
-        Point3::new(-5., 0., 0.),
-        Point3::new(5., 0., 0.),
-        Point3::new(5., 0., 5.),
-        red,
-    );
+    let corner_one = Point3::new(0., 0., 0.);
+    let corner_two = Point3::new(5., 0., 0.);
+    let corner_three = Point3::new(5., 0., 5.);
+    let triangle = Triangle::new(corner_one, corner_two, corner_three, red);
     let spheres = [
-        Sphere::new_still(Point3::new(-5., 0., 0.), 0.5, blue.clone()),
-        Sphere::new_still(Point3::new(5., 0., 0.), 0.5, blue.clone()),
-        Sphere::new_still(Point3::new(5., 0., 5.), 0.5, blue),
+        Sphere::new_still(corner_one, 0.5, blue.clone()),
+        Sphere::new_still(corner_two, 0.5, blue.clone()),
+        Sphere::new_still(corner_three, 0.5, blue),
     ];
     let world = [triangle]
         .into_iter()
@@ -244,7 +245,7 @@ fn tinted_glass() -> SceneInfo {
             .map(HittableObject::Sphere)
             .collect::<HittableList>()
             .optimise(),
-        Point3::new(10., 0., 0.),
+        Point3::new(0., 10., 0.),
         Point3::new(0., 0., 0.),
         20.,
     )
