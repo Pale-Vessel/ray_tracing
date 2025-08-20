@@ -15,10 +15,7 @@ mod triangle;
 mod vector;
 
 use core::f64;
-use std::{
-    fs::File,
-    io::{Result, Write},
-};
+use std::path::Path;
 
 #[allow(unused_imports)]
 use rand::{Rng, rng};
@@ -47,7 +44,7 @@ enum Profile {
 
 const PROFILE: Profile = Profile::Debug;
 
-fn main() -> Result<()> {
+fn main() {
     let (image_width, rays_per_pixel, max_ray_bounces) = match PROFILE {
         Profile::Debug => (800, 10, 10),
         Profile::Release => (800, 100, 50),
@@ -61,13 +58,13 @@ fn main() -> Result<()> {
         fov,
         look_from,
         look_at,
-        Vec3::new(1., 0., 1.),
+        Vec3::new(0., 0., 1.),
         10.,
         0.,
     );
     let image = camera.render(&world);
-    let mut output = File::create("image.ppm")?;
-    write!(output, "{image}")
+    let output = Path::new("image.png");
+    let _ = image.save(output);
 }
 
 #[allow(dead_code)]
@@ -204,9 +201,9 @@ fn perlin_spheres() -> SceneInfo {
 #[allow(dead_code)]
 fn triangle() -> SceneInfo {
     let red =
-        Material::new_no_refract(0., Colour::new(1., 0., 0.).to_texture());
+        Material::new_no_refract(1., Colour::new(1., 0., 0.).to_texture());
     let blue =
-        Material::new_no_refract(0., Colour::new(0., 0., 1.).to_texture());
+        Material::new_no_refract(1., Colour::new(0., 0., 1.).to_texture());
     let triangle = Triangle::new(
         Point3::new(-5., 0., 0.),
         Point3::new(5., 0., 0.),
