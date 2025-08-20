@@ -53,7 +53,7 @@ fn main() -> Result<()> {
         Profile::Release => (800, 100, 50),
         Profile::Insane => (1920, 500, 50),
     };
-    let (world, look_from, look_at, fov) = triangle();
+    let (world, look_from, look_at, fov) = basic_spheres();
     let camera = Camera::initialise(
         image_width,
         rays_per_pixel,
@@ -71,19 +71,38 @@ fn main() -> Result<()> {
 }
 
 #[allow(dead_code)]
-fn checkered_spheres() -> SceneInfo {
+fn basic_spheres() -> SceneInfo {
     let checkered_texture = Texture::Checker(CheckerTexture::new(
-        Colour::new(0.5, 0.5, 0.5).to_texture(),
-        Colour::new(0., 0.3, 0.7).to_texture(),
-        4.,
+        Colour::new(0.2, 0.3, 0.1).to_texture(),
+        Colour::new(0.9, 0.9, 0.9).to_texture(),
+        0.32,
     ));
 
-    let material = Material::new_no_refract(1., checkered_texture);
+    let ground_material = Material::new_no_refract(0., checkered_texture);
 
-    let world = [
-        Sphere::new_still(Point3::new(0., -10., 0.), 10., material.clone()),
-        Sphere::new_still(Point3::new(0., 10., 0.), 10., material),
-    ];
+    let mut world = vec![Sphere::new_still(
+        Point3::new(0., -1000., -1.),
+        1000.,
+        ground_material,
+    )];
+
+    let glass = Material::new_glass(1.5, Colour::new(1., 1., 1.).to_texture());
+    let air =
+        Material::new_glass(1. / 1.5, Colour::new(1., 1., 1.).to_texture());
+    let rough =
+        Material::new_no_refract(1., Colour::new(0.4, 0.2, 0.1).to_texture());
+    let smooth =
+        Material::new_no_refract(1., Colour::new(1., 0.6, 0.5).to_texture());
+
+    world.push(Sphere::new_still(Point3::new(0., 2., 1.), 1., glass));
+    world.push(Sphere::new_still(Point3::new(0., 2., 1.), 0.5, air));
+    world.push(Sphere::new_still(Point3::new(-4., 1., 0.), 1., rough));
+    world.push(Sphere::new_still(
+        // Point3::new(4., 0.5, 0.),
+        Point3::new(4., 1.0, 0.),
+        1.,
+        smooth,
+    ));
 
     (
         world
@@ -92,8 +111,8 @@ fn checkered_spheres() -> SceneInfo {
             .collect::<HittableList>()
             .optimise(),
         Point3::new(13., 2., 3.),
-        Point3::new(0., 1., 0.),
-        50.,
+        Point3::new(0., 0., 0.),
+        20.,
     )
 }
 
@@ -170,6 +189,33 @@ fn bouncing_spheres() -> SceneInfo {
         Point3::new(13., 2., 3.),
         Point3::new(0., 0., 0.),
         20.,
+    )
+}
+
+#[allow(dead_code)]
+fn checkered_spheres() -> SceneInfo {
+    let checkered_texture = Texture::Checker(CheckerTexture::new(
+        Colour::new(0.5, 0.5, 0.5).to_texture(),
+        Colour::new(0., 0.3, 0.7).to_texture(),
+        4.,
+    ));
+
+    let material = Material::new_no_refract(1., checkered_texture);
+
+    let world = [
+        Sphere::new_still(Point3::new(0., -10., 0.), 10., material.clone()),
+        Sphere::new_still(Point3::new(0., 10., 0.), 10., material),
+    ];
+
+    (
+        world
+            .iter()
+            .map(|sphere| HittableObject::Sphere(sphere.clone()))
+            .collect::<HittableList>()
+            .optimise(),
+        Point3::new(13., 2., 3.),
+        Point3::new(0., 1., 0.),
+        50.,
     )
 }
 
