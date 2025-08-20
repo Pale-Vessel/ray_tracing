@@ -6,12 +6,13 @@ use crate::{
     texture::GetTexture,
     vector::{Point3, Vec3},
 };
+use image::RgbImage;
 use rand::{Rng, rng};
 
 #[derive(Debug)]
 pub struct Camera {
-    image_width: i32,
-    image_height: i32,
+    image_width: u32,
+    image_height: u32,
     center: Point3,
     pixel_upper_left: Point3,
     horizontal_pixel_delta: Vec3,
@@ -31,7 +32,7 @@ impl Camera {
 
     #[allow(clippy::too_many_arguments)]
     pub fn initialise(
-        image_width: i32,
+        image_width: u32,
         rays_per_pixel: u16,
         max_ray_bounces: u16,
         fov: f64,
@@ -41,8 +42,9 @@ impl Camera {
         focus_distance: f64,
         defocus_angle: f64,
     ) -> Camera {
+        #[allow(clippy::cast_possible_truncation)]
         let image_height =
-            (f64::from(image_width) / Self::IDEAL_ASPECT_RATIO).floor() as i32;
+            (f64::from(image_width) / Self::IDEAL_ASPECT_RATIO).floor() as u32;
         let pixel_sample_scale = 1. / f64::from(rays_per_pixel);
 
         let camera_center = look_from;
@@ -106,7 +108,7 @@ impl Camera {
             let material = data.clone().material;
             let mut rng = rng();
             if rng.random_bool(material.refraction_chance) {
-                let refracted_ray = material.refract(ray, data);
+                let refracted_ray = material.refract(ray, &data);
                 return material.texture.get_colour(u, v)
                     * self.ray_colour(refracted_ray, world, depth + 1);
             }
@@ -122,9 +124,8 @@ impl Camera {
             + vert_ratio * Self::SKY_TOP_COLOUR
     }
 
-    pub fn render(&self, world: &HittableList) -> String {
-        let mut buffer =
-            format!("P3\n{} {}\n255\n", self.image_width, self.image_height);
+    pub fn render(&self, world: &HittableList) -> RgbImage {
+        let mut buffer = RgbImage::new(self.image_width, self.image_height);
 
         for j in 0..self.image_height {
             for i in 0..self.image_width {
@@ -134,7 +135,7 @@ impl Camera {
                         self.ray_colour(ray, world, 0)
                     })
                     .sum();
-                write_colour(&mut buffer, &(colour * self.pixel_sample_scale));
+                write_colour(i, j, &mut buffer, &(colour * self.pixel_sample_scale));
             }
             if j % 40 == 0 {
                 println!("{j}");
@@ -143,7 +144,7 @@ impl Camera {
         buffer
     }
 
-    fn get_ray(&self, horiz_position: i32, vert_position: i32) -> Ray {
+    fn get_ray(&self, horiz_position: u32, vert_position: u32) -> Ray {
         let offset = Self::sample_square(horiz_position, vert_position);
         let pixel_sample = *self.pixel_upper_left
             + offset.x * self.horizontal_pixel_delta
@@ -161,7 +162,7 @@ impl Camera {
         Ray::new(ray_origin, ray_direction, ray_time)
     }
 
-    fn sample_square(horiz_position: i32, vert_position: i32) -> Vec3 {
+    fn sample_square(horiz_position: u32, vert_position: u32) -> Vec3 {
         let mut rng = rng();
         let horiz_offset = rng.random_range(-0.5..0.5);
         let vert_offset = rng.random_range(-0.5..0.5);

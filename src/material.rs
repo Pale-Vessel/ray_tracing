@@ -59,7 +59,7 @@ impl Material {
         Ray::new(diffuse_ray.origin, direction.unit(), ray.time)
     }
 
-    pub fn refract(&self, ray: Ray, record: HitRecord) -> Ray {
+    pub fn refract(&self, ray: Ray, record: &HitRecord) -> Ray {
         let refractive_index = if record.front_face {
             1. / self.refractive_index
         } else {
