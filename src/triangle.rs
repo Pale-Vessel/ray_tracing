@@ -28,8 +28,7 @@ impl Hittable for Triangle {
 
         let collision_point = ray.at(collision_time);
 
-        // TODO: Calculate front face properly
-        let front_face = true;
+        let front_face = self.normal.dot(ray.direction.unit()) > 0.;
 
         Some(HitRecord::new(
             collision_point,
@@ -57,7 +56,7 @@ impl Triangle {
         // https://stackoverflow.com/a/23709352/23247074
         let a_vector = *(corner_two - corner_one);
         let b_vector = *(corner_three - corner_one);
-        let normal = a_vector.cross(b_vector);
+        let normal = a_vector.cross(b_vector).unit();
 
         let mut intervals = [Interval::default(); 3];
         for axis in 0..=2 {
