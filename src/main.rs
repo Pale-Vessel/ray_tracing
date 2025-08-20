@@ -47,16 +47,18 @@ enum Profile {
     Release,
     InsaneRays,
     Insane,
+    OvernightRender
 }
 
-const PROFILE: Profile = Profile::InsaneRays;
+const PROFILE: Profile = Profile::Release;
 
 fn main() -> Result<()> {
     let (image_width, rays_per_pixel, max_ray_bounces) = match PROFILE {
         Profile::Debug => (800, 10, 10),
         Profile::Release => (800, 100, 50),
-        Profile::InsaneRays => (800, 1000, 100),
+        Profile::InsaneRays => (800, 1_000, 100),
         Profile::Insane => (1920, 500, 100),
+        Profile::OvernightRender => (1920, 5_000, 500),
     };
     let (world, look_from, look_at, fov) = cornell_box();
     let camera = Camera::initialise(
@@ -353,6 +355,7 @@ fn basic_light() -> SceneInfo {
 #[allow(dead_code)]
 fn cornell_box() -> SceneInfo {
     let white_texture = Colour::new(1., 1., 1.).to_texture();
+    let glass = Material::new_glass(1.5, white_texture.clone());
     let white_walls = Material::new_no_refract(0., white_texture.clone());
     let white_light =
         Material::new_light((Colour::new(1., 1., 1.) * 50.).to_texture());
@@ -418,13 +421,19 @@ fn cornell_box() -> SceneInfo {
 
     let (ceiling_light_one, ceiling_light_two) = Triangle::new_quad(
         (
-            Point3::new(-0.1, 0.99, -0.1),
-            Point3::new(-0.1, 0.99, 0.1),
-            Point3::new(0.1, 0.99, -0.1),
-            Point3::new(0.1, 0.99, 0.1),
+            Point3::new(-0.3, 0.99, -0.3),
+            Point3::new(-0.3, 0.99, 0.3),
+            Point3::new(0.3, 0.99, -0.3),
+            Point3::new(0.3, 0.99, 0.3),
         ),
         white_light,
         None,
+    );
+
+    let ball = Sphere::new_still(
+        Point3::new(0., 0., 0.),
+        1. / 2.,
+        glass
     );
 
     let world = [
@@ -440,6 +449,7 @@ fn cornell_box() -> SceneInfo {
         TriHit(ceiling_two),
         TriHit(ceiling_light_one),
         TriHit(ceiling_light_two),
+        SpheHit(ball)
     ];
     (
         world.into_iter().collect::<HittableList>().optimise(),
