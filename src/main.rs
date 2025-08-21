@@ -52,7 +52,7 @@ enum Profile {
     OvernightRender,
 }
 
-const PROFILE: Profile = Profile::InsaneRays;
+const PROFILE: Profile = Profile::Release;
 
 fn main() -> ImageResult<()> {
     let (image_width, rays_per_pixel, max_ray_bounces) = match PROFILE {
@@ -351,32 +351,25 @@ fn basic_light() -> SceneInfo {
 fn cornell_box() -> SceneInfo {
     let brightness = 1.;
     let light_size = 0.5;
-    let white_texture = Colour::new(1., 1., 1.).to_texture();
+    let white_texture = Colour::new(0.8, 0.8, 0.8).to_texture();
+    #[cfg(false)]
     let glass = Material::new_glass(1.5, white_texture.clone());
     let white_walls = Material::new_no_refract(1., white_texture.clone());
     let white_light = Material::new_light(
         (Colour::new(1., 1., 1.) * brightness).to_texture(),
     );
     let red_walls =
-        Material::new_no_refract(1., Colour::new(1., 0., 0.).to_texture());
+        Material::new_no_refract(0.9, Colour::new(1., 0.5, 0.5).to_texture());
     let green_walls =
-        Material::new_no_refract(1., Colour::new(0., 1., 0.).to_texture());
-    let back_walls = Material::new_no_refract(
-        0.5,
-        CheckerTexture::new(
-            Colour::new(1., 0., 0.).to_texture(),
-            Colour::new(0., 0., 1.).to_texture(),
-            0.1,
-        )
-        .wrap(),
-    );
+        Material::new_no_refract(0.9, Colour::new(0.5, 1., 0.5).to_texture());
+    let back_walls = Material::new_no_refract(0.9, white_texture.clone());
 
     let (floor_one, floor_two) = Triangle::new_quad(
         (
-            Point3::new(-1., -1., -1.),
-            Point3::new(-1., -1., 1.),
-            Point3::new(1., -1., -1.),
-            Point3::new(1., -1., 1.),
+            Point3::new(-2., -2., -2.),
+            Point3::new(-2., -2., 2.),
+            Point3::new(2., -2., -2.),
+            Point3::new(2., -2., 2.),
         ),
         white_walls.clone(),
         None,
@@ -384,21 +377,21 @@ fn cornell_box() -> SceneInfo {
 
     let (back_wall_one, back_wall_two) = Triangle::new_quad(
         (
-            Point3::new(-1., -1., -1.),
-            Point3::new(-1., 1., -1.),
-            Point3::new(1., -1., -1.),
-            Point3::new(1., 1., -1.),
+            Point3::new(-2., -2., -2.),
+            Point3::new(-2., 2., -2.),
+            Point3::new(2., -2., -2.),
+            Point3::new(2., 2., -2.),
         ),
-        back_walls,
+        back_walls.clone(),
         None,
     );
 
     let (left_wall_one, left_wall_two) = Triangle::new_quad(
         (
-            Point3::new(-1., -1., -1.),
-            Point3::new(-1., -1., 1.),
-            Point3::new(-1., 1., -1.),
-            Point3::new(-1., 1., 1.),
+            Point3::new(-2., -2., -2.),
+            Point3::new(-2., -2., 2.),
+            Point3::new(-2., 2., -2.),
+            Point3::new(-2., 2., 2.),
         ),
         red_walls,
         None,
@@ -406,21 +399,32 @@ fn cornell_box() -> SceneInfo {
 
     let (right_wall_one, right_wall_two) = Triangle::new_quad(
         (
-            Point3::new(1., -1., -1.),
-            Point3::new(1., -1., 1.),
-            Point3::new(1., 1., -1.),
-            Point3::new(1., 1., 1.),
+            Point3::new(2., -2., -2.),
+            Point3::new(2., -2., 2.),
+            Point3::new(2., 2., -2.),
+            Point3::new(2., 2., 2.),
         ),
         green_walls,
         None,
     );
 
+    let (front_wall_one, front_wall_two) = Triangle::new_quad(
+        (
+            Point3::new(-2., -2., 2.),
+            Point3::new(-2., 2., 2.),
+            Point3::new(2., -2., 2.),
+            Point3::new(2., 2., 2.),
+        ),
+        back_walls,
+        None,
+    );
+
     let (ceiling_one, ceiling_two) = Triangle::new_quad(
         (
-            Point3::new(-1., 1., -1.),
-            Point3::new(-1., 1., 1.),
-            Point3::new(1., 1., -1.),
-            Point3::new(1., 1., 1.),
+            Point3::new(-2., 2., -2.),
+            Point3::new(-2., 2., 2.),
+            Point3::new(2., 2., -2.),
+            Point3::new(2., 2., 2.),
         ),
         white_walls,
         None,
@@ -428,16 +432,17 @@ fn cornell_box() -> SceneInfo {
 
     let (ceiling_light_one, ceiling_light_two) = Triangle::new_quad(
         (
-            Point3::new(-light_size, 0.99, -light_size),
-            Point3::new(-light_size, 0.99, light_size),
-            Point3::new(light_size, 0.99, -light_size),
-            Point3::new(light_size, 0.99, light_size),
+            Point3::new(-light_size, 0.9999, -light_size),
+            Point3::new(-light_size, 0.9999, light_size),
+            Point3::new(light_size, 0.9999, -light_size),
+            Point3::new(light_size, 0.9999, light_size),
         ),
         white_light,
         None,
     );
 
-    let ball = Sphere::new_still(Point3::new(0., 0., 0.), 1. / 2., glass);
+    #[cfg(false)]
+    let ball_one = Sphere::new_still(Point3::new(0., 0., 0.), 1. / 2., glass);
 
     let world = [
         TriHit(floor_one),
@@ -448,15 +453,17 @@ fn cornell_box() -> SceneInfo {
         TriHit(left_wall_two),
         TriHit(right_wall_one),
         TriHit(right_wall_two),
+        TriHit(front_wall_one),
+        TriHit(front_wall_two),
         TriHit(ceiling_one),
         TriHit(ceiling_two),
         TriHit(ceiling_light_one),
         TriHit(ceiling_light_two),
-        SpheHit(ball),
+        // SpheHit(ball_one),
     ];
     (
         world.into_iter().collect::<HittableList>().optimise(),
-        Point3::new(0., 0., 2.),
+        Point3::new(0., 0., 0.5),
         Point3::new(0., 0., 0.),
         90.,
     )
