@@ -35,8 +35,10 @@ use crate::{
     sphere::Sphere,
     texture::Texture,
     triangle::Triangle,
-    vector::{Point3, Vec3},
+    vector::{Point3},
 };
+
+use glam::DVec3 as Vec3;
 
 type SceneInfo = (HittableList, Point3, Point3, f64);
 
@@ -50,7 +52,7 @@ enum Profile {
     OvernightRender,
 }
 
-const PROFILE: Profile = Profile::OvernightRender;
+const PROFILE: Profile = Profile::Release;
 
 fn main() -> ImageResult<()> {
     let (image_width, rays_per_pixel, max_ray_bounces) = match PROFILE {
@@ -150,7 +152,7 @@ fn bouncing_spheres() -> SceneInfo {
             );
 
             if (center - Point3::new(4., 0.2, 0.)).length() > 0.9 {
-                let colour = Colour::rand_unit_vector().to_texture();
+                let colour = Colour::new_random().to_texture();
                 let material = Material::new_no_refract(rng.random(), colour);
                 world.push(Sphere::new_still(center, 0.2, material));
             }
@@ -163,7 +165,7 @@ fn bouncing_spheres() -> SceneInfo {
             );
 
             if (center - Point3::new(4., 0.2, 0.)).length() > 0.9 {
-                let colour = Colour::rand_unit_vector().to_texture();
+                let colour = Colour::new_random().to_texture();
                 let material = Material::new_glass(1.5, colour);
                 world.push(Sphere::new_still(center, 0.2, material));
             }
@@ -327,7 +329,7 @@ fn basic_light() -> SceneInfo {
     let glass = Material::new_glass(1.5, Colour::new(1., 1., 1.).to_texture());
     let air =
         Material::new_glass(1. / 1.5, Colour::new(1., 1., 1.).to_texture());
-    let lamp = Material::new_light((5. * Colour::new(1., 0., 0.)).to_texture());
+    let lamp = Material::new_light((Colour::new(1., 0., 0.) * 5.).to_texture());
     let smooth =
         Material::new_no_refract(1., Colour::new(1., 0.6, 0.5).to_texture());
 
@@ -361,7 +363,7 @@ fn cornell_box() -> SceneInfo {
     let glass = Material::new_glass(1.5, white_texture.clone());
     let white_walls = Material::new_no_refract(0.5, white_texture.clone());
     let white_light = Material::new_light(
-        (brightness * Colour::new(1., 1., 1.)).to_texture(),
+        (Colour::new(1., 1., 1.) * brightness).to_texture(),
     );
     let red_walls =
         Material::new_no_refract(0.5, Colour::new(1., 0., 0.).to_texture());

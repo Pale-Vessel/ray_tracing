@@ -10,8 +10,10 @@ use crate::{
     ray::Ray,
     sphere::Sphere,
     triangle::Triangle,
-    vector::{Point3, Vec3},
+    vector::{Point3},
 };
+
+use glam::DVec3 as Vec3;
 
 #[derive(Clone, Debug, Default, Constructor)]
 pub struct HitRecord {

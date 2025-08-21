@@ -8,8 +8,10 @@ use crate::{
     interval::Interval,
     material::Material,
     ray::Ray,
-    vector::{Point3, Vec3},
+    vector::Point3,
 };
+
+use glam::DVec3 as Vec3;
 
 #[derive(Clone, Debug, Constructor)]
 pub struct Sphere {
@@ -27,15 +29,18 @@ impl Hittable for Sphere {
         let a_coefficient = ray.direction.length_squared();
         let h_coefficient = ray.direction.dot(oc);
         let c_coefficient = oc.length_squared() - self.radius * self.radius;
-        let discriminant = h_coefficient * h_coefficient - a_coefficient * c_coefficient;
+        let discriminant =
+            h_coefficient * h_coefficient - a_coefficient * c_coefficient;
         if discriminant < 0. {
             return None;
         }
         let discriminant_root = discriminant.sqrt();
         //println!("{ray:?} {discriminant_root}\n");
-        let mut collision_time = (h_coefficient - discriminant_root) / a_coefficient;
+        let mut collision_time =
+            (h_coefficient - discriminant_root) / a_coefficient;
         if !interval.surrounds(collision_time) {
-            collision_time = (h_coefficient + discriminant_root) / a_coefficient;
+            collision_time =
+                (h_coefficient + discriminant_root) / a_coefficient;
             if !interval.surrounds(collision_time) {
                 return None;
             }
@@ -100,7 +105,7 @@ impl Sphere {
     }
 
     pub fn get_uv(&self, point: Point3) -> (f64, f64) {
-        let vector = (self.center.origin - point).unit();
+        let vector = (self.center.origin - point).normalize();
 
         (
             self.radius * (0.5 + (vector.x.atan2(vector.z) / TAU)),

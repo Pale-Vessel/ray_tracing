@@ -1,13 +1,35 @@
+use std::ops::Mul;
+
 use crate::{
-    interval::Interval, solid_texture::SolidTexture, texture::Texture,
-    vector::Vec3,
+    interval::Interval, solid_texture::SolidTexture, texture::Texture, vector::VecStuff,
 };
 
-pub type Colour = Vec3;
+use derive_more::{Add, Deref, Div, Mul, Sum};
+use glam::DVec3 as Vec3;
+
+#[derive(Clone, Copy, Debug, Default, Deref, Add, Sum, Mul, Div)]
+pub struct Colour(Vec3);
 
 impl Colour {
+    pub const fn new(r: f64, g: f64, b: f64) -> Self {
+        Self(Vec3::new(r, g, b))
+    }
+
+    pub fn new_random() -> Self {
+        let random = Vec3::rand_unit_vector();
+        Self(random)
+    }
+
     pub fn to_texture(self) -> Texture {
-        Texture::Solid(SolidTexture::new(self))
+        SolidTexture::new(self).wrap()
+    }
+}
+
+impl Mul for Colour {
+    type Output = Self;
+
+    fn mul(self, rhs: Colour) -> Self::Output {
+        Self::new(self.x * rhs.x, self.y * rhs.y, self.z * rhs.z)
     }
 }
 

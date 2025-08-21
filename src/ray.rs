@@ -1,5 +1,6 @@
-use crate::vector::{Point3, Vec3};
+use crate::vector::Point3;
 use derive_more::Constructor;
+use glam::DVec3 as Vec3;
 
 #[derive(Copy, Clone, Debug, Constructor)]
 pub struct Ray {

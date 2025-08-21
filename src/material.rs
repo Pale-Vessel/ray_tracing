@@ -1,7 +1,9 @@
 use derive_more::Constructor;
 use rand::{Rng, rng};
 
-use crate::{hittable::HitRecord, ray::Ray, texture::Texture, vector};
+use crate::{hittable::HitRecord, ray::Ray, texture::Texture, vector::VecStuff};
+
+use glam::DVec3 as Vec3;
 
 #[derive(Clone, Debug, Default, Constructor)]
 pub struct Material {
@@ -28,7 +30,7 @@ impl Material {
 
     pub fn diffuse_reflection(ray: Ray, record: &HitRecord) -> Ray {
         let scatter_direction =
-            record.normal_vector + vector::Vec3::rand_unit_vector();
+            record.normal_vector + Vec3::rand_unit_vector();
         let scatter_direction = if scatter_direction.near_zero() {
             record.normal_vector
         } else {
@@ -48,7 +50,7 @@ impl Material {
         let specular_ray = Self::specular_reflection(ray, record);
         let direction = self.smoothness * specular_ray.direction
             + (1. - self.smoothness) * diffuse_ray.direction;
-        Ray::new(diffuse_ray.origin, direction.unit(), ray.time)
+        Ray::new(diffuse_ray.origin, direction.normalize(), ray.time)
     }
 
     pub fn refract(&self, ray: Ray, record: &HitRecord) -> Ray {
@@ -57,10 +59,10 @@ impl Material {
         } else {
             self.refractive_index
         };
-        let unit = ray.direction.unit();
+        let unit = ray.direction.normalize();
 
         let cos_theta = -unit.dot(record.normal_vector).min(1.);
-        let sin_theta = (1. - cos_theta * cos_theta).sqrt();
+        let sin_theta = (1f64 - cos_theta * cos_theta).sqrt();
 
         let mut rng = rng();
         let direction = if refractive_index * sin_theta < 1.
@@ -70,7 +72,7 @@ impl Material {
         } else {
             unit.reflect(record.normal_vector)
         }
-        .unit();
+        .normalize();
 
         Ray::new(record.collision_point, direction, ray.time)
     }

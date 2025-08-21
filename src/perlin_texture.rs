@@ -3,8 +3,10 @@ use derive_more::Constructor;
 use crate::{
     colour::Colour,
     texture::{GetTexture, Texture},
-    vector::{Point3, Vec3},
+    vector::{Point3, VecStuff},
 };
+
+use glam::{DVec3 as Vec3, Vec3Swizzles};
 
 #[derive(Clone, Debug, Constructor)]
 pub struct PerlinTexture {
@@ -61,7 +63,7 @@ impl GetTexture for PerlinTexture {
         let value =
             Self::smoothstep(interpolated_y[0], interpolated_y[1], x_position);
         self.colour * value
-    }   
+    }
 }
 
 impl PerlinTexture {
@@ -74,12 +76,8 @@ impl PerlinTexture {
         // https://www.shadertoy.com/view/4djSRW#
         let mut point = Self::fract(point * Vec3::new(0.1031, 0.1030, 0.0973));
         point += point.dot(Vec3::new(point.y, point.x, point.z) + 33.33);
-        point = Point3::from_vector(
-            (Vec3::new(point.x, point.x, point.y)
-                + Vec3::new(point.y, point.x, point.x))
-                * Vec3::new(point.z, point.y, point.x),
-        );
-        (*Self::fract(point) - 0.5).unit()
+        point = Point3::from_vector((point.xxy() + point.yyx()) * point.zyx());
+        (*Self::fract(point) - 0.5).normalize()
     }
 
     fn fract(point: Point3) -> Point3 {

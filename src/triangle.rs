@@ -4,8 +4,10 @@ use crate::{
     interval::Interval,
     material::Material,
     ray::Ray,
-    vector::{Point3, Vec3},
+    vector::Point3,
 };
+
+use glam::DVec3 as Vec3;
 
 #[derive(Clone, Debug)]
 pub struct Triangle {
@@ -28,7 +30,7 @@ impl Hittable for Triangle {
 
         let collision_point = ray.at(collision_time);
 
-        let front_face = self.normal.dot(ray.direction.unit()) > 0.;
+        let front_face = self.normal.dot(ray.direction.normalize()) > 0.;
 
         Some(HitRecord::new(
             collision_point,
@@ -56,7 +58,7 @@ impl Triangle {
         // https://stackoverflow.com/a/23709352/23247074
         let a_vector = *(corner_two - corner_one);
         let b_vector = *(corner_three - corner_one);
-        let normal = a_vector.cross(b_vector).unit();
+        let normal = a_vector.cross(b_vector).normalize();
 
         let mut intervals = [Interval::default(); 3];
         for axis in 0..=2 {

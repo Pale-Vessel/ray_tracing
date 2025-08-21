@@ -6,11 +6,12 @@ use crate::{
     interval::Interval,
     ray::Ray,
     texture::GetTexture,
-    vector::{Point3, Vec3},
+    vector::{Point3, VecStuff},
 };
 use image::{Rgb, RgbImage};
 use rand::{Rng, rng};
 use rayon::prelude::*;
+use glam::DVec3 as Vec3;
 
 #[derive(Debug)]
 pub struct Camera {
@@ -58,8 +59,8 @@ impl Camera {
         let viewport_width = viewport_height
             * (f64::from(image_width) / f64::from(image_height));
 
-        let w = (look_from - look_at).unit();
-        let u = up_vector.cross(w).unit();
+        let w = (look_from - look_at).normalize();
+        let u = up_vector.cross(w).normalize();
         let v = w.cross(u);
 
         let viewport_horizontal = viewport_width * u;
@@ -125,15 +126,15 @@ impl Camera {
                 * self.ray_colour(scattered_ray, world, depth + 1);
         }
 
-        let unit_vector = ray.direction.unit();
+        let unit_vector = ray.direction.normalize();
         let vert_ratio = 0.5 * (unit_vector.y + 1.);
 
-        (1.0 - vert_ratio) * Self::SKY_BOTTOM_COLOUR
-            + vert_ratio * Self::SKY_TOP_COLOUR
+        Self::SKY_BOTTOM_COLOUR * (1. - vert_ratio)
+            + Self::SKY_TOP_COLOUR * vert_ratio
     }
 
     pub fn render(&self, world: &HittableList) -> RgbImage {
-        let pixel_report = (self.image_width * self.image_height) / 500;
+        let pixel_report = (self.image_width * self.image_height) / 20;
         let done_pixels = Arc::new(Mutex::new(0));
         RgbImage::from_par_fn(self.image_width, self.image_height, |i, j| {
             let colour = (0..self.rays_per_pixel)
