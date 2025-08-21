@@ -148,7 +148,7 @@ impl Camera {
             let mut num = done_pixels.lock().unwrap();
             *num += 1;
             if *num % pixel_report == 0 {
-                println!("{num}")
+                println!("{}", *num / pixel_report)
             }
             let (r, g, b) = map_colours(&colour);
             Rgb([r, g, b])
