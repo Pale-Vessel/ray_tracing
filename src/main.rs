@@ -15,9 +15,9 @@ mod triangle;
 mod vector;
 
 use core::f64;
-use std::path::Path;
 use derive_more::Display;
 use image::ImageResult;
+use std::path::Path;
 
 #[allow(unused_imports)]
 use rand::{Rng, rng};
@@ -50,7 +50,7 @@ enum Profile {
     OvernightRender,
 }
 
-const PROFILE: Profile = Profile::InsaneRays;
+const PROFILE: Profile = Profile::Release;
 
 fn main() -> ImageResult<()> {
     let (image_width, rays_per_pixel, max_ray_bounces) = match PROFILE {
@@ -355,15 +355,27 @@ fn basic_light() -> SceneInfo {
 
 #[allow(dead_code)]
 fn cornell_box() -> SceneInfo {
+    let brightness = 1. / 10.;
+    let light_size = 0.5;
     let white_texture = Colour::new(1., 1., 1.).to_texture();
     let glass = Material::new_glass(1.5, white_texture.clone());
     let white_walls = Material::new_no_refract(0., white_texture.clone());
-    let white_light =
-        Material::new_light((Colour::new(1., 1., 1.) * 5.).to_texture());
+    let white_light = Material::new_light(
+        (brightness * Colour::new(1., 1., 1.)).to_texture(),
+    );
     let red_walls =
         Material::new_no_refract(0., Colour::new(1., 0., 0.).to_texture());
     let green_walls =
         Material::new_no_refract(0., Colour::new(0., 1., 0.).to_texture());
+    let back_walls = Material::new_no_refract(
+        0.,
+        CheckerTexture::new(
+            Colour::new(1., 0., 0.).to_texture(),
+            Colour::new(0., 0., 1.).to_texture(),
+            0.1,
+        )
+        .wrap(),
+    );
 
     let (floor_one, floor_two) = Triangle::new_quad(
         (
@@ -383,7 +395,7 @@ fn cornell_box() -> SceneInfo {
             Point3::new(1., -1., -1.),
             Point3::new(1., 1., -1.),
         ),
-        white_walls.clone(),
+        back_walls,
         None,
     );
 
@@ -422,10 +434,10 @@ fn cornell_box() -> SceneInfo {
 
     let (ceiling_light_one, ceiling_light_two) = Triangle::new_quad(
         (
-            Point3::new(-0.3, 0.99, -0.3),
-            Point3::new(-0.3, 0.99, 0.3),
-            Point3::new(0.3, 0.99, -0.3),
-            Point3::new(0.3, 0.99, 0.3),
+            Point3::new(-light_size, 0.99, -light_size),
+            Point3::new(-light_size, 0.99, light_size),
+            Point3::new(light_size, 0.99, -light_size),
+            Point3::new(light_size, 0.99, light_size),
         ),
         white_light,
         None,
@@ -450,7 +462,7 @@ fn cornell_box() -> SceneInfo {
     ];
     (
         world.into_iter().collect::<HittableList>().optimise(),
-        Point3::new(0., 0., 2.5),
+        Point3::new(0., 0., 2.),
         Point3::new(0., 0., 0.),
         90.,
     )

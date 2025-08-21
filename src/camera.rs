@@ -27,7 +27,7 @@ pub struct Camera {
 }
 
 impl Camera {
-    const IDEAL_ASPECT_RATIO: f64 = 16. / 9.;
+    const IDEAL_ASPECT_RATIO: f64 =  1.;
     const SKY_TOP_COLOUR: Colour = Colour::new(0., 0., 0.);
     const SKY_BOTTOM_COLOUR: Colour = Self::SKY_TOP_COLOUR;
 
