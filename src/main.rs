@@ -333,11 +333,7 @@ fn basic_light() -> SceneInfo {
         Sphere::new_still(Point3::new(0., 2., 1.), 1., glass),
         Sphere::new_still(Point3::new(0., 2., 1.), 0.5, air),
         Sphere::new_still(Point3::new(0., 1000., 0.), 900., lamp),
-        Sphere::new_still(
-            Point3::new(4., 1.0, 0.),
-            1.,
-            smooth,
-        ),
+        Sphere::new_still(Point3::new(4., 1.0, 0.), 1., smooth),
     ];
     (
         world
@@ -353,8 +349,8 @@ fn basic_light() -> SceneInfo {
 
 #[allow(dead_code)]
 fn cornell_box() -> SceneInfo {
-    let brightness = 1. / 2.;
-    let light_size = 0.1;
+    let brightness = 1.;
+    let light_size = 0.5;
     let white_texture = Colour::new(1., 1., 1.).to_texture();
     let glass = Material::new_glass(1.5, white_texture.clone());
     let white_walls = Material::new_no_refract(0.5, white_texture.clone());
