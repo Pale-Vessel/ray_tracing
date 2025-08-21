@@ -50,7 +50,7 @@ enum Profile {
     OvernightRender,
 }
 
-const PROFILE: Profile = Profile::InsaneRays;
+const PROFILE: Profile = Profile::OvernightRender;
 
 fn main() -> ImageResult<()> {
     let (image_width, rays_per_pixel, max_ray_bounces) = match PROFILE {
@@ -58,7 +58,7 @@ fn main() -> ImageResult<()> {
         Profile::Release => (800, 100, 50),
         Profile::InsaneRays => (800, 1_000, 100),
         Profile::Insane => (1920, 500, 100),
-        Profile::OvernightRender => (1920, 5_000, 5_000),
+        Profile::OvernightRender => (1920, 5_000, 10),
     };
     let (world, look_from, look_at, fov) = cornell_box();
     let camera = Camera::initialise(

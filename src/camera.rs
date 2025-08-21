@@ -1,3 +1,5 @@
+use std::sync::{Arc, Mutex};
+
 use crate::{
     colour::{Colour, map_colours},
     hittable::{Hittable, HittableList},
@@ -131,6 +133,8 @@ impl Camera {
     }
 
     pub fn render(&self, world: &HittableList) -> RgbImage {
+        let pixel_report = (self.image_width * self.image_height) / 500;
+        let done_pixels = Arc::new(Mutex::new(0));
         RgbImage::from_par_fn(self.image_width, self.image_height, |i, j| {
             let colour = (0..self.rays_per_pixel)
                 .into_par_iter()
@@ -140,6 +144,12 @@ impl Camera {
                 })
                 .sum::<Colour>()
                 / self.pixel_sample_scale;
+            let done_pixels = Arc::clone(&done_pixels);
+            let mut num = done_pixels.lock().unwrap();
+            *num += 1;
+            if *num % pixel_report == 0 {
+                println!("{num}")
+            }
             let (r, g, b) = map_colours(&colour);
             Rgb([r, g, b])
         })
