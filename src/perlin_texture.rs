@@ -75,7 +75,7 @@ impl PerlinTexture {
         };
         // https://www.shadertoy.com/view/4djSRW#
         let mut point = Self::fract(point * Vec3::new(0.1031, 0.1030, 0.0973));
-        point += point.dot(Vec3::new(point.y, point.x, point.z) + 33.33);
+        point += point.dot(point.yxz() + 33.33);
         point = Point3::from_vector((point.xxy() + point.yyx()) * point.zyx());
         (*Self::fract(point) - 0.5).normalize()
     }
