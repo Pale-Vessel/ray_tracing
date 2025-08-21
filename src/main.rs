@@ -353,14 +353,14 @@ fn cornell_box() -> SceneInfo {
     let light_size = 0.5;
     let white_texture = Colour::new(1., 1., 1.).to_texture();
     let glass = Material::new_glass(1.5, white_texture.clone());
-    let white_walls = Material::new_no_refract(0.5, white_texture.clone());
+    let white_walls = Material::new_no_refract(1., white_texture.clone());
     let white_light = Material::new_light(
         (Colour::new(1., 1., 1.) * brightness).to_texture(),
     );
     let red_walls =
-        Material::new_no_refract(0.5, Colour::new(1., 0., 0.).to_texture());
+        Material::new_no_refract(1., Colour::new(1., 0., 0.).to_texture());
     let green_walls =
-        Material::new_no_refract(0.5, Colour::new(0., 1., 0.).to_texture());
+        Material::new_no_refract(1., Colour::new(0., 1., 0.).to_texture());
     let back_walls = Material::new_no_refract(
         0.5,
         CheckerTexture::new(
