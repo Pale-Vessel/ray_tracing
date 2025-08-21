@@ -50,7 +50,7 @@ enum Profile {
     OvernightRender,
 }
 
-const PROFILE: Profile = Profile::Release;
+const PROFILE: Profile = Profile::InsaneRays;
 
 fn main() -> ImageResult<()> {
     let (image_width, rays_per_pixel, max_ray_bounces) = match PROFILE {
@@ -359,16 +359,16 @@ fn cornell_box() -> SceneInfo {
     let light_size = 0.5;
     let white_texture = Colour::new(1., 1., 1.).to_texture();
     let glass = Material::new_glass(1.5, white_texture.clone());
-    let white_walls = Material::new_no_refract(0., white_texture.clone());
+    let white_walls = Material::new_no_refract(0.5, white_texture.clone());
     let white_light = Material::new_light(
         (brightness * Colour::new(1., 1., 1.)).to_texture(),
     );
     let red_walls =
-        Material::new_no_refract(0., Colour::new(1., 0., 0.).to_texture());
+        Material::new_no_refract(0.5, Colour::new(1., 0., 0.).to_texture());
     let green_walls =
-        Material::new_no_refract(0., Colour::new(0., 1., 0.).to_texture());
+        Material::new_no_refract(0.5, Colour::new(0., 1., 0.).to_texture());
     let back_walls = Material::new_no_refract(
-        0.,
+        0.5,
         CheckerTexture::new(
             Colour::new(1., 0., 0.).to_texture(),
             Colour::new(0., 0., 1.).to_texture(),
