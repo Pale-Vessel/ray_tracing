@@ -1,17 +1,18 @@
 use std::ops::Mul;
 
 use crate::{
-    interval::Interval, solid_texture::SolidTexture, texture::Texture, vector::VecStuff,
+    interval::Interval, solid_texture::SolidTexture, texture::Texture,
+    vector::VecStuff,
 };
 
 use derive_more::{Add, Deref, Div, Mul, Sum};
-use glam::DVec3 as Vec3;
+use glam::Vec3;
 
 #[derive(Clone, Copy, Debug, Default, Deref, Add, Sum, Mul, Div)]
 pub struct Colour(Vec3);
 
 impl Colour {
-    pub const fn new(r: f64, g: f64, b: f64) -> Self {
+    pub const fn new(r: f32, g: f32, b: f32) -> Self {
         Self(Vec3::new(r, g, b))
     }
 
@@ -51,6 +52,6 @@ pub fn map_colours(colour: &Colour) -> (u8, u8, u8) {
     (rbyte, gbyte, bbyte)
 }
 
-fn linear_to_gamma(linear_component: f64) -> f64 {
+fn linear_to_gamma(linear_component: f32) -> f32 {
     linear_component.max(0.).sqrt()
 }

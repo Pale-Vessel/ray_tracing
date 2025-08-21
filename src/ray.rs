@@ -1,12 +1,12 @@
 use crate::vector::Point3;
 use derive_more::Constructor;
-use glam::DVec3 as Vec3;
+use glam::Vec3;
 
 #[derive(Copy, Clone, Debug, Constructor)]
 pub struct Ray {
     pub origin: Point3,
     pub direction: Vec3,
-    pub time: f64,
+    pub time: f32,
 }
 
 impl Ray {
@@ -18,7 +18,7 @@ impl Ray {
         }
     }
 
-    pub fn at(&self, time: f64) -> Point3 {
+    pub fn at(&self, time: f32) -> Point3 {
         self.origin + Point3::from_vector(time * self.direction)
     }
 }

@@ -4,7 +4,7 @@ use crate::{
 };
 
 pub trait GetTexture {
-    fn get_colour(&self, u: f64, v: f64) -> Colour;
+    fn get_colour(&self, u: f32, v: f32) -> Colour;
 }
 
 #[derive(Debug, Clone)]
@@ -21,7 +21,7 @@ impl Default for Texture {
 }
 
 impl GetTexture for Texture {
-    fn get_colour(&self, u: f64, v: f64) -> Colour {
+    fn get_colour(&self, u: f32, v: f32) -> Colour {
         match self {
             Texture::Solid(solid_texture) => solid_texture.get_colour(u, v),
             Texture::Checker(checker_texture) => {

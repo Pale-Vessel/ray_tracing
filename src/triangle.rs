@@ -7,7 +7,7 @@ use crate::{
     vector::Point3,
 };
 
-use glam::DVec3 as Vec3;
+use glam::Vec3;
 
 #[derive(Clone, Debug)]
 pub struct Triangle {
@@ -86,14 +86,14 @@ impl Triangle {
         &self,
         origin: Point3,
         direction: Vec3,
-    ) -> Option<(f64, f64, f64)> {
+    ) -> Option<(f32, f32, f32)> {
         let e1 = self.corner_two - self.corner_one;
         let e2 = self.corner_three - self.corner_one;
 
         let ray_cross_e2 = direction.cross(*e2);
         let det = e1.dot(ray_cross_e2);
 
-        if det.abs() < f64::EPSILON {
+        if det.abs() < f32::EPSILON {
             return None; // This ray is parallel to this self.
         }
 
@@ -112,7 +112,7 @@ impl Triangle {
         // At this stage we can compute t to find out where the intersection point is on the line.
         let collision_time = inv_det * e2.dot(s_cross_e1);
 
-        if collision_time > f64::EPSILON {
+        if collision_time > f32::EPSILON {
             Some((collision_time, u, v))
         } else {
             // This means that there is a line intersection but not a ray intersection.

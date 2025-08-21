@@ -6,16 +6,16 @@ use crate::{
     vector::{Point3, VecStuff},
 };
 
-use glam::{DVec3 as Vec3, Vec3Swizzles};
+use glam::{Vec3, Vec3Swizzles};
 
 #[derive(Clone, Debug, Constructor)]
 pub struct PerlinTexture {
-    scale: f64,
+    scale: f32,
     colour: Colour,
 }
 
 impl GetTexture for PerlinTexture {
-    fn get_colour(&self, u: f64, v: f64) -> Colour {
+    fn get_colour(&self, u: f32, v: f32) -> Colour {
         let point = Point3::new(u, 0., v);
         let origin_corner = Point3::new(
             self.floor_to_scale(point.x),
@@ -28,9 +28,9 @@ impl GetTexture for PerlinTexture {
             for y in 0..=1 {
                 for z in 0..=1 {
                     let corner_point = Point3::new(
-                        origin_corner.x + f64::from(x) * self.scale,
-                        origin_corner.y + f64::from(y) * self.scale,
-                        origin_corner.z + f64::from(z) * self.scale,
+                        origin_corner.x + (x as f32) * self.scale,
+                        origin_corner.y + (y as f32) * self.scale,
+                        origin_corner.z + (z as f32) * self.scale,
                     );
                     let grid_vector = Self::hash_point_to_vec(corner_point);
                     let offset_vector = point - corner_point;
@@ -84,15 +84,15 @@ impl PerlinTexture {
         point - point.floor()
     }
 
-    fn floor_to_scale(&self, val: f64) -> f64 {
+    fn floor_to_scale(&self, val: f32) -> f32 {
         (val / self.scale).floor() * self.scale
     }
 
-    fn smoothstep(a: f64, b: f64, t: f64) -> f64 {
+    fn smoothstep(a: f32, b: f32, t: f32) -> f32 {
         Self::lerp(a, b, 3. * t * t - 2. * t * t * t)
     }
 
-    fn lerp(a: f64, b: f64, t: f64) -> f64 {
+    fn lerp(a: f32, b: f32, t: f32) -> f32 {
         a * (1. - t) + b * t
     }
 

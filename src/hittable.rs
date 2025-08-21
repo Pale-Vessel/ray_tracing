@@ -3,27 +3,22 @@ use std::ops::Index;
 use derive_more::Constructor;
 
 use crate::{
-    bounding_box::BoundingBox,
-    bvh::BVHNode,
-    interval::Interval,
-    material::Material,
-    ray::Ray,
-    sphere::Sphere,
-    triangle::Triangle,
-    vector::{Point3},
+    bounding_box::BoundingBox, bvh::BVHNode, interval::Interval,
+    material::Material, ray::Ray, sphere::Sphere, triangle::Triangle,
+    vector::Point3,
 };
 
-use glam::DVec3 as Vec3;
+use glam::Vec3;
 
 #[derive(Clone, Debug, Default, Constructor)]
 pub struct HitRecord {
     pub collision_point: Point3,
     pub normal_vector: Vec3,
-    pub collision_time: f64,
+    pub collision_time: f32,
     pub front_face: bool,
     pub material: Material,
-    pub u: f64,
-    pub v: f64,
+    pub u: f32,
+    pub v: f32,
 }
 
 impl HitRecord {

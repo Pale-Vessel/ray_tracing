@@ -2,34 +2,34 @@ use derive_more::Constructor;
 
 #[derive(Copy, Clone, Constructor, Debug, Default)]
 pub struct Interval {
-    pub min: f64,
-    pub max: f64,
+    pub min: f32,
+    pub max: f32,
 }
 
 impl Interval {
-    pub const EMPTY: Self = Self::new(f64::INFINITY, f64::NEG_INFINITY);
+    pub const EMPTY: Self = Self::new(f32::INFINITY, f32::NEG_INFINITY);
     #[cfg(false)]
-    pub const UNIVERSE: Self = Self::new(f64::NEG_INFINITY, f64::INFINITY);
+    pub const UNIVERSE: Self = Self::new(f32::NEG_INFINITY, f32::INFINITY);
 
-    pub fn size(&self) -> f64 {
+    pub fn size(&self) -> f32 {
         self.max - self.min
     }
 
     #[cfg(false)]
-    pub fn contains(&self, value: f64) -> bool {
+    pub fn contains(&self, value: f32) -> bool {
         self.min <= value && value <= self.max
     }
 
-    pub fn surrounds(&self, value: f64) -> bool {
+    pub fn surrounds(&self, value: f32) -> bool {
         self.min < value && value < self.max
     }
 
-    pub fn clamp(&self, value: f64) -> f64 {
+    pub fn clamp(&self, value: f32) -> f32 {
         value.clamp(self.min, self.max)
     }
 
     #[cfg(false)]
-    pub fn expand(&self, delta: f64) -> Self {
+    pub fn expand(&self, delta: f32) -> Self {
         #[cfg(false)]
         let padding = delta / 2.;
         Interval::new(self.min - padding, self.max + padding)

@@ -8,10 +8,10 @@ use crate::{
     texture::GetTexture,
     vector::{Point3, VecStuff},
 };
+use glam::Vec3;
 use image::{Rgb, RgbImage};
 use rand::{Rng, rng};
 use rayon::prelude::*;
-use glam::DVec3 as Vec3;
 
 #[derive(Debug)]
 pub struct Camera {
@@ -22,15 +22,15 @@ pub struct Camera {
     horizontal_pixel_delta: Vec3,
     vertical_pixel_delta: Vec3,
     rays_per_pixel: u16,
-    pixel_sample_scale: f64,
+    pixel_sample_scale: f32,
     max_ray_bounces: u16,
-    defocus_angle: f64,
+    defocus_angle: f32,
     defocus_disk_horiz_radius: Vec3,
     defocus_disk_vert_radius: Vec3,
 }
 
 impl Camera {
-    const IDEAL_ASPECT_RATIO: f64 =  1.;
+    const IDEAL_ASPECT_RATIO: f32 = 1.;
     const SKY_TOP_COLOUR: Colour = Colour::new(0., 0., 0.);
     const SKY_BOTTOM_COLOUR: Colour = Self::SKY_TOP_COLOUR;
 
@@ -39,25 +39,25 @@ impl Camera {
         image_width: u32,
         rays_per_pixel: u16,
         max_ray_bounces: u16,
-        fov: f64,
+        fov: f32,
         look_from: Point3,
         look_at: Point3,
         up_vector: Vec3,
-        focus_distance: f64,
-        defocus_angle: f64,
+        focus_distance: f32,
+        defocus_angle: f32,
     ) -> Camera {
         #[allow(clippy::cast_possible_truncation)]
         let image_height =
-            (f64::from(image_width) / Self::IDEAL_ASPECT_RATIO).floor() as u32;
-        let pixel_sample_scale = 1. / f64::from(rays_per_pixel);
+            (image_width as f32 / Self::IDEAL_ASPECT_RATIO).floor() as u32;
+        let pixel_sample_scale = 1. / f32::from(rays_per_pixel);
 
         let camera_center = look_from;
 
         let theta = fov.to_radians();
         let h = (theta / 2.).tan();
         let viewport_height = 2. * h * focus_distance;
-        let viewport_width = viewport_height
-            * (f64::from(image_width) / f64::from(image_height));
+        let viewport_width =
+            viewport_height * ((image_width as f32) / (image_height as f32));
 
         let w = (look_from - look_at).normalize();
         let u = up_vector.cross(w).normalize();
@@ -66,9 +66,8 @@ impl Camera {
         let viewport_horizontal = viewport_width * u;
         let viewport_vertical = viewport_height * -v;
 
-        let horizontal_pixel_delta =
-            viewport_horizontal / f64::from(image_width);
-        let vertical_pixel_delta = viewport_vertical / f64::from(image_height);
+        let horizontal_pixel_delta = viewport_horizontal / (image_width as f32);
+        let vertical_pixel_delta = viewport_vertical / (image_height as f32);
 
         let viewport_upper_left = camera_center
             - Point3::from_vector(focus_distance * w)
@@ -105,7 +104,7 @@ impl Camera {
             return Colour::new(0., 0., 0.);
         }
         if let Some(data) =
-            world.did_hit(ray, Interval::new(0.001, f64::INFINITY))
+            world.did_hit(ray, Interval::new(0.001, f32::INFINITY))
         {
             let (u, v) = (data.u, data.v);
 
@@ -116,7 +115,7 @@ impl Camera {
             }
 
             let mut rng = rng();
-            if rng.random_bool(material.refraction_chance) {
+            if rng.random_bool(material.refraction_chance as f64) {
                 let refracted_ray = material.refract(ray, &data);
                 return material.texture.get_colour(u, v)
                     * self.ray_colour(refracted_ray, world, depth + 1);
@@ -179,8 +178,8 @@ impl Camera {
         let horiz_offset = rng.random_range(-0.5..0.5);
         let vert_offset = rng.random_range(-0.5..0.5);
         Vec3::new(
-            f64::from(horiz_position) + horiz_offset,
-            f64::from(vert_position) + vert_offset,
+            (horiz_position as f32) + horiz_offset,
+            (vert_position as f32) + vert_offset,
             0.,
         )
     }

@@ -1,6 +1,6 @@
 use std::ops::{Add, AddAssign};
 
-use glam::DVec3 as Vec3;
+use glam::Vec3;
 
 use derive_more::{
     Add, AddAssign, Deref, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign,
@@ -10,7 +10,7 @@ use rand::{Rng, rng};
 use rand_distr::StandardNormal;
 
 pub trait VecStuff {
-    const EPSILON: f64 = 1e-8;
+    const EPSILON: f32 = 1e-8;
     fn near_zero(&self) -> bool;
     fn rand_unit_vector() -> Self;
     fn random_on_unit_disk() -> Self;
@@ -64,22 +64,22 @@ impl VecStuff for Vec3 {
 )]
 pub struct Point3(Vec3);
 
-impl Add<f64> for Point3 {
+impl Add<f32> for Point3 {
     type Output = Point3;
 
-    fn add(self, rhs: f64) -> Self::Output {
+    fn add(self, rhs: f32) -> Self::Output {
         Self::new(self.x + rhs, self.y + rhs, self.z + rhs)
     }
 }
 
-impl AddAssign<f64> for Point3 {
-    fn add_assign(&mut self, rhs: f64) {
+impl AddAssign<f32> for Point3 {
+    fn add_assign(&mut self, rhs: f32) {
         *self = *self + rhs;
     }
 }
 
 impl Point3 {
-    pub const fn new(x: f64, y: f64, z: f64) -> Self {
+    pub const fn new(x: f32, y: f32, z: f32) -> Self {
         Self(Vec3::new(x, y, z))
     }
 

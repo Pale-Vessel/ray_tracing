@@ -7,13 +7,13 @@ use crate::{
 pub struct CheckerTexture {
     even_texture: Box<Texture>,
     odd_texture: Box<Texture>,
-    pub inv_scale: f64,
+    pub inv_scale: f32,
 }
 
 impl GetTexture for CheckerTexture {
     #[allow(clippy::cast_possible_truncation)]
     #[allow(clippy::cast_sign_loss)]
-    fn get_colour(&self, u: f64, v: f64) -> Colour {
+    fn get_colour(&self, u: f32, v: f32) -> Colour {
         let u_pos = (u * self.inv_scale).round() as u16;
         let v_pos = (v * self.inv_scale).round() as u16;
 
@@ -28,7 +28,7 @@ impl GetTexture for CheckerTexture {
 }
 
 impl CheckerTexture {
-    pub fn new(even_texture: Texture, odd_texture: Texture, size: f64) -> Self {
+    pub fn new(even_texture: Texture, odd_texture: Texture, size: f32) -> Self {
         Self {
             even_texture: Box::new(even_texture),
             odd_texture: Box::new(odd_texture),

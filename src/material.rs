@@ -1,25 +1,27 @@
 use derive_more::Constructor;
 use rand::{Rng, rng};
 
-use crate::{hittable::HitRecord, ray::Ray, texture::Texture, vector::VecStuff};
+use crate::{
+    hittable::HitRecord, ray::Ray, texture::Texture, vector::VecStuff,
+};
 
-use glam::DVec3 as Vec3;
+use glam::Vec3;
 
 #[derive(Clone, Debug, Default, Constructor)]
 pub struct Material {
-    smoothness: f64,
+    smoothness: f32,
     pub texture: Texture,
-    pub refraction_chance: f64,
-    refractive_index: f64,
+    pub refraction_chance: f32,
+    refractive_index: f32,
     pub is_light: bool,
 }
 
 impl Material {
-    pub const fn new_no_refract(smoothness: f64, texture: Texture) -> Self {
+    pub const fn new_no_refract(smoothness: f32, texture: Texture) -> Self {
         Self::new(smoothness, texture, 0., 0., false)
     }
 
-    pub const fn new_glass(refractive_index: f64, texture: Texture) -> Self {
+    pub const fn new_glass(refractive_index: f32, texture: Texture) -> Self {
         let refractive_index = refractive_index.max(0.000_000_1);
         Self::new(0., texture, 1., refractive_index, false)
     }
@@ -29,8 +31,7 @@ impl Material {
     }
 
     pub fn diffuse_reflection(ray: Ray, record: &HitRecord) -> Ray {
-        let scatter_direction =
-            record.normal_vector + Vec3::rand_unit_vector();
+        let scatter_direction = record.normal_vector + Vec3::rand_unit_vector();
         let scatter_direction = if scatter_direction.near_zero() {
             record.normal_vector
         } else {
@@ -62,12 +63,13 @@ impl Material {
         let unit = ray.direction.normalize();
 
         let cos_theta = -unit.dot(record.normal_vector).min(1.);
-        let sin_theta = (1f64 - cos_theta * cos_theta).sqrt();
+        let sin_theta = (1f32 - cos_theta * cos_theta).sqrt();
 
         let mut rng = rng();
         let direction = if refractive_index * sin_theta < 1.
-            || rng.random_bool(Self::reflectance(cos_theta, refractive_index))
-        {
+            || rng.random_bool(
+                Self::reflectance(cos_theta, refractive_index).into(),
+            ) {
             unit.refract(record.normal_vector, refractive_index)
         } else {
             unit.reflect(record.normal_vector)
@@ -77,7 +79,7 @@ impl Material {
         Ray::new(record.collision_point, direction, ray.time)
     }
 
-    fn reflectance(cosine: f64, refractive_index: f64) -> f64 {
+    fn reflectance(cosine: f32, refractive_index: f32) -> f32 {
         match refractive_index {
             0. => 1.,
             1. => 0.,

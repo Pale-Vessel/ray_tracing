@@ -1,4 +1,4 @@
-use core::f64::consts::{PI, TAU};
+use core::f32::consts::{PI, TAU};
 
 use derive_more::Constructor;
 
@@ -11,12 +11,12 @@ use crate::{
     vector::Point3,
 };
 
-use glam::DVec3 as Vec3;
+use glam::Vec3;
 
 #[derive(Clone, Debug, Constructor)]
 pub struct Sphere {
     center: Ray,
-    radius: f64,
+    radius: f32,
     material: Material,
     bounds: BoundingBox,
 }
@@ -68,7 +68,7 @@ impl Hittable for Sphere {
 }
 
 impl Sphere {
-    pub fn new_still(center: Point3, radius: f64, material: Material) -> Self {
+    pub fn new_still(center: Point3, radius: f32, material: Material) -> Self {
         let radius_vector = Vec3::new(radius, radius, radius);
         let bounds = BoundingBox::new_from_corners(
             Point3::from_vector(*center - radius_vector),
@@ -86,7 +86,7 @@ impl Sphere {
     pub fn new_from_two_points(
         start_center: Point3,
         end_center: Point3,
-        radius: f64,
+        radius: f32,
         material: Material,
     ) -> Self {
         let movement =
@@ -104,7 +104,7 @@ impl Sphere {
         Self::new(movement, radius, material, bounds)
     }
 
-    pub fn get_uv(&self, point: Point3) -> (f64, f64) {
+    pub fn get_uv(&self, point: Point3) -> (f32, f32) {
         let vector = (self.center.origin - point).normalize();
 
         (

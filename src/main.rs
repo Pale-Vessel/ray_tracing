@@ -14,7 +14,7 @@ mod texture;
 mod triangle;
 mod vector;
 
-use core::f64;
+use core::f32;
 use derive_more::Display;
 use image::ImageResult;
 use std::path::Path;
@@ -35,12 +35,12 @@ use crate::{
     sphere::Sphere,
     texture::Texture,
     triangle::Triangle,
-    vector::{Point3},
+    vector::Point3,
 };
 
-use glam::DVec3 as Vec3;
+use glam::Vec3;
 
-type SceneInfo = (HittableList, Point3, Point3, f64);
+type SceneInfo = (HittableList, Point3, Point3, f32);
 
 #[allow(dead_code)]
 #[derive(Display)]
@@ -146,9 +146,9 @@ fn bouncing_spheres() -> SceneInfo {
     for a in -5..5 {
         for b in -5..3 {
             let center = Point3::new(
-                f64::from(a) + 0.9 * rng.random::<f64>(),
+                (a as f32) + 0.9 * rng.random::<f32>(),
                 0.2,
-                f64::from(b) + 0.9 * rng.random::<f64>(),
+                (b as f32) + 0.9 * rng.random::<f32>(),
             );
 
             if (center - Point3::new(4., 0.2, 0.)).length() > 0.9 {
@@ -159,9 +159,9 @@ fn bouncing_spheres() -> SceneInfo {
         }
         for b in 3..5 {
             let center = Point3::new(
-                f64::from(a) + 0.9 * rng.random::<f64>(),
+                (a as f32) + 0.9 * rng.random::<f32>(),
                 0.2,
-                f64::from(b) + 0.9 * rng.random::<f64>(),
+                (b as f32) + 0.9 * rng.random::<f32>(),
             );
 
             if (center - Point3::new(4., 0.2, 0.)).length() > 0.9 {

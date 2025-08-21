@@ -1,6 +1,9 @@
 use derive_more::Constructor;
 
-use crate::{colour::Colour, texture::{GetTexture, Texture}};
+use crate::{
+    colour::Colour,
+    texture::{GetTexture, Texture},
+};
 
 #[derive(Copy, Clone, Constructor, Debug, Default)]
 pub struct SolidTexture {
@@ -8,7 +11,7 @@ pub struct SolidTexture {
 }
 
 impl GetTexture for SolidTexture {
-    fn get_colour(&self, _u: f64, _v: f64) -> Colour {
+    fn get_colour(&self, _u: f32, _v: f32) -> Colour {
         self.colour
     }
 }
