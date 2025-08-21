@@ -16,6 +16,7 @@ mod vector;
 
 use core::f64;
 use std::path::Path;
+use derive_more::Display;
 use image::ImageResult;
 
 #[allow(unused_imports)]
@@ -40,6 +41,7 @@ use crate::{
 type SceneInfo = (HittableList, Point3, Point3, f64);
 
 #[allow(dead_code)]
+#[derive(Display)]
 enum Profile {
     Debug,
     Release,
@@ -48,7 +50,7 @@ enum Profile {
     OvernightRender,
 }
 
-const PROFILE: Profile = Profile::OvernightRender;
+const PROFILE: Profile = Profile::InsaneRays;
 
 fn main() -> ImageResult<()> {
     let (image_width, rays_per_pixel, max_ray_bounces) = match PROFILE {
@@ -56,7 +58,7 @@ fn main() -> ImageResult<()> {
         Profile::Release => (800, 100, 50),
         Profile::InsaneRays => (800, 1_000, 100),
         Profile::Insane => (1920, 500, 100),
-        Profile::OvernightRender => (1920, 5_000, 500),
+        Profile::OvernightRender => (1920, 5_000, 5_000),
     };
     let (world, look_from, look_at, fov) = cornell_box();
     let camera = Camera::initialise(
@@ -71,7 +73,8 @@ fn main() -> ImageResult<()> {
         0.,
     );
     let image = camera.render(&world);
-    let output = Path::new("image.ppm");
+    let path = format!("image{PROFILE}.png");
+    let output = Path::new(&path);
     image.save(output)
 }
 
@@ -356,7 +359,7 @@ fn cornell_box() -> SceneInfo {
     let glass = Material::new_glass(1.5, white_texture.clone());
     let white_walls = Material::new_no_refract(0., white_texture.clone());
     let white_light =
-        Material::new_light((Colour::new(1., 1., 1.) * 50.).to_texture());
+        Material::new_light((Colour::new(1., 1., 1.) * 5.).to_texture());
     let red_walls =
         Material::new_no_refract(0., Colour::new(1., 0., 0.).to_texture());
     let green_walls =
