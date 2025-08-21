@@ -52,13 +52,13 @@ enum Profile {
     OvernightRender,
 }
 
-const PROFILE: Profile = Profile::Release;
+const PROFILE: Profile = Profile::InsaneRays;
 
 fn main() -> ImageResult<()> {
     let (image_width, rays_per_pixel, max_ray_bounces) = match PROFILE {
         Profile::Debug => (800, 10, 10),
         Profile::Release => (800, 100, 50),
-        Profile::InsaneRays => (800, 1_000, 100),
+        Profile::InsaneRays => (800, 1_000, 10),
         Profile::Insane => (1920, 500, 100),
         Profile::OvernightRender => (1920, 5_000, 10),
     };
@@ -358,7 +358,7 @@ fn basic_light() -> SceneInfo {
 #[allow(dead_code)]
 fn cornell_box() -> SceneInfo {
     let brightness = 1. / 10.;
-    let light_size = 0.5;
+    let light_size = 0.2;
     let white_texture = Colour::new(1., 1., 1.).to_texture();
     let glass = Material::new_glass(1.5, white_texture.clone());
     let white_walls = Material::new_no_refract(0.5, white_texture.clone());
