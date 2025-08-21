@@ -35,13 +35,9 @@ impl Mul for Colour {
 }
 
 pub fn map_colours(colour: &Colour) -> (u8, u8, u8) {
-    let (r, g, b) = (
-        linear_to_gamma(colour.x),
-        linear_to_gamma(colour.y),
-        linear_to_gamma(colour.z),
-    );
+    let (r, g, b) = (colour.x, colour.y, colour.z);
 
-    let colour_interval = Interval::new(0., 0.9999);
+    let colour_interval = Interval::new(0., 1.0);
     #[allow(clippy::cast_possible_truncation)]
     #[allow(clippy::cast_sign_loss)]
     let (rbyte, gbyte, bbyte) = (
@@ -50,8 +46,4 @@ pub fn map_colours(colour: &Colour) -> (u8, u8, u8) {
         (colour_interval.clamp(b) * 255.) as u8,
     );
     (rbyte, gbyte, bbyte)
-}
-
-fn linear_to_gamma(linear_component: f32) -> f32 {
-    linear_component.max(0.).sqrt()
 }

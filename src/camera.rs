@@ -101,7 +101,7 @@ impl Camera {
 
     fn ray_colour(&self, ray: Ray, world: &HittableList, depth: u16) -> Colour {
         if depth > self.max_ray_bounces {
-            return Colour::new(0., 0., 0.);
+            return Colour::new(0., 0. ,0.);
         }
         if let Some(data) =
             world.did_hit(ray, Interval::new(0.001, f32::INFINITY))
@@ -143,7 +143,7 @@ impl Camera {
                     self.ray_colour(ray, world, 0)
                 })
                 .sum::<Colour>()
-                / self.pixel_sample_scale;
+                * self.pixel_sample_scale;
             let done_pixels = Arc::clone(&done_pixels);
             let mut num = done_pixels.lock().unwrap();
             *num += 1;

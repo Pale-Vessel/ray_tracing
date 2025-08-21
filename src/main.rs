@@ -320,29 +320,25 @@ fn basic_light() -> SceneInfo {
 
     let ground_material = Material::new_no_refract(0., checkered_texture);
 
-    let mut world = vec![Sphere::new_still(
-        Point3::new(0., -1000., -1.),
-        1000.,
-        ground_material,
-    )];
-
     let glass = Material::new_glass(1.5, Colour::new(1., 1., 1.).to_texture());
     let air =
         Material::new_glass(1. / 1.5, Colour::new(1., 1., 1.).to_texture());
-    let lamp = Material::new_light((Colour::new(1., 0., 0.) * 5.).to_texture());
+    let lamp =
+        Material::new_no_refract(0., Colour::new(1., 1., 1.).to_texture());
     let smooth =
         Material::new_no_refract(1., Colour::new(1., 0.6, 0.5).to_texture());
 
-    world.push(Sphere::new_still(Point3::new(0., 2., 1.), 1., glass));
-    world.push(Sphere::new_still(Point3::new(0., 2., 1.), 0.5, air));
-    world.push(Sphere::new_still(Point3::new(0., 1000., 0.), 500., lamp));
-    world.push(Sphere::new_still(
-        // Point3::new(4., 0.5, 0.),
-        Point3::new(4., 1.0, 0.),
-        1.,
-        smooth,
-    ));
-
+    let world = vec![
+        Sphere::new_still(Point3::new(0., -1000., -1.), 1000., ground_material),
+        Sphere::new_still(Point3::new(0., 2., 1.), 1., glass),
+        Sphere::new_still(Point3::new(0., 2., 1.), 0.5, air),
+        Sphere::new_still(Point3::new(0., 1000., 0.), 900., lamp),
+        Sphere::new_still(
+            Point3::new(4., 1.0, 0.),
+            1.,
+            smooth,
+        ),
+    ];
     (
         world
             .iter()
@@ -351,14 +347,14 @@ fn basic_light() -> SceneInfo {
             .optimise(),
         Point3::new(13., 2., 3.),
         Point3::new(0., 0., 0.),
-        20.,
+        30.,
     )
 }
 
 #[allow(dead_code)]
 fn cornell_box() -> SceneInfo {
-    let brightness = 1. / 10.;
-    let light_size = 0.2;
+    let brightness = 1. / 2.;
+    let light_size = 0.1;
     let white_texture = Colour::new(1., 1., 1.).to_texture();
     let glass = Material::new_glass(1.5, white_texture.clone());
     let white_walls = Material::new_no_refract(0.5, white_texture.clone());
