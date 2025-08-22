@@ -350,7 +350,7 @@ fn basic_light() -> SceneInfo {
 #[allow(dead_code)]
 fn cornell_box() -> SceneInfo {
     let brightness = 1.;
-    let light_size = 1.5;
+    let light_size = 0.5;
     let white_texture = Colour::new(0.8, 0.8, 0.8).to_texture();
     let glass = Material::new_glass(1.5, white_texture.clone());
     let white_walls = Material::new_no_refract(1., white_texture.clone());
