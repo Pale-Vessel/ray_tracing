@@ -444,9 +444,21 @@ fn cornell_box() -> SceneInfo {
             Point3::new(light_size, 0.9999, -light_size),
             Point3::new(light_size, 0.9999, light_size),
         ),
+        white_light.clone(),
+        None,
+    );
+
+    let (floor_light_one, floor_light_two) = Triangle::new_quad(
+        (
+            Point3::new(-light_size, -0.9999, -light_size),
+            Point3::new(-light_size, -0.9999, light_size),
+            Point3::new(light_size, -0.9999, -light_size),
+            Point3::new(light_size, -0.9999, light_size),
+        ),
         white_light,
         None,
     );
+
 
     let ball_one = Sphere::new_still(Point3::new(0., 0., 0.), 1. / 3., glass);
 
@@ -465,6 +477,8 @@ fn cornell_box() -> SceneInfo {
         TriHit(ceiling_two),
         TriHit(ceiling_light_one),
         TriHit(ceiling_light_two),
+        TriHit(floor_light_one),
+        TriHit(floor_light_two),
         SpheHit(ball_one),
     ];
     (
