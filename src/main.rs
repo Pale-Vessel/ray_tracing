@@ -57,7 +57,7 @@ const PROFILE: Profile = Profile::Release;
 fn main() -> ImageResult<()> {
     let (image_width, rays_per_pixel, max_ray_bounces) = match PROFILE {
         Profile::Debug => (800, 10, 10),
-        Profile::Release => (800, 100, 50),
+        Profile::Release => (800, 100, 10),
         Profile::InsaneRays => (800, 1_000, 10),
         Profile::Insane => (1920, 500, 100),
         Profile::OvernightRender => (1920, 5_000, 10),
@@ -350,9 +350,8 @@ fn basic_light() -> SceneInfo {
 #[allow(dead_code)]
 fn cornell_box() -> SceneInfo {
     let brightness = 1.;
-    let light_size = 0.5;
+    let light_size = 1.5;
     let white_texture = Colour::new(0.8, 0.8, 0.8).to_texture();
-    #[cfg(false)]
     let glass = Material::new_glass(1.5, white_texture.clone());
     let white_walls = Material::new_no_refract(1., white_texture.clone());
     let white_light = Material::new_light(
@@ -362,7 +361,15 @@ fn cornell_box() -> SceneInfo {
         Material::new_no_refract(0.9, Colour::new(1., 0.5, 0.5).to_texture());
     let green_walls =
         Material::new_no_refract(0.9, Colour::new(0.5, 1., 0.5).to_texture());
-    let back_walls = Material::new_no_refract(0.9, white_texture.clone());
+    let back_walls = Material::new_no_refract(
+        1.,
+        CheckerTexture::new(
+            red_walls.clone().texture,
+            green_walls.clone().texture,
+            0.5,
+        )
+        .wrap(),
+    );
 
     let (floor_one, floor_two) = Triangle::new_quad(
         (
@@ -441,8 +448,7 @@ fn cornell_box() -> SceneInfo {
         None,
     );
 
-    #[cfg(false)]
-    let ball_one = Sphere::new_still(Point3::new(0., 0., 0.), 1. / 2., glass);
+    let ball_one = Sphere::new_still(Point3::new(0., 0., 0.), 1. / 3., glass);
 
     let world = [
         TriHit(floor_one),
@@ -459,11 +465,11 @@ fn cornell_box() -> SceneInfo {
         TriHit(ceiling_two),
         TriHit(ceiling_light_one),
         TriHit(ceiling_light_two),
-        // SpheHit(ball_one),
+        SpheHit(ball_one),
     ];
     (
         world.into_iter().collect::<HittableList>().optimise(),
-        Point3::new(0., 0., 0.5),
+        Point3::new(0., 0., 1.5),
         Point3::new(0., 0., 0.),
         90.,
     )
