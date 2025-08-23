@@ -12,6 +12,8 @@ use glam::Vec3;
 pub struct Colour(Vec3);
 
 impl Colour {
+    pub const WHITE: Self = Self::new(1., 1., 1.);
+    pub const BLACK: Self = Self::new(0. ,0. ,0.);
     pub const fn new(r: f32, g: f32, b: f32) -> Self {
         Self(Vec3::new(r, g, b))
     }
