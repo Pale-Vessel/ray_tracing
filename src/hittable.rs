@@ -123,6 +123,8 @@ impl HittableList {
         }
     }
     pub fn optimise(self) -> HittableList {
-        vec![HittableObject::BVHNode(BVHNode::new(self))].into_iter().collect()
+        vec![HittableObject::BVHNode(BVHNode::new(self))]
+            .into_iter()
+            .collect()
     }
 }

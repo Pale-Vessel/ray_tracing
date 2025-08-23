@@ -6,7 +6,7 @@ use crate::{
 #[derive(Clone, Debug)]
 enum Direction {
     U,
-    V
+    V,
 }
 
 #[derive(Clone, Debug)]
@@ -14,7 +14,7 @@ pub struct StripeTexture {
     even_texture: Box<Texture>,
     odd_texture: Box<Texture>,
     inv_scale: f32,
-    direction: Direction
+    direction: Direction,
 }
 
 impl GetTexture for StripeTexture {
@@ -40,21 +40,29 @@ impl GetTexture for StripeTexture {
 
 #[allow(dead_code)]
 impl StripeTexture {
-    pub fn new_u(even_texture: Texture, odd_texture: Texture, size: f32) -> Self {
+    pub fn new_u(
+        even_texture: Texture,
+        odd_texture: Texture,
+        size: f32,
+    ) -> Self {
         Self {
             even_texture: Box::new(even_texture),
             odd_texture: Box::new(odd_texture),
             inv_scale: 1. / size,
-            direction: Direction::U
+            direction: Direction::U,
         }
     }
 
-    pub fn new_v(even_texture: Texture, odd_texture: Texture, size: f32) -> Self {
+    pub fn new_v(
+        even_texture: Texture,
+        odd_texture: Texture,
+        size: f32,
+    ) -> Self {
         Self {
             even_texture: Box::new(even_texture),
             odd_texture: Box::new(odd_texture),
             inv_scale: 1. / size,
-            direction: Direction::V
+            direction: Direction::V,
         }
     }
 

@@ -6,7 +6,7 @@ use crate::{
     interval::Interval,
     ray::Ray,
     texture::GetTexture,
-    vector::{VecRand, Point3},
+    vector::{Point3, VecRand},
 };
 use glam::Vec3;
 use image::{Rgb, RgbImage};

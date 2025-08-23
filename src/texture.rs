@@ -1,7 +1,7 @@
 use crate::{
     checker_texture::CheckerTexture, colour::Colour,
     gradient_texture::GradientTexture, perlin_texture::PerlinTexture,
-    solid_texture::SolidTexture, stripe_texture::StripeTexture
+    solid_texture::SolidTexture, stripe_texture::StripeTexture,
 };
 
 pub trait GetTexture {
@@ -15,7 +15,7 @@ pub enum Texture {
     Perlin(PerlinTexture),
     Stripe(StripeTexture),
     Gradient(GradientTexture),
-    UV
+    UV,
 }
 
 impl Default for Texture {
@@ -36,7 +36,7 @@ impl GetTexture for Texture {
             Texture::Gradient(gradient_texture) => {
                 gradient_texture.get_colour(u, v)
             }
-            Texture::UV => Colour::new(u, v, 0.)
+            Texture::UV => Colour::new(u, v, 0.),
         }
     }
 }
