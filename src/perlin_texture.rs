@@ -63,9 +63,9 @@ impl PerlinTexture {
         };
         // https://www.shadertoy.com/view/4djSRW#
         let mut point =
-            (point.xyx() * Vec3::new(0.1031, 0.1030, 0.973)).fract();
+            (point.xyx() * Vec3::new(0.1031, 0.1030, 0.0973)).fract();
         point += point.dot(point.yzx() + 33.33);
-        (point.xx() + point.yz()) * point.zy()
+        ((point.xx() + point.yz()) * point.zy()).fract()
     }
 
     fn floor_to_scale(&self, val: f32) -> f32 {
