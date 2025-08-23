@@ -30,7 +30,7 @@ use crate::{
     colour::Colour,
     hittable::{
         HittableList,
-        HittableObject::{self, Sphere as SpheHit, Triangle as TriHit},
+        HittableObject::{Sphere as SpheHit, Triangle as TriHit},
     },
     material::Material,
     perlin_texture::PerlinTexture,
