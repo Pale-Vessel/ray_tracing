@@ -2,7 +2,7 @@ use std::ops::Mul;
 
 use crate::{
     interval::Interval, solid_texture::SolidTexture, texture::Texture,
-    vector::VecStuff,
+    vector::VecRand,
 };
 
 use derive_more::{Add, Deref, Div, Mul, Sum};

@@ -2,7 +2,7 @@ use derive_more::Constructor;
 use rand::{Rng, rng};
 
 use crate::{
-    hittable::HitRecord, ray::Ray, texture::Texture, vector::VecStuff,
+    hittable::HitRecord, ray::Ray, texture::Texture, vector::{NearZero, VecRand},
 };
 
 use glam::Vec3;

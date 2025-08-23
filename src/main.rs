@@ -66,7 +66,7 @@ fn main() -> ImageResult<()> {
         Profile::Insane => (1920, 500, 100),
         Profile::OvernightRender => (1920, 5_000, 10),
     };
-    let (world, look_from, look_at, fov) = cornell_box();
+    let (world, look_from, look_at, fov) = perlin_triangle();
     let camera = Camera::initialise(
         image_width,
         rays_per_pixel,
@@ -516,21 +516,22 @@ fn gradient_stripe_test() -> SceneInfo {
 
 #[allow(dead_code)]
 fn perlin_triangle() -> SceneInfo {
+    let tri_size = 3.;
     let material1 = Material::new_no_refract(
         1.,
         PerlinTexture::new(1., Colour::new(1., 0., 1.)).wrap(),
     );
     let material2 =
-        Material::new_no_refract(1., Colour::new(1., 1., 1.).to_texture());
+        Material::new_no_refract(1., Colour::new(1., 0., 1.).to_texture());
     let triangle = Triangle::new(
-        Point3::new(1000., 0., 0.),
-        Point3::new(0., 0., 1000.),
-        Point3::new(-1000., 0., -1000.),
-        material2,
+        Point3::new(tri_size, 0., 0.),
+        Point3::new(0., 0., tri_size),
+        Point3::new(tri_size, 0., tri_size),
+        material1,
     );
     let world = [TriHit(triangle)]
         .into_iter()
         .collect::<HittableList>()
         .optimise();
-    (world, Point3::new(0., 50., 0.), Point3::default(), 90.)
+    (world, Point3::new(0., 5., 0.), Point3::default(), 90.)
 }

@@ -1,12 +1,12 @@
 use std::sync::{Arc, Mutex};
 
 use crate::{
-    colour::{map_colours, Colour},
+    colour::{Colour, map_colours},
     hittable::{Hittable, HittableList},
     interval::Interval,
     ray::Ray,
     texture::GetTexture,
-    vector::{Point3, VecStuff},
+    vector::{VecRand, Point3},
 };
 use glam::Vec3;
 use image::{Rgb, RgbImage};
@@ -101,7 +101,7 @@ impl Camera {
 
     fn ray_colour(&self, ray: Ray, world: &HittableList, depth: u16) -> Colour {
         if depth > self.max_ray_bounces {
-            return Colour::new(0., 0. ,0.);
+            return Colour::new(0., 0., 0.);
         }
         if let Some(data) =
             world.did_hit(ray, Interval::new(0.001, f32::INFINITY))

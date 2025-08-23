@@ -1,6 +1,6 @@
 use std::ops::{Add, AddAssign};
 
-use glam::Vec3;
+use glam::{Vec2, Vec3};
 
 use derive_more::{
     Add, AddAssign, Deref, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign,
@@ -9,20 +9,24 @@ use derive_more::{
 use rand::{Rng, rng};
 use rand_distr::StandardNormal;
 
-pub trait VecStuff {
+pub trait NearZero {
     const EPSILON: f32 = 1e-8;
     fn near_zero(&self) -> bool;
+}
+pub trait VecRand {
     fn rand_unit_vector() -> Self;
     fn random_on_unit_disk() -> Self;
 }
 
-impl VecStuff for Vec3 {
+impl NearZero for Vec3 {
     fn near_zero(&self) -> bool {
         self.x.abs() < Self::EPSILON
             && self.y.abs() < Self::EPSILON
             && self.z.abs() < Self::EPSILON
     }
+}
 
+impl VecRand for Vec3 {
     fn rand_unit_vector() -> Self {
         let mut rng = rng();
         let (x, y, z) = (
@@ -30,11 +34,7 @@ impl VecStuff for Vec3 {
             rng.sample(StandardNormal),
             rng.sample(StandardNormal),
         );
-        if x == 0. && y == 0. && z == 0. {
-            Vec3::new(1., 0., 0.)
-        } else {
-            Vec3::new(x, y, z)
-        }
+        Vec3::new(x, y, z)
     }
 
     fn random_on_unit_disk() -> Self {
@@ -65,7 +65,7 @@ impl VecStuff for Vec3 {
 pub struct Point3(Vec3);
 
 impl Add<f32> for Point3 {
-    type Output = Point3;
+    type Output = Self;
 
     fn add(self, rhs: f32) -> Self::Output {
         Self::new(self.x + rhs, self.y + rhs, self.z + rhs)
@@ -86,8 +86,10 @@ impl Point3 {
     pub const fn from_vector(vec: Vec3) -> Self {
         Self(vec)
     }
+}
 
-    pub fn floor(&self) -> Self {
-        Self::new(self.x.floor(), self.y.floor(), self.z.floor())
+impl NearZero for Vec2 {
+    fn near_zero(&self) -> bool {
+        self.x < Self::EPSILON && self.y < Self::EPSILON
     }
 }
