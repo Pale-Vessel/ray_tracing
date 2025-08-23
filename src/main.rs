@@ -28,6 +28,7 @@ use crate::{
     camera::Camera,
     checker_texture::CheckerTexture,
     colour::Colour,
+    gradient_texture::GradientTexture,
     hittable::{
         HittableList,
         HittableObject::{Sphere as SpheHit, Triangle as TriHit},
@@ -65,7 +66,7 @@ fn main() -> ImageResult<()> {
         Profile::Insane => (1920, 500, 100),
         Profile::OvernightRender => (1920, 5_000, 10),
     };
-    let (world, look_from, look_at, fov) = triangle();
+    let (world, look_from, look_at, fov) = cornell_box();
     let camera = Camera::initialise(
         image_width,
         rays_per_pixel,
@@ -262,26 +263,26 @@ fn perlin_spheres() -> SceneInfo {
 
 #[allow(dead_code)]
 fn triangle() -> SceneInfo {
-    let blue =
+    let blue: Material =
         Material::new_light(Colour::new(0., 0., 1.).to_texture());
     let triangle_texture = Material::new_no_refract(
         1.,
-        PerlinTexture::new(10., Colour::new(1., 1., 1.)).wrap(),
+        PerlinTexture::new(0.1, Colour::new(1., 1., 1.)).wrap(),
     );
-    let corner_one = Point3::new(0., 0., 0.);
-    let corner_two = Point3::new(5., 0., 0.);
-    let corner_three = Point3::new(0., 0., 5.);
+    let corner_one = Point3::new(-10., 0., -10.);
+    let corner_two = Point3::new(40., 0., -10.);
+    let corner_three = Point3::new(-10., 0., 40.);
     let triangle =
         Triangle::new(corner_one, corner_two, corner_three, triangle_texture);
-    let spheres = [
-        Sphere::new_still(corner_one, 0.5, blue.clone()),
-        Sphere::new_still(corner_two, 0.5, blue.clone()),
-        Sphere::new_still(corner_three, 0.5, blue),
-    ];
+    // let spheres = [
+    //     Sphere::new_still(corner_one, 0.5, blue.clone()),
+    //     Sphere::new_still(corner_two, 0.5, blue.clone()),
+    //     Sphere::new_still(corner_three, 0.5, blue),
+    // ];
     let world = [triangle]
         .into_iter()
         .map(TriHit)
-        .chain(spheres.into_iter().map(SpheHit))
+        //.chain(spheres.into_iter().map(SpheHit))
         .collect::<HittableList>()
         .optimise();
 
@@ -356,16 +357,16 @@ fn cornell_box() -> SceneInfo {
     let light_size = 0.5;
     let white_texture = Colour::new(0.8, 0.8, 0.8).to_texture();
     let glass = Material::new_glass(1.5, white_texture.clone());
-    let white_walls = Material::new_no_refract(1., white_texture.clone());
+    let white_walls = Material::new_no_refract(0.5, white_texture.clone());
     let white_light = Material::new_light(
         (Colour::new(1., 1., 1.) * brightness).to_texture(),
     );
     let red_walls =
-        Material::new_no_refract(1., Colour::new(1., 0.5, 0.5).to_texture());
+        Material::new_no_refract(0.5, Colour::new(1., 0.5, 0.5).to_texture());
     let green_walls =
-        Material::new_no_refract(1., Colour::new(0.5, 1., 0.5).to_texture());
+        Material::new_no_refract(0.5, Colour::new(0.5, 1., 0.5).to_texture());
     let back_walls = Material::new_no_refract(
-        1.,
+        0.5,
         CheckerTexture::new(
             red_walls.clone().texture,
             green_walls.clone().texture,
@@ -493,9 +494,10 @@ fn cornell_box() -> SceneInfo {
 
 #[allow(dead_code)]
 fn gradient_stripe_test() -> SceneInfo {
-    let world = [SpheHit(Sphere::new_still(
+    let world = [TriHit(Triangle::new(
         Point3::new(0., 0., 0.),
-        1.,
+        Point3::new(0., 1., 0.),
+        Point3::new(0., 1., 1.),
         Material::new_no_refract(
             1.,
             StripeTexture::new_u(
@@ -509,10 +511,26 @@ fn gradient_stripe_test() -> SceneInfo {
     .into_iter()
     .collect::<HittableList>()
     .optimise();
-    (
-        world,
-        Point3::new(1., 0., 0.),
-        Point3::default(),
-        90.,
-    )
+    (world, Point3::new(1.5, 0., 0.), Point3::default(), 90.)
+}
+
+#[allow(dead_code)]
+fn perlin_triangle() -> SceneInfo {
+    let material1 = Material::new_no_refract(
+        1.,
+        PerlinTexture::new(1., Colour::new(1., 0., 1.)).wrap(),
+    );
+    let material2 =
+        Material::new_no_refract(1., Colour::new(1., 1., 1.).to_texture());
+    let triangle = Triangle::new(
+        Point3::new(1000., 0., 0.),
+        Point3::new(0., 0., 1000.),
+        Point3::new(-1000., 0., -1000.),
+        material2,
+    );
+    let world = [TriHit(triangle)]
+        .into_iter()
+        .collect::<HittableList>()
+        .optimise();
+    (world, Point3::new(0., 50., 0.), Point3::default(), 90.)
 }
