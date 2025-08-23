@@ -1,8 +1,8 @@
 use std::sync::{Arc, Mutex};
 
 use crate::{
-    colour::{Colour, map_colours},
-    hittable::{Hittable, HittableList},
+    colour::{map_colours, Colour},
+    hittable::{Hittable, HittableList, HittableObject},
     interval::Interval,
     ray::Ray,
     texture::GetTexture,

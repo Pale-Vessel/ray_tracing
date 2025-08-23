@@ -3,6 +3,7 @@ mod bvh;
 mod camera;
 mod checker_texture;
 mod colour;
+mod gradient_texture;
 mod hittable;
 mod interval;
 mod material;
@@ -10,6 +11,7 @@ mod perlin_texture;
 mod ray;
 mod solid_texture;
 mod sphere;
+mod stripe_texture;
 mod texture;
 mod triangle;
 mod vector;
@@ -28,11 +30,12 @@ use crate::{
     colour::Colour,
     hittable::{
         HittableList,
-        HittableObject::{Sphere as SpheHit, Triangle as TriHit},
+        HittableObject::{self, Sphere as SpheHit, Triangle as TriHit},
     },
     material::Material,
     perlin_texture::PerlinTexture,
     sphere::Sphere,
+    stripe_texture::StripeTexture,
     texture::Texture,
     triangle::Triangle,
     vector::Point3,
@@ -52,7 +55,7 @@ enum Profile {
     OvernightRender,
 }
 
-const PROFILE: Profile = Profile::InsaneRays;
+const PROFILE: Profile = Profile::Release;
 
 fn main() -> ImageResult<()> {
     let (image_width, rays_per_pixel, max_ray_bounces) = match PROFILE {
@@ -62,7 +65,7 @@ fn main() -> ImageResult<()> {
         Profile::Insane => (1920, 500, 100),
         Profile::OvernightRender => (1920, 5_000, 10),
     };
-    let (world, look_from, look_at, fov) = cornell_box();
+    let (world, look_from, look_at, fov) = triangle();
     let camera = Camera::initialise(
         image_width,
         rays_per_pixel,
@@ -260,7 +263,7 @@ fn perlin_spheres() -> SceneInfo {
 #[allow(dead_code)]
 fn triangle() -> SceneInfo {
     let blue =
-        Material::new_no_refract(0., Colour::new(0., 0., 1.).to_texture());
+        Material::new_light(Colour::new(0., 0., 1.).to_texture());
     let triangle_texture = Material::new_no_refract(
         1.,
         PerlinTexture::new(10., Colour::new(1., 1., 1.)).wrap(),
@@ -459,7 +462,6 @@ fn cornell_box() -> SceneInfo {
         None,
     );
 
-
     let ball_one = Sphere::new_still(Point3::new(0., 0., 0.), 1. / 3., glass);
 
     let world = [
@@ -485,6 +487,32 @@ fn cornell_box() -> SceneInfo {
         world.into_iter().collect::<HittableList>().optimise(),
         Point3::new(0., 0., 1.5),
         Point3::new(0., 0., 0.),
+        90.,
+    )
+}
+
+#[allow(dead_code)]
+fn gradient_stripe_test() -> SceneInfo {
+    let world = [SpheHit(Sphere::new_still(
+        Point3::new(0., 0., 0.),
+        1.,
+        Material::new_no_refract(
+            1.,
+            StripeTexture::new_u(
+                Colour::new(1., 0., 0.).to_texture(),
+                Colour::new(0., 1., 0.).to_texture(),
+                0.1,
+            )
+            .wrap(),
+        ),
+    ))]
+    .into_iter()
+    .collect::<HittableList>()
+    .optimise();
+    (
+        world,
+        Point3::new(1., 0., 0.),
+        Point3::default(),
         90.,
     )
 }
