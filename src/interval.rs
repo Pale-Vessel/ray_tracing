@@ -36,8 +36,8 @@ impl Interval {
     }
 
     pub fn enclose(&self, interval_two: Self) -> Self {
-        let minimum = self.min.min(interval_two.min);
-        let maximum = self.max.max(interval_two.max);
+        let minimum = f32::min(self.min, interval_two.min);
+        let maximum = f32::max(self.max, interval_two.max);
         Interval::new(minimum, maximum)
     }
 }

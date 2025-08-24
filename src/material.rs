@@ -25,7 +25,7 @@ impl Material {
     }
 
     pub const fn new_glass(refractive_index: f32, texture: Texture) -> Self {
-        let refractive_index = refractive_index.max(0.000_000_1);
+        let refractive_index = f32::max(refractive_index, 0.000_000_1);
         Self::new(0., texture, 1., refractive_index, false)
     }
 
@@ -65,7 +65,7 @@ impl Material {
         };
         let unit = ray.direction.normalize();
 
-        let cos_theta = -unit.dot(record.normal_vector).min(1.);
+        let cos_theta = f32::min(1., -unit.dot(record.normal_vector));
         let sin_theta = (1f32 - cos_theta * cos_theta).sqrt();
 
         let mut rng = rng();

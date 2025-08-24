@@ -77,8 +77,8 @@ impl AxisAlignedBoundingBox {
                 (time_zero, time_one)
             };
 
-            let minimum = time_zero.max(ray_time.min);
-            let maximum = time_one.min(ray_time.max);
+            let minimum = f32::max(time_zero, ray_time.min);
+            let maximum = f32::min(time_one, ray_time.max);
             if maximum < minimum {
                 return false;
             }

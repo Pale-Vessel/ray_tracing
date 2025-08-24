@@ -519,7 +519,7 @@ fn perlin_triangle() -> SceneInfo {
     let tri_size = 3.;
     let material1 = Material::new_no_refract(
         1.,
-        PerlinTexture::new(0.1, Colour::new(1., 1., 1.)).wrap(),
+        PerlinTexture::new(0.05, Colour::new(1., 1., 1.)).wrap(),
     );
     let triangle = Triangle::new(
         Point3::new(tri_size, 0., 0.),
