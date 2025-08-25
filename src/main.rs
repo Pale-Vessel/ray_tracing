@@ -523,12 +523,12 @@ fn perlin_triangle() -> SceneInfo {
     let tri_size = 3.;
     let material = Material::new_no_refract(
         1.,
-        PerlinTexture::new(0.1, Colour::new(1., 1., 1.)).wrap(),
+        PerlinTexture::new(2., Colour::new(1., 1., 1.)).wrap(),
     );
     let triangle = Triangle::new(
-        Point3::new(tri_size, 0., 0.),
-        Point3::new(0., 0., tri_size),
         Point3::new(tri_size, 0., tri_size),
+        Point3::new(tri_size, 0., -tri_size),
+        Point3::new(-tri_size, 0., -tri_size),
         material,
     );
     let world = [TriHit(triangle)]
