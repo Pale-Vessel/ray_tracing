@@ -1,15 +1,19 @@
-use std::ops::Mul;
-
 use crate::{
     interval::Interval, solid_texture::SolidTexture, texture::Texture,
     vector::VecRand,
 };
 
 use derive_more::{Add, Deref, Div, Mul, Sum};
-use glam::Vec3;
+use glam::{Vec2, Vec3};
 
 #[derive(Clone, Copy, Debug, Default, Deref, Add, Sum, Mul, Div)]
 pub struct Colour(Vec3);
+
+impl From<Vec2> for  Colour {
+    fn from(value: Vec2) -> Self {
+        Self::new(value.x, 0., value.y)
+    }
+}
 
 impl Colour {
     #[allow(dead_code)]
@@ -27,14 +31,6 @@ impl Colour {
 
     pub fn to_texture(self) -> Texture {
         SolidTexture::new(self).wrap()
-    }
-}
-
-impl Mul for Colour {
-    type Output = Self;
-
-    fn mul(self, rhs: Colour) -> Self::Output {
-        Self::new(self.x * rhs.x, self.y * rhs.y, self.z * rhs.z)
     }
 }
 

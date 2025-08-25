@@ -118,11 +118,11 @@ impl Camera {
             if rng.random_bool(material.refraction_chance as f64) {
                 let refracted_ray = material.refract(ray, &data);
                 return material.texture.get_colour(u, v)
-                    * self.ray_colour(refracted_ray, world, depth + 1);
+                    * *self.ray_colour(refracted_ray, world, depth + 1);
             }
             let scattered_ray = material.lerp_reflect(ray, &data);
             return material.texture.get_colour(u, v)
-                * self.ray_colour(scattered_ray, world, depth + 1);
+                * *self.ray_colour(scattered_ray, world, depth + 1);
         }
 
         let unit_vector = ray.direction.normalize();
