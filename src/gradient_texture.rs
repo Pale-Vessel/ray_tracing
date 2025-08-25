@@ -56,7 +56,6 @@ impl GradientTexture {
         }
     }
 
-    #[allow(dead_code)]
     pub fn wrap(self) -> Texture {
         Texture::Gradient(self)
     }

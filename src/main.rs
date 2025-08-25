@@ -28,7 +28,7 @@ use crate::{
     camera::Camera,
     checker_texture::CheckerTexture,
     colour::Colour,
-    gradient_texture::GradientTexture,
+    
     hittable::{
         HittableList,
         HittableObject::{Sphere as SpheHit, Triangle as TriHit},
@@ -41,6 +41,9 @@ use crate::{
     triangle::Triangle,
     vector::Point3,
 };
+
+#[allow(unused_imports)]
+use crate::gradient_texture::GradientTexture;
 
 use glam::Vec3;
 
@@ -263,11 +266,12 @@ fn perlin_spheres() -> SceneInfo {
 
 #[allow(dead_code)]
 fn triangle() -> SceneInfo {
+    #[allow(unused_variables)]
     let blue: Material =
         Material::new_light(Colour::new(0., 0., 1.).to_texture());
     let triangle_texture = Material::new_no_refract(
         1.,
-        PerlinTexture::new(0.1, Colour::new(1., 1., 1.)).wrap(),
+        PerlinTexture::new(1., Colour::new(1., 1., 1.)).wrap(),
     );
     let corner_one = Point3::new(-10., 0., -10.);
     let corner_two = Point3::new(40., 0., -10.);
@@ -517,15 +521,15 @@ fn gradient_stripe_test() -> SceneInfo {
 #[allow(dead_code)]
 fn perlin_triangle() -> SceneInfo {
     let tri_size = 3.;
-    let material1 = Material::new_no_refract(
+    let material = Material::new_no_refract(
         1.,
-        PerlinTexture::new(0.05, Colour::new(1., 1., 1.)).wrap(),
+        PerlinTexture::new(0.1, Colour::new(1., 1., 1.)).wrap(),
     );
     let triangle = Triangle::new(
         Point3::new(tri_size, 0., 0.),
         Point3::new(0., 0., tri_size),
         Point3::new(tri_size, 0., tri_size),
-        material1,
+        material,
     );
     let world = [TriHit(triangle)]
         .into_iter()

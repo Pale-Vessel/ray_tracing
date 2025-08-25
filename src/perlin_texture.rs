@@ -31,7 +31,7 @@ impl GetTexture for PerlinTexture {
                 );
                 let grid_vector = Self::hash_point_to_vec(corner_point);
                 let offset_vector = point - corner_point;
-                let noise_value = grid_vector.dot(offset_vector);
+                let noise_value = grid_vector.dot(offset_vector).clamp(-1., 1.);
 
                 // Normalise from [-1, 1] to [0, 1]
                 corner_values.push((noise_value / 2.) + 0.5);
