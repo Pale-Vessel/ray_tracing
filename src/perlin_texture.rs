@@ -17,6 +17,7 @@ pub struct PerlinTexture {
 impl GetTexture for PerlinTexture {
     fn get_colour(&self, u: f32, v: f32) -> Colour {
         let point = Vec2::new(u, v);
+        return Self::hash_point_to_vec(point).fract().into();
         let origin_corner = Vec2::new(
             self.floor_to_scale(point.x),
             self.floor_to_scale(point.y),
