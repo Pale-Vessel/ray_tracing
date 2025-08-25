@@ -520,7 +520,7 @@ fn gradient_stripe_test() -> SceneInfo {
 
 #[allow(dead_code)]
 fn perlin_triangle() -> SceneInfo {
-    let tri_size = 3.;
+    let tri_size = 5.;
     let material = Material::new_no_refract(
         1.,
         PerlinTexture::new(2., Colour::new(1., 1., 1.)).wrap(),
