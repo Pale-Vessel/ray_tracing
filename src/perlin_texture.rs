@@ -17,7 +17,6 @@ pub struct PerlinTexture {
 impl GetTexture for PerlinTexture {
     fn get_colour(&self, u: f32, v: f32) -> Colour {
         let point = Vec2::new(u, v);
-        return Self::hash_point_to_vec(point).fract().into();
         let origin_corner = Vec2::new(
             self.floor_to_scale(point.x),
             self.floor_to_scale(point.y),
@@ -74,7 +73,8 @@ impl PerlinTexture {
     }
 
     fn smoothstep(a: f32, b: f32, t: f32) -> f32 {
-        Self::lerp(a, b, 3. * t * t - 2. * t * t * t)
+        let faded = t * t * t * (t * (t * 6. - 15.) + 10.);
+        Self::lerp(a, b, faded)
     }
 
     fn lerp(a: f32, b: f32, t: f32) -> f32 {

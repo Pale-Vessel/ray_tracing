@@ -522,8 +522,8 @@ fn gradient_stripe_test() -> SceneInfo {
 fn perlin_triangle() -> SceneInfo {
     let tri_size = 5.;
     let material = Material::new_no_refract(
-        1.,
-        PerlinTexture::new(2., Colour::new(1., 1., 1.)).wrap(),
+        0.5,
+        PerlinTexture::new(0.005, Colour::new(1., 1., 1.)).wrap(),
     );
     let triangle = Triangle::new(
         Point3::new(tri_size, 0., tri_size),
