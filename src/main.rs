@@ -360,7 +360,7 @@ fn cornell_box() -> SceneInfo {
     let glass = Material::new_glass(1.5, white_texture.clone());
     let ball_one = Sphere::new_still(Point3::new(0., 0., 0.), 1. / 3., glass);
 
-    let mut world = enclosed_box();
+    let mut world = enclosed_box(2.);
     world.push(SpheHit(ball_one));
 
     (
@@ -419,7 +419,7 @@ fn glass_box() -> SceneInfo {
 }
 
 #[allow(dead_code)]
-fn enclosed_box() -> Vec<HittableObject> {
+fn enclosed_box(size: f32) -> Vec<HittableObject> {
     let brightness = 1.;
     let light_size = 0.5;
     let white_texture = Colour::new(0.8, 0.8, 0.8).to_texture();
@@ -443,10 +443,10 @@ fn enclosed_box() -> Vec<HittableObject> {
 
     let (floor_one, floor_two) = Triangle::new_quad(
         (
-            Point3::new(-2., -2., -2.),
-            Point3::new(-2., -2., 2.),
-            Point3::new(2., -2., -2.),
-            Point3::new(2., -2., 2.),
+            Point3::new(-size, -size, -size),
+            Point3::new(-size, -size, size),
+            Point3::new(size, -size, -size),
+            Point3::new(size, -size, size),
         ),
         white_walls.clone(),
         None,
@@ -454,10 +454,10 @@ fn enclosed_box() -> Vec<HittableObject> {
 
     let (back_wall_one, back_wall_two) = Triangle::new_quad(
         (
-            Point3::new(-2., -2., -2.),
-            Point3::new(-2., 2., -2.),
-            Point3::new(2., -2., -2.),
-            Point3::new(2., 2., -2.),
+            Point3::new(-size, -size, -size),
+            Point3::new(-size, size, -size),
+            Point3::new(size, -size, -size),
+            Point3::new(size, size, -size),
         ),
         back_walls.clone(),
         None,
@@ -465,10 +465,10 @@ fn enclosed_box() -> Vec<HittableObject> {
 
     let (left_wall_one, left_wall_two) = Triangle::new_quad(
         (
-            Point3::new(-2., -2., -2.),
-            Point3::new(-2., -2., 2.),
-            Point3::new(-2., 2., -2.),
-            Point3::new(-2., 2., 2.),
+            Point3::new(-size, -size, -size),
+            Point3::new(-size, -size, size),
+            Point3::new(-size, size, -size),
+            Point3::new(-size, size, size),
         ),
         red_walls,
         None,
@@ -476,10 +476,10 @@ fn enclosed_box() -> Vec<HittableObject> {
 
     let (right_wall_one, right_wall_two) = Triangle::new_quad(
         (
-            Point3::new(2., -2., -2.),
-            Point3::new(2., -2., 2.),
-            Point3::new(2., 2., -2.),
-            Point3::new(2., 2., 2.),
+            Point3::new(size, -size, -size),
+            Point3::new(size, -size, size),
+            Point3::new(size, size, -size),
+            Point3::new(size, size, size),
         ),
         green_walls,
         None,
@@ -487,10 +487,10 @@ fn enclosed_box() -> Vec<HittableObject> {
 
     let (front_wall_one, front_wall_two) = Triangle::new_quad(
         (
-            Point3::new(-2., -2., 2.),
-            Point3::new(-2., 2., 2.),
-            Point3::new(2., -2., 2.),
-            Point3::new(2., 2., 2.),
+            Point3::new(-size, -size, size),
+            Point3::new(-size, size, size),
+            Point3::new(size, -size, size),
+            Point3::new(size, size, size),
         ),
         back_walls,
         None,
@@ -498,10 +498,10 @@ fn enclosed_box() -> Vec<HittableObject> {
 
     let (ceiling_one, ceiling_two) = Triangle::new_quad(
         (
-            Point3::new(-2., 2., -2.),
-            Point3::new(-2., 2., 2.),
-            Point3::new(2., 2., -2.),
-            Point3::new(2., 2., 2.),
+            Point3::new(-size, size, -size),
+            Point3::new(-size, size, size),
+            Point3::new(size, size, -size),
+            Point3::new(size, size, size),
         ),
         white_walls,
         None,
