@@ -31,7 +31,7 @@ pub struct Camera {
 
 impl Camera {
     const IDEAL_ASPECT_RATIO: f32 = 1.;
-    const SKY_TOP_COLOUR: Colour = Colour::new(1., 1., 1.);
+    const SKY_TOP_COLOUR: Colour = Colour::new(0.5, 0.5, 0.5);
     const SKY_BOTTOM_COLOUR: Colour = Self::SKY_TOP_COLOUR;
 
     #[allow(clippy::too_many_arguments)]
