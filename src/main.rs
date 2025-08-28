@@ -359,8 +359,7 @@ fn cornell_box() -> SceneInfo {
     let white_texture = Colour::new(0.8, 0.8, 0.8).to_texture();
     let glass = Material::new_glass(1.5, white_texture.clone());
     let ball_one = Sphere::new_still(Point3::new(0., 0., 0.), 1. / 3., glass);
-
-    let mut world = enclosed_box(2.);
+    let mut world = make_cube(2., None);
     world.push(SpheHit(ball_one));
 
     (
@@ -415,30 +414,31 @@ fn perlin_triangle() -> SceneInfo {
 
 #[allow(dead_code)]
 fn glass_box() -> SceneInfo {
-    todo!()
+    let world = make_cube(3., None);
+    let glass = Material::new_glass(1.5, Colour::new(1., 1., 1.).to_texture());
+    let small_cube = make_cube(1., Some(glass));
+    (
+        world
+            .into_iter()
+            .chain(small_cube)
+            .collect::<HittableList>()
+            .optimise(),
+        Point3::new(0., 0., 2.5),
+        Point3::new(0., 0., 0.),
+        90.,
+    )
 }
 
 #[allow(dead_code)]
-fn enclosed_box(size: f32) -> Vec<HittableObject> {
+fn make_cube(size: f32, material: Option<Material>) -> Vec<HittableObject> {
+    let material = material.unwrap_or(Material::new_no_refract(
+        0.8,
+        Colour::new(0.8, 0.8, 0.8).to_texture(),
+    ));
     let brightness = 1.;
     let light_size = 0.5;
-    let white_texture = Colour::new(0.8, 0.8, 0.8).to_texture();
-    let white_walls = Material::new_no_refract(0.5, white_texture.clone());
     let white_light = Material::new_light(
         (Colour::new(1., 1., 1.) * brightness).to_texture(),
-    );
-    let red_walls =
-        Material::new_no_refract(0.5, Colour::new(1., 0.5, 0.5).to_texture());
-    let green_walls =
-        Material::new_no_refract(0.5, Colour::new(0.5, 1., 0.5).to_texture());
-    let back_walls = Material::new_no_refract(
-        0.5,
-        CheckerTexture::new(
-            red_walls.clone().texture,
-            green_walls.clone().texture,
-            0.5,
-        )
-        .wrap(),
     );
 
     let (floor_one, floor_two) = Triangle::new_quad(
@@ -448,7 +448,7 @@ fn enclosed_box(size: f32) -> Vec<HittableObject> {
             Point3::new(size, -size, -size),
             Point3::new(size, -size, size),
         ),
-        white_walls.clone(),
+        material.clone(),
         None,
     );
 
@@ -459,7 +459,7 @@ fn enclosed_box(size: f32) -> Vec<HittableObject> {
             Point3::new(size, -size, -size),
             Point3::new(size, size, -size),
         ),
-        back_walls.clone(),
+        material.clone(),
         None,
     );
 
@@ -470,7 +470,7 @@ fn enclosed_box(size: f32) -> Vec<HittableObject> {
             Point3::new(-size, size, -size),
             Point3::new(-size, size, size),
         ),
-        red_walls,
+        material.clone(),
         None,
     );
 
@@ -481,7 +481,7 @@ fn enclosed_box(size: f32) -> Vec<HittableObject> {
             Point3::new(size, size, -size),
             Point3::new(size, size, size),
         ),
-        green_walls,
+        material.clone(),
         None,
     );
 
@@ -492,7 +492,7 @@ fn enclosed_box(size: f32) -> Vec<HittableObject> {
             Point3::new(size, -size, size),
             Point3::new(size, size, size),
         ),
-        back_walls,
+        material.clone(),
         None,
     );
 
@@ -503,7 +503,7 @@ fn enclosed_box(size: f32) -> Vec<HittableObject> {
             Point3::new(size, size, -size),
             Point3::new(size, size, size),
         ),
-        white_walls,
+        material.clone(),
         None,
     );
 
