@@ -54,7 +54,12 @@ impl Material {
         let specular_ray = Self::specular_reflection(ray, record);
         let direction = self.smoothness * specular_ray.direction
             + (1. - self.smoothness) * diffuse_ray.direction;
-        Ray::new(diffuse_ray.origin, direction.normalize(), ray.time)
+        Ray::new_with_colour(
+            diffuse_ray.origin,
+            direction.normalize(),
+            ray.time,
+            ray.collected_light,
+        )
     }
 
     pub fn refract(&self, ray: Ray, record: &HitRecord) -> Ray {
@@ -79,7 +84,12 @@ impl Material {
         }
         .normalize();
 
-        Ray::new(record.collision_point, direction, ray.time)
+        Ray::new_with_colour(
+            record.collision_point,
+            direction,
+            ray.time,
+            ray.collected_light,
+        )
     }
 
     fn reflectance(cosine: f32, refractive_index: f32) -> f32 {
