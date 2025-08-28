@@ -36,6 +36,7 @@ impl CheckerTexture {
         }
     }
 
+    #[allow(dead_code)]
     pub fn wrap(self) -> Texture {
         Texture::Checker(self)
     }
