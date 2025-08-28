@@ -98,9 +98,9 @@ impl Camera {
         }
     }
 
-    fn ray_colour(&self, ray: Ray, world: &HittableList, depth: u16) -> Colour {
+    fn ray_colour(&self, mut ray: Ray, world: &HittableList, depth: u16) -> Colour {
         if depth > self.max_ray_bounces {
-            return Colour::new(0., 0., 0.);
+            return ray.collected_light;
         }
         if let Some(data) =
             world.did_hit(ray, Interval::new(0.001, f32::INFINITY))
@@ -110,7 +110,7 @@ impl Camera {
             let material = data.clone().material;
 
             if material.is_light {
-                return material.texture.get_colour(u, v);
+                ray.collected_light += material.texture.get_colour(u, v);
             }
 
             let mut rng = rng();

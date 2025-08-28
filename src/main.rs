@@ -63,7 +63,7 @@ enum Profile {
 
 fn main() -> ImageResult<()> {
     let args = std::env::args().collect::<Vec<_>>();
-    let profile = match args[1].as_str() {
+    let profile = match args[1].to_ascii_lowercase().as_str() {
         "debug" => Profile::Debug,
         "release" => Profile::Release,
         "insane" => Profile::Insane,
@@ -277,7 +277,7 @@ fn perlin_spheres() -> SceneInfo {
 fn triangle() -> SceneInfo {
     #[allow(unused_variables)]
     let blue: Material =
-        Material::new_light(Colour::new(0., 0., 1.).to_texture());
+        Material::new_light(1., Colour::new(0., 0., 1.).to_texture());
     let triangle_texture = Material::new_no_refract(
         1.,
         PerlinTexture::new(1., Colour::new(1., 1., 1.)).wrap(),
@@ -457,6 +457,7 @@ fn make_cube(
     let brightness = 1.;
     let light_size = light_size.unwrap_or(size * 0.8);
     let white_light = Material::new_light(
+        1.,
         (Colour::new(1., 1., 1.) * brightness).to_texture(),
     );
 
