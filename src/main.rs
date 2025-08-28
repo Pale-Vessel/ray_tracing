@@ -359,7 +359,7 @@ fn cornell_box() -> SceneInfo {
     let white_texture = Colour::new(0.8, 0.8, 0.8).to_texture();
     let glass = Material::new_glass(1.5, white_texture.clone());
     let ball_one = Sphere::new_still(Point3::new(0., 0., 0.), 1. / 3., glass);
-    let mut world = make_cube(2., None);
+    let mut world = make_cube(2., None, None);
     world.push(SpheHit(ball_one));
 
     (
@@ -414,9 +414,9 @@ fn perlin_triangle() -> SceneInfo {
 
 #[allow(dead_code)]
 fn glass_box() -> SceneInfo {
-    let world = make_cube(3., None);
+    let world = make_cube(3., None, None);
     let glass = Material::new_glass(1.5, Colour::new(1., 1., 1.).to_texture());
-    let small_cube = make_cube(1., Some(glass));
+    let small_cube = make_cube(1., Some(glass), Some(0.));
     (
         world
             .into_iter()
@@ -430,13 +430,13 @@ fn glass_box() -> SceneInfo {
 }
 
 #[allow(dead_code)]
-fn make_cube(size: f32, material: Option<Material>) -> Vec<HittableObject> {
+fn make_cube(size: f32, material: Option<Material>, light_size: Option<f32>) -> Vec<HittableObject> {
     let material = material.unwrap_or(Material::new_no_refract(
         0.8,
         Colour::new(0.8, 0.8, 0.8).to_texture(),
     ));
     let brightness = 1.;
-    let light_size = 0.5;
+    let light_size = light_size.unwrap_or(size * 0.8);
     let white_light = Material::new_light(
         (Colour::new(1., 1., 1.) * brightness).to_texture(),
     );
@@ -509,10 +509,10 @@ fn make_cube(size: f32, material: Option<Material>) -> Vec<HittableObject> {
 
     let (ceiling_light_one, ceiling_light_two) = Triangle::new_quad(
         (
-            Point3::new(-light_size, 0.9999, -light_size),
-            Point3::new(-light_size, 0.9999, light_size),
-            Point3::new(light_size, 0.9999, -light_size),
-            Point3::new(light_size, 0.9999, light_size),
+            Point3::new(-light_size, size - 1e-8, -light_size),
+            Point3::new(-light_size, size - 1e-8, light_size),
+            Point3::new(light_size, size - 1e-8, -light_size),
+            Point3::new(light_size, size - 1e-8, light_size),
         ),
         white_light.clone(),
         None,
