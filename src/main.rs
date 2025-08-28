@@ -68,7 +68,7 @@ fn main() -> ImageResult<()> {
         Profile::Debug => (800, 10, 10),
         Profile::Release => (800, 100, 10),
         Profile::InsaneRays => (800, 1_000, 10),
-        Profile::Insane => (1920, 500, 100),
+        Profile::Insane => (1920, 500, 10),
         Profile::OvernightRender => (1920, 5_000, 10),
     };
     let (world, look_from, look_at, fov) = glass_box();
@@ -359,10 +359,10 @@ fn basic_light() -> SceneInfo {
 
 #[allow(dead_code)]
 fn cornell_box() -> SceneInfo {
-    let white_texture = Colour::new(0.8, 0.8, 0.8).to_texture();
+    let white_texture = Colour::new(1., 1., 1.).to_texture();
     let glass = Material::new_glass(1.5, white_texture.clone());
     let ball_one = Sphere::new_still(Point3::new(0., 0., 0.), 1. / 3., glass);
-    let mut world = make_cube(1.5, None, None);
+    let mut world = make_cube(1.5, false, None, None);
     world.push(SpheHit(ball_one));
 
     (
@@ -417,9 +417,9 @@ fn perlin_triangle() -> SceneInfo {
 
 #[allow(dead_code)]
 fn glass_box() -> SceneInfo {
-    let world = make_cube(3., None, None);
+    let world = make_cube(3., true, None, None);
     let glass = Material::new_glass(1.5, Colour::new(1., 1., 1.).to_texture());
-    let small_cube = make_cube(0.75, Some(glass), Some(0.));
+    let small_cube = make_cube(0.75, false, Some(glass), Some(0.));
     (
         world
             .into_iter()
@@ -433,7 +433,12 @@ fn glass_box() -> SceneInfo {
 }
 
 #[allow(dead_code)]
-fn make_cube(size: f32, material: Option<Material>, light_size: Option<f32>) -> Vec<HittableObject> {
+fn make_cube(
+    size: f32,
+    open: bool,
+    material: Option<Material>,
+    light_size: Option<f32>,
+) -> Vec<HittableObject> {
     let material = material.unwrap_or(Material::new_no_refract(
         0.8,
         Colour::new(0.8, 0.8, 0.8).to_texture(),
@@ -521,6 +526,13 @@ fn make_cube(size: f32, material: Option<Material>, light_size: Option<f32>) -> 
         None,
     );
 
+    let null_triangle = TriHit(Triangle::new(
+        Point3::default(),
+        Point3::default(),
+        Point3::default(),
+        Material::default(),
+    ));
+
     vec![
         TriHit(floor_one),
         TriHit(floor_two),
@@ -530,8 +542,16 @@ fn make_cube(size: f32, material: Option<Material>, light_size: Option<f32>) -> 
         TriHit(left_wall_two),
         TriHit(right_wall_one),
         TriHit(right_wall_two),
-        TriHit(front_wall_one),
-        TriHit(front_wall_two),
+        if open {
+            null_triangle.clone()
+        } else {
+            TriHit(front_wall_one)
+        },
+        if open {
+            null_triangle
+        } else {
+            TriHit(front_wall_two)
+        },
         TriHit(ceiling_one),
         TriHit(ceiling_two),
         TriHit(ceiling_light_one),
