@@ -61,10 +61,17 @@ enum Profile {
     ManyBounces,
 }
 
-const PROFILE: Profile = Profile::Release;
-
 fn main() -> ImageResult<()> {
-    let (image_width, rays_per_pixel, max_ray_bounces) = match PROFILE {
+    let args = std::env::args().collect::<Vec<_>>();
+    let profile = match args[1].as_str() {
+        "debug" => Profile::Debug,
+        "release" => Profile::Release,
+        "insane" => Profile::Insane,
+        "overnight" => Profile::OvernightRender,
+        "bounce" => Profile::ManyBounces,
+        _ => unreachable!(),
+    };
+    let (image_width, rays_per_pixel, max_ray_bounces) = match profile {
         Profile::Debug => (800, 10, 10),
         Profile::Release => (800, 100, 10),
         Profile::Insane => (800, 1_000, 10),
@@ -84,7 +91,7 @@ fn main() -> ImageResult<()> {
         0.,
     );
     let image = camera.render(&world);
-    let path = format!("image{PROFILE}.png");
+    let path = format!("image{profile}.png");
     let output = Path::new(&path);
     image.save(output)
 }
