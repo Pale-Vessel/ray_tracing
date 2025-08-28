@@ -98,8 +98,16 @@ impl Camera {
         }
     }
 
-    fn ray_colour(&self, mut ray: Ray, world: &HittableList, depth: u16) -> Colour {
+    fn ray_colour(
+        &self,
+        mut ray: Ray,
+        world: &HittableList,
+        depth: u16,
+    ) -> Colour {
         if depth > self.max_ray_bounces {
+            if ray.collected_light != Colour::BLACK {
+                println!("{:?}", ray.collected_light);
+            }
             return ray.collected_light;
         }
         if let Some(data) =

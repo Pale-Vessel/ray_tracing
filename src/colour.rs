@@ -6,10 +6,22 @@ use crate::{
 use derive_more::{Add, AddAssign, Deref, Div, Mul, Sum};
 use glam::{Vec2, Vec3};
 
-#[derive(Clone, Copy, Debug, Default, Deref, Add, AddAssign, Sum, Mul, Div)]
+#[derive(
+    Clone,
+    Copy,
+    Debug,
+    Default,
+    Deref,
+    Add,
+    AddAssign,
+    Sum,
+    Mul,
+    Div,
+    PartialEq,
+)]
 pub struct Colour(Vec3);
 
-impl From<Vec2> for  Colour {
+impl From<Vec2> for Colour {
     fn from(value: Vec2) -> Self {
         Self::new(value.x, 0., value.y)
     }
@@ -19,7 +31,7 @@ impl Colour {
     #[allow(dead_code)]
     pub const WHITE: Self = Self::new(1., 1., 1.);
     #[allow(dead_code)]
-    pub const BLACK: Self = Self::new(0. ,0. ,0.);
+    pub const BLACK: Self = Self::new(0., 0., 0.);
     pub const fn new(r: f32, g: f32, b: f32) -> Self {
         Self(Vec3::new(r, g, b))
     }
