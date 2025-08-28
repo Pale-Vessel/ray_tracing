@@ -45,25 +45,34 @@ pub enum HittableObject {
     Sphere(Sphere),
     BVHNode(BVHNode),
     Triangle(Triangle),
+    Empty
 }
 
 impl Hittable for HittableObject {
     fn did_hit(&self, ray: Ray, interval: Interval) -> Option<HitRecord> {
         match self {
-            HittableObject::Sphere(sphere) => sphere.did_hit(ray, interval),
-            HittableObject::BVHNode(bvhnode) => bvhnode.did_hit(ray, interval),
-            HittableObject::Triangle(triangle) => {
+            Self::Sphere(sphere) => sphere.did_hit(ray, interval),
+            Self::BVHNode(bvhnode) => bvhnode.did_hit(ray, interval),
+            Self::Triangle(triangle) => {
                 triangle.did_hit(ray, interval)
             }
+            Self::Empty => None
         }
     }
 
     fn get_bounding_box(&self) -> BoundingBox {
         match self {
-            HittableObject::Sphere(sphere) => sphere.get_bounding_box(),
-            HittableObject::BVHNode(bvhnode) => bvhnode.get_bounding_box(),
-            HittableObject::Triangle(triangle) => triangle.get_bounding_box(),
+            Self::Sphere(sphere) => sphere.get_bounding_box(),
+            Self::BVHNode(bvhnode) => bvhnode.get_bounding_box(),
+            Self::Triangle(triangle) => triangle.get_bounding_box(),
+            Self::Empty => BoundingBox::EMPTY
         }
+    }
+}
+
+impl HittableObject {
+    pub fn exist_if(self, predicate: bool) -> Self {
+        if predicate {self} else {Self::Empty}
     }
 }
 

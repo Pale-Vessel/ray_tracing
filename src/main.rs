@@ -61,7 +61,7 @@ enum Profile {
     OvernightRender,
 }
 
-const PROFILE: Profile = Profile::Release;
+const PROFILE: Profile = Profile::Debug;
 
 fn main() -> ImageResult<()> {
     let (image_width, rays_per_pixel, max_ray_bounces) = match PROFILE {
@@ -362,7 +362,7 @@ fn cornell_box() -> SceneInfo {
     let white_texture = Colour::new(1., 1., 1.).to_texture();
     let glass = Material::new_glass(1.5, white_texture.clone());
     let ball_one = Sphere::new_still(Point3::new(0., 0., 0.), 1. / 3., glass);
-    let mut world = make_cube(1.5, false, None, None);
+    let mut world = make_cube(1.5, true, true, true, None, None);
     world.push(SpheHit(ball_one));
 
     (
@@ -417,9 +417,9 @@ fn perlin_triangle() -> SceneInfo {
 
 #[allow(dead_code)]
 fn glass_box() -> SceneInfo {
-    let world = make_cube(3., true, None, None);
+    let world = make_cube(3., true, true, true, None, None);
     let glass = Material::new_glass(1.5, Colour::new(1., 1., 1.).to_texture());
-    let small_cube = make_cube(0.75, false, Some(glass), Some(0.));
+    let small_cube = make_cube(0.75, true, false, false, Some(glass), None);
     (
         world
             .into_iter()
@@ -435,7 +435,9 @@ fn glass_box() -> SceneInfo {
 #[allow(dead_code)]
 fn make_cube(
     size: f32,
-    open: bool,
+    closed: bool,
+    ceiling_light: bool,
+    floor_light: bool,
     material: Option<Material>,
     light_size: Option<f32>,
 ) -> Vec<HittableObject> {
@@ -526,12 +528,16 @@ fn make_cube(
         None,
     );
 
-    let null_triangle = TriHit(Triangle::new(
-        Point3::default(),
-        Point3::default(),
-        Point3::default(),
-        Material::default(),
-    ));
+    let (floor_light_one, floor_light_two) = Triangle::new_quad(
+        (
+            Point3::new(-light_size, -size + 1e-8, -light_size),
+            Point3::new(-light_size, -size + 1e-8, light_size),
+            Point3::new(light_size, -size + 1e-8, -light_size),
+            Point3::new(light_size, -size + 1e-8, light_size),
+        ),
+        white_light.clone(),
+        None,
+    );
 
     vec![
         TriHit(floor_one),
@@ -542,19 +548,13 @@ fn make_cube(
         TriHit(left_wall_two),
         TriHit(right_wall_one),
         TriHit(right_wall_two),
-        if open {
-            null_triangle.clone()
-        } else {
-            TriHit(front_wall_one)
-        },
-        if open {
-            null_triangle
-        } else {
-            TriHit(front_wall_two)
-        },
         TriHit(ceiling_one),
         TriHit(ceiling_two),
-        TriHit(ceiling_light_one),
-        TriHit(ceiling_light_two),
+        TriHit(ceiling_light_one).exist_if(ceiling_light),
+        TriHit(ceiling_light_two).exist_if(ceiling_light),
+        TriHit(front_wall_one).exist_if(closed),
+        TriHit(front_wall_two).exist_if(closed),
+        TriHit(floor_light_one).exist_if(floor_light),
+        TriHit(floor_light_two).exist_if(floor_light),
     ]
 }
