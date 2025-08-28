@@ -28,10 +28,9 @@ use crate::{
     camera::Camera,
     checker_texture::CheckerTexture,
     colour::Colour,
-    
     hittable::{
         HittableList,
-        HittableObject::{Sphere as SpheHit, Triangle as TriHit},
+        HittableObject::{self, Sphere as SpheHit, Triangle as TriHit},
     },
     material::Material,
     perlin_texture::PerlinTexture,
@@ -69,7 +68,7 @@ fn main() -> ImageResult<()> {
         Profile::Insane => (1920, 500, 100),
         Profile::OvernightRender => (1920, 5_000, 10),
     };
-    let (world, look_from, look_at, fov) = perlin_triangle();
+    let (world, look_from, look_at, fov) = cornell_box();
     let camera = Camera::initialise(
         image_width,
         rays_per_pixel,
@@ -357,10 +356,73 @@ fn basic_light() -> SceneInfo {
 
 #[allow(dead_code)]
 fn cornell_box() -> SceneInfo {
+    let white_texture = Colour::new(0.8, 0.8, 0.8).to_texture();
+    let glass = Material::new_glass(1.5, white_texture.clone());
+    let ball_one = Sphere::new_still(Point3::new(0., 0., 0.), 1. / 3., glass);
+
+    let mut world = enclosed_box();
+    world.push(SpheHit(ball_one));
+
+    (
+        world.into_iter().collect::<HittableList>().optimise(),
+        Point3::new(0., 0., 1.5),
+        Point3::new(0., 0., 0.),
+        90.,
+    )
+}
+
+#[allow(dead_code)]
+fn gradient_stripe_test() -> SceneInfo {
+    let world = [TriHit(Triangle::new(
+        Point3::new(0., 0., 0.),
+        Point3::new(0., 1., 0.),
+        Point3::new(0., 1., 1.),
+        Material::new_no_refract(
+            1.,
+            StripeTexture::new_u(
+                Colour::new(1., 0., 0.).to_texture(),
+                Colour::new(0., 1., 0.).to_texture(),
+                0.1,
+            )
+            .wrap(),
+        ),
+    ))]
+    .into_iter()
+    .collect::<HittableList>()
+    .optimise();
+    (world, Point3::new(1.5, 0., 0.), Point3::default(), 90.)
+}
+
+#[allow(dead_code)]
+fn perlin_triangle() -> SceneInfo {
+    let tri_size = 5.;
+    let material = Material::new_no_refract(
+        0.,
+        PerlinTexture::new(500., Colour::new(1., 1., 1.)).wrap(),
+    );
+    let triangle = Triangle::new(
+        Point3::new(tri_size, 0., tri_size),
+        Point3::new(tri_size, 0., -tri_size),
+        Point3::new(-tri_size, 0., -tri_size),
+        material,
+    );
+    let world = [TriHit(triangle)]
+        .into_iter()
+        .collect::<HittableList>()
+        .optimise();
+    (world, Point3::new(0., 6., 0.), Point3::default(), 90.)
+}
+
+#[allow(dead_code)]
+fn glass_box() -> SceneInfo {
+    todo!()
+}
+
+#[allow(dead_code)]
+fn enclosed_box() -> Vec<HittableObject> {
     let brightness = 1.;
     let light_size = 0.5;
     let white_texture = Colour::new(0.8, 0.8, 0.8).to_texture();
-    let glass = Material::new_glass(1.5, white_texture.clone());
     let white_walls = Material::new_no_refract(0.5, white_texture.clone());
     let white_light = Material::new_light(
         (Colour::new(1., 1., 1.) * brightness).to_texture(),
@@ -456,20 +518,7 @@ fn cornell_box() -> SceneInfo {
         None,
     );
 
-    let (floor_light_one, floor_light_two) = Triangle::new_quad(
-        (
-            Point3::new(-light_size, -0.9999, -light_size),
-            Point3::new(-light_size, -0.9999, light_size),
-            Point3::new(light_size, -0.9999, -light_size),
-            Point3::new(light_size, -0.9999, light_size),
-        ),
-        white_light,
-        None,
-    );
-
-    let ball_one = Sphere::new_still(Point3::new(0., 0., 0.), 1. / 3., glass);
-
-    let world = [
+    vec![
         TriHit(floor_one),
         TriHit(floor_two),
         TriHit(back_wall_one),
@@ -484,56 +533,5 @@ fn cornell_box() -> SceneInfo {
         TriHit(ceiling_two),
         TriHit(ceiling_light_one),
         TriHit(ceiling_light_two),
-        TriHit(floor_light_one),
-        TriHit(floor_light_two),
-        SpheHit(ball_one),
-    ];
-    (
-        world.into_iter().collect::<HittableList>().optimise(),
-        Point3::new(0., 0., 1.5),
-        Point3::new(0., 0., 0.),
-        90.,
-    )
-}
-
-#[allow(dead_code)]
-fn gradient_stripe_test() -> SceneInfo {
-    let world = [TriHit(Triangle::new(
-        Point3::new(0., 0., 0.),
-        Point3::new(0., 1., 0.),
-        Point3::new(0., 1., 1.),
-        Material::new_no_refract(
-            1.,
-            StripeTexture::new_u(
-                Colour::new(1., 0., 0.).to_texture(),
-                Colour::new(0., 1., 0.).to_texture(),
-                0.1,
-            )
-            .wrap(),
-        ),
-    ))]
-    .into_iter()
-    .collect::<HittableList>()
-    .optimise();
-    (world, Point3::new(1.5, 0., 0.), Point3::default(), 90.)
-}
-
-#[allow(dead_code)]
-fn perlin_triangle() -> SceneInfo {
-    let tri_size = 5.;
-    let material = Material::new_no_refract(
-        0.5,
-        PerlinTexture::new(0.005, Colour::new(1., 1., 1.)).wrap(),
-    );
-    let triangle = Triangle::new(
-        Point3::new(tri_size, 0., tri_size),
-        Point3::new(tri_size, 0., -tri_size),
-        Point3::new(-tri_size, 0., -tri_size),
-        material,
-    );
-    let world = [TriHit(triangle)]
-        .into_iter()
-        .collect::<HittableList>()
-        .optimise();
-    (world, Point3::new(0., 5., 0.), Point3::default(), 90.)
+    ]
 }
