@@ -68,7 +68,7 @@ fn main() -> ImageResult<()> {
         Profile::Insane => (1920, 500, 100),
         Profile::OvernightRender => (1920, 5_000, 10),
     };
-    let (world, look_from, look_at, fov) = cornell_box();
+    let (world, look_from, look_at, fov) = glass_box();
     let camera = Camera::initialise(
         image_width,
         rays_per_pixel,
