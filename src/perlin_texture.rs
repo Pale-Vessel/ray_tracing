@@ -70,10 +70,10 @@ impl PerlinTexture {
 
     fn floor_to_scale(&self, val: f32) -> f32 {
         (val / self.scale).floor() * self.scale
-    }
+    } 
 
     fn smoothstep(a: f32, b: f32, t: f32) -> f32 {
-        let faded = t * t * t * (t * (t * 6. - 15.) + 10.);
+        let faded = t.powi(3) * (t * (t * 6. - 15.) + 10.);
         Self::lerp(a, b, faded)
     }
 
