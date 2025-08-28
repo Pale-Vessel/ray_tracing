@@ -56,20 +56,20 @@ type SceneInfo = (HittableList, Point3, Point3, f32);
 enum Profile {
     Debug,
     Release,
-    InsaneRays,
     Insane,
     OvernightRender,
+    ManyBounces,
 }
 
-const PROFILE: Profile = Profile::Debug;
+const PROFILE: Profile = Profile::Release;
 
 fn main() -> ImageResult<()> {
     let (image_width, rays_per_pixel, max_ray_bounces) = match PROFILE {
         Profile::Debug => (800, 10, 10),
         Profile::Release => (800, 100, 10),
-        Profile::InsaneRays => (800, 1_000, 10),
-        Profile::Insane => (1920, 500, 10),
+        Profile::Insane => (800, 1_000, 10),
         Profile::OvernightRender => (1920, 5_000, 10),
+        Profile::ManyBounces => (800, 100, 50),
     };
     let (world, look_from, look_at, fov) = glass_box();
     let camera = Camera::initialise(
@@ -417,13 +417,15 @@ fn perlin_triangle() -> SceneInfo {
 
 #[allow(dead_code)]
 fn glass_box() -> SceneInfo {
-    let world = make_cube(3., true, true, true, None, None);
-    let glass = Material::new_glass(1.5, Colour::new(1., 1., 1.).to_texture());
+    let walls =
+        Material::new_no_refract(1., Colour::new(0.8, 0.3, 0.3).to_texture());
+    let world = make_cube(3., true, true, true, Some(walls), None);
+    let glass = Material::new_glass(1., Colour::new(1., 1., 1.).to_texture());
     let small_cube = make_cube(0.75, true, false, false, Some(glass), None);
     (
         world
             .into_iter()
-            .chain(small_cube)
+            // .chain(small_cube)
             .collect::<HittableList>()
             .optimise(),
         Point3::new(0., 0., 2.5),
