@@ -1,3 +1,6 @@
+#![allow(clippy::cast_possible_truncation)]
+#![allow(clippy::cast_sign_loss)]
+
 mod bounding_box;
 mod bvh;
 mod camera;
@@ -359,7 +362,7 @@ fn cornell_box() -> SceneInfo {
     let white_texture = Colour::new(0.8, 0.8, 0.8).to_texture();
     let glass = Material::new_glass(1.5, white_texture.clone());
     let ball_one = Sphere::new_still(Point3::new(0., 0., 0.), 1. / 3., glass);
-    let mut world = make_cube(2., None, None);
+    let mut world = make_cube(1.5, None, None);
     world.push(SpheHit(ball_one));
 
     (
@@ -416,7 +419,7 @@ fn perlin_triangle() -> SceneInfo {
 fn glass_box() -> SceneInfo {
     let world = make_cube(3., None, None);
     let glass = Material::new_glass(1.5, Colour::new(1., 1., 1.).to_texture());
-    let small_cube = make_cube(1., Some(glass), Some(0.));
+    let small_cube = make_cube(0.75, Some(glass), Some(0.));
     (
         world
             .into_iter()

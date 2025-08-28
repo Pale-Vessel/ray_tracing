@@ -38,8 +38,6 @@ pub fn map_colours(colour: &Colour) -> (u8, u8, u8) {
     let (r, g, b) = (colour.x, colour.y, colour.z);
 
     let colour_interval = Interval::new(0., 1.0);
-    #[allow(clippy::cast_possible_truncation)]
-    #[allow(clippy::cast_sign_loss)]
     let (rbyte, gbyte, bbyte) = (
         (colour_interval.clamp(r) * 255.) as u8,
         (colour_interval.clamp(g) * 255.) as u8,

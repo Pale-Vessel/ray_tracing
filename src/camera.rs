@@ -46,7 +46,6 @@ impl Camera {
         focus_distance: f32,
         defocus_angle: f32,
     ) -> Camera {
-        #[allow(clippy::cast_possible_truncation)]
         let image_height =
             (image_width as f32 / Self::IDEAL_ASPECT_RATIO).floor() as u32;
         let pixel_sample_scale = 1. / f32::from(rays_per_pixel);

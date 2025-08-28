@@ -11,8 +11,6 @@ pub struct CheckerTexture {
 }
 
 impl GetTexture for CheckerTexture {
-    #[allow(clippy::cast_possible_truncation)]
-    #[allow(clippy::cast_sign_loss)]
     fn get_colour(&self, u: f32, v: f32) -> Colour {
         let u_pos = (u * self.inv_scale).round() as u16;
         let v_pos = (v * self.inv_scale).round() as u16;
