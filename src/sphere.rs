@@ -35,7 +35,6 @@ impl Hittable for Sphere {
             return None;
         }
         let discriminant_root = discriminant.sqrt();
-        //println!("{ray:?} {discriminant_root}\n");
         let mut collision_time =
             (h_coefficient - discriminant_root) / a_coefficient;
         if !interval.surrounds(collision_time) {
