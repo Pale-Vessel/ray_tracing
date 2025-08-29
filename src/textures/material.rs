@@ -22,7 +22,7 @@ pub struct Material {
 }
 
 impl Material {
-    pub const fn new_no_refract(smoothness: f32, texture: Texture) -> Self {
+    pub const fn new_opaque(smoothness: f32, texture: Texture) -> Self {
         Self::new(smoothness, texture, 0., 0., false)
     }
 
