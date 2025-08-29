@@ -41,7 +41,13 @@ pub fn read_scene(path: String) -> (HittableList, Point3, Point3, f32) {
     let (look_from, look_at, fov) = parse_camera_data(first_line);
     let objects = lines
         .flat_map(|row| {
-            parse_row(row, &mut points, &mut colours, &mut textures, &mut materials)
+            parse_row(
+                row,
+                &mut points,
+                &mut colours,
+                &mut textures,
+                &mut materials,
+            )
         })
         .collect::<HittableList>()
         .optimise();
@@ -81,7 +87,8 @@ fn parse_row(
     if row_type == "object" {
         return Some(parse_object(row_data, materials, points));
     }
-    let (name, description) = row_data.split_once(";").expect("Name not provided");
+    let (name, description) =
+        row_data.split_once(";").expect("Name not provided");
     let name = name.strip_prefix("name=").unwrap_or(name).to_string();
     match row_type {
         "point" => parse_point(name, description, points),
@@ -105,11 +112,7 @@ fn parse_point(
         .unwrap_or_else(|_| {
             panic!("Expected three parameters for colour, got {description:?}")
         });
-    let point = Point3::new(
-        parse_f32(x),
-        parse_f32(y),
-        parse_f32(z)
-    );
+    let point = Point3::new(parse_f32(x), parse_f32(y), parse_f32(z));
     points.insert(name, point);
 }
 
@@ -125,11 +128,7 @@ fn parse_colour(
         .unwrap_or_else(|_| {
             panic!("Expected three parameters for colour, got {description:?}")
         });
-    let colour = Colour::new(
-        parse_f32(red),
-        parse_f32(green),
-        parse_f32(blue)
-    );
+    let colour = Colour::new(parse_f32(red), parse_f32(green), parse_f32(blue));
     colours.insert(name, colour);
 }
 

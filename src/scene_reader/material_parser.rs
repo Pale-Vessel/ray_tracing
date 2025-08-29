@@ -21,9 +21,7 @@ pub(super) fn parse_full(
         ],
     ) = description.split(",").collect_array_checked()
     else {
-        panic!(
-            "{description:?} is not a valid description for a material"
-        )
+        panic!("{description:?} is not a valid description for a material")
     };
     let smoothness = parse_f32(smoothness);
     let texture = get_texture(texture_name, textures);

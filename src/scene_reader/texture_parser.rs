@@ -22,7 +22,9 @@ pub(super) fn get_texture(
 ) -> Texture {
     textures
         .get(texture_name)
-        .unwrap_or_else(|| panic!("{texture_name:?} is not a known texture name"))
+        .unwrap_or_else(|| {
+            panic!("{texture_name:?} is not a known texture name")
+        })
         .clone()
 }
 
@@ -88,9 +90,7 @@ pub(super) fn parse_stripe(
     let Ok([size, even_texture, odd_texture, direction]) =
         description.split(",").collect_array_checked()
     else {
-        panic!(
-            "{description:?} is an invalid description for striped texture"
-        )
+        panic!("{description:?} is an invalid description for striped texture")
     };
     StripeTexture::new_with_dir_name(
         get_texture(even_texture, textures),
@@ -109,9 +109,7 @@ pub(super) fn parse_gradient(
     let Ok([bottom_texture, top_texture, direction]) =
         description.split(",").collect_array_checked()
     else {
-        panic!(
-            "{description:?} is an invalid description for gradient texture"
-        )
+        panic!("{description:?} is an invalid description for gradient texture")
     };
     GradientTexture::new_with_dir_name(
         get_texture(bottom_texture, textures),
