@@ -15,16 +15,21 @@ impl Ray {
             origin,
             direction,
             time,
-            collected_light: Colour::new(0., 0., 0.),
+            collected_light: Colour::new(1., 1., 1.),
         }
     }
 
-    pub const fn new_with_colour(origin: Point3, direction: Vec3, time: f32, collected_light: Colour) -> Self {
+    pub const fn new_with_colour(
+        origin: Point3,
+        direction: Vec3,
+        time: f32,
+        collected_light: Colour,
+    ) -> Self {
         Self {
             origin,
             direction,
             time,
-            collected_light
+            collected_light,
         }
     }
 
@@ -33,7 +38,7 @@ impl Ray {
             origin,
             direction,
             time: 0.,
-            collected_light: Colour::new(0., 0., 0.),
+            collected_light: Colour::new(1., 1., 1.),
         }
     }
 

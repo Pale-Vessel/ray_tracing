@@ -78,20 +78,21 @@ fn main() -> ImageResult<()> {
         Profile::OvernightRender => (1920, 5_000, 10),
         Profile::ManyBounces => (800, 100, 50),
     };
-    let (world, look_from, look_at, fov) = match args[2].to_ascii_lowercase() {
-        "spheres" => basic_spheres(),
-        "big_scene" => many_spheres(),
-        "checks" => checkered_spheres(),
-        "perlin_sphere" => perlin_spheres(),
-        "triangle" => triangle(),
-        "tinted_glass" => tinted_glass(),
-        "basic_light" => basic_light(),
-        "cornell" => cornell_box(),
-        "perlin_tri" => perlin_triangle(),
-        "glass_box" => glass_box()
-        _ => panic!("Invalid scene")
-    }
-    ;
+    let (world, look_from, look_at, fov) =
+        match args[2].to_ascii_lowercase().as_str() {
+            "spheres" => basic_spheres(),
+            "big_scene" => many_spheres(),
+            "checks" => checkered_spheres(),
+            "perlin_sphere" => perlin_spheres(),
+            "triangle" => triangle(),
+            "tinted_glass" => tinted_glass(),
+            "basic_light" => basic_light(),
+            "cornell" => cornell_box(),
+            "perlin_tri" => perlin_triangle(),
+            "glass_box" => glass_box(),
+            "empty" => Default::default(),
+            _ => panic!("Invalid scene"),
+        };
     let camera = Camera::initialise(
         image_width,
         rays_per_pixel,

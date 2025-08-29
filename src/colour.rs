@@ -3,21 +3,11 @@ use crate::{
     vector::VecRand,
 };
 
-use derive_more::{Add, AddAssign, Deref, Div, Mul, Sum};
+use derive_more::{Add, Deref, Div, Mul, MulAssign, Sum};
 use glam::{Vec2, Vec3};
 
 #[derive(
-    Clone,
-    Copy,
-    Debug,
-    Default,
-    Deref,
-    Add,
-    AddAssign,
-    Sum,
-    Mul,
-    Div,
-    PartialEq,
+    Clone, Copy, Debug, Default, Deref, Add, Sum, Mul, MulAssign, Div, PartialEq,
 )]
 pub struct Colour(Vec3);
 

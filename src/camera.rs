@@ -115,7 +115,7 @@ impl Camera {
             let material = data.clone().material;
 
             if material.is_light {
-                ray.collected_light += material.texture.get_colour(u, v);
+                ray.collected_light *= material.texture.get_colour(u, v);
             }
 
             let mut rng = rng();

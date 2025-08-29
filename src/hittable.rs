@@ -45,7 +45,7 @@ pub enum HittableObject {
     Sphere(Sphere),
     BVHNode(BVHNode),
     Triangle(Triangle),
-    Empty
+    Empty,
 }
 
 impl Hittable for HittableObject {
@@ -53,10 +53,8 @@ impl Hittable for HittableObject {
         match self {
             Self::Sphere(sphere) => sphere.did_hit(ray, interval),
             Self::BVHNode(bvhnode) => bvhnode.did_hit(ray, interval),
-            Self::Triangle(triangle) => {
-                triangle.did_hit(ray, interval)
-            }
-            Self::Empty => None
+            Self::Triangle(triangle) => triangle.did_hit(ray, interval),
+            Self::Empty => None,
         }
     }
 
@@ -65,18 +63,18 @@ impl Hittable for HittableObject {
             Self::Sphere(sphere) => sphere.get_bounding_box(),
             Self::BVHNode(bvhnode) => bvhnode.get_bounding_box(),
             Self::Triangle(triangle) => triangle.get_bounding_box(),
-            Self::Empty => BoundingBox::EMPTY
+            Self::Empty => BoundingBox::EMPTY,
         }
     }
 }
 
 impl HittableObject {
     pub fn exist_if(self, predicate: bool) -> Self {
-        if predicate {self} else {Self::Empty}
+        if predicate { self } else { Self::Empty }
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct HittableList {
     pub data: Vec<HittableObject>,
     bounds: BoundingBox,
