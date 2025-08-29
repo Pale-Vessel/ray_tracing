@@ -90,7 +90,7 @@ fn main() -> ImageResult<()> {
             "cornell" => cornell_box(),
             "perlin_tri" => perlin_triangle(),
             "glass_box" => glass_box(),
-            "empty" => Default::default(),
+            "empty" => empty_scene(),
             _ => panic!("Invalid scene"),
         };
     let camera = Camera::initialise(
@@ -431,6 +431,11 @@ fn glass_box() -> SceneInfo {
         Point3::new(0., 0., 0.),
         90.,
     )
+}
+
+fn empty_scene() -> SceneInfo {
+    let world = Default::default();
+    (world, Point3::new(1., 0., 0.), Point3::default(), 90.)
 }
 
 #[allow(dead_code)]
