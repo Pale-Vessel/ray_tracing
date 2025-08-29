@@ -77,7 +77,7 @@ fn parse_row(
         return Some(parse_object(row_data, materials));
     }
     let (name, row_data) = row_data.split_once(";").expect("Name not provided");
-    let name = name.to_string();
+    let name = name.strip_prefix("name=").unwrap_or(name).to_string();
     match row_type {
         "colour" => parse_colour(name, row_data, colours),
         "texture" => parse_texture(name, row_data, textures, colours),
@@ -116,6 +116,7 @@ fn parse_texture(
     let (texture_type, description) = description
         .split_once(";")
         .expect("Type of texture not properly delimited");
+    let texture_type = texture_type.strip_prefix("type=").unwrap_or(texture_type);
     let texture = match texture_type {
         "solid" => parse_solid(description, colours),
         "perlin" => parse_perlin(description, colours),
@@ -137,6 +138,7 @@ fn parse_material(
     let (mode, description) = description
         .split_once(";")
         .expect("Material mode not provided");
+    let mode = mode.strip_prefix("type=").unwrap_or(mode);
     let material = match mode {
         "full" => parse_full(description, textures),
         "opaque" => parse_opaque(description, textures),
@@ -154,6 +156,7 @@ fn parse_object(
     let (object_type, description) = description
         .split_once(";")
         .unwrap_or_else(|| panic!("Object type not given"));
+    let object_type = object_type.strip_prefix("type=").unwrap_or(object_type);
     match object_type {
         "sphere" => parse_sphere(description, materials),
         "triangle" => parse_triangle(description, materials),
