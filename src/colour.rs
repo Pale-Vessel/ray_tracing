@@ -1,5 +1,6 @@
 use crate::{
-    geometry::vector::VecRand, interval::Interval,
+    geometry::vector::VecRand,
+    interval::Interval,
     textures::{solid_texture::SolidTexture, texture::Texture},
 };
 

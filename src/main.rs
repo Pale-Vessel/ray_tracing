@@ -403,7 +403,7 @@ fn glass_box() -> SceneInfo {
     (
         world
             .into_iter()
-            // .chain(small_cube)
+            .chain(small_cube)
             .collect::<HittableList>()
             .optimise(),
         Point3::new(0., 0., 2.5),

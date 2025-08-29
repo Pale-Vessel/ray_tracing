@@ -8,7 +8,8 @@ use crate::{
         bounding_box::BoundingBox, bvh::BVHNode, sphere::Sphere,
         triangle::Triangle,
     },
-    interval::Interval, textures::material::Material,
+    interval::Interval,
+    textures::material::Material,
 };
 
 use glam::Vec3;
