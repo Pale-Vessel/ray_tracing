@@ -70,6 +70,9 @@ fn parse_row(
     materials: WriteDictionary<Material>,
 ) -> Option<HittableObject> {
     let row = row.split_whitespace().collect::<String>();
+    if row.starts_with("//") {
+        return None;
+    }
     let (row_type, row_data) = row
         .split_once(";")
         .expect("Row type not properly delimited");
