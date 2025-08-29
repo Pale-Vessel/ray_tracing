@@ -91,6 +91,6 @@ impl Point3 {
 
 impl NearZero for Vec2 {
     fn near_zero(&self) -> bool {
-        self.x < Self::EPSILON && self.y < Self::EPSILON
+        self.x.abs() < Self::EPSILON && self.y.abs() < Self::EPSILON
     }
 }
