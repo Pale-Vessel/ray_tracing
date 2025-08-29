@@ -1,4 +1,3 @@
-use core::f32::consts::{PI, TAU};
 use crate::{
     geometry::{ray::Ray, vector::Point3},
     hittables::{
@@ -8,6 +7,7 @@ use crate::{
     interval::Interval,
     textures::material::Material,
 };
+use core::f32::consts::{PI, TAU};
 
 use glam::Vec3;
 
@@ -70,7 +70,12 @@ impl Sphere {
             Point3::from_vector(*center - radius_vector),
             Point3::from_vector(*center + radius_vector),
         );
-        Self { center, radius, material, bounds }
+        Self {
+            center,
+            radius,
+            material,
+            bounds,
+        }
     }
 
     pub fn get_uv(&self, point: Point3) -> (f32, f32) {
