@@ -116,7 +116,8 @@ fn parse_texture(
     let (texture_type, description) = description
         .split_once(";")
         .expect("Type of texture not properly delimited");
-    let texture_type = texture_type.strip_prefix("type=").unwrap_or(texture_type);
+    let texture_type =
+        texture_type.strip_prefix("type=").unwrap_or(texture_type);
     let texture = match texture_type {
         "solid" => parse_solid(description, colours),
         "perlin" => parse_perlin(description, colours),

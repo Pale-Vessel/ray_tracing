@@ -85,11 +85,7 @@ impl Material {
         }
         .normalize();
 
-        Ray::new(
-            record.collision_point,
-            direction,
-            ray.collected_light,
-        )
+        Ray::new(record.collision_point, direction, ray.collected_light)
     }
 
     fn reflectance(cosine: f32, refractive_index: f32) -> f32 {
