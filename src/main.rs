@@ -9,35 +9,12 @@ mod interval;
 mod scene_reader;
 mod textures;
 
-use core::f32;
+use crate::camera::Camera;
+
 use derive_more::Display;
+use glam::Vec3;
 use image::ImageResult;
 use std::path::Path;
-
-#[allow(unused_imports)]
-use rand::{Rng, rng};
-
-use crate::{
-    camera::Camera,
-    colour::Colour,
-    geometry::vector::Point3,
-    hittables::{
-        hittable::{
-            HittableList,
-            HittableObject::{self, Sphere as SpheHit, Triangle as TriHit},
-        },
-        sphere::Sphere,
-        triangle::Triangle,
-    },
-    textures::{
-        checker_texture::CheckerTexture, material::Material,
-        perlin_texture::PerlinTexture, texture::Texture,
-    },
-};
-
-use glam::Vec3;
-
-pub type SceneInfo = (HittableList, Point3, Point3, f32);
 
 #[allow(dead_code)]
 #[derive(Display)]
@@ -68,21 +45,6 @@ fn main() -> ImageResult<()> {
     };
     let (world, look_from, look_at, fov) =
         scene_reader::reader::read_scene(String::from("spheres.scene"));
-    // match args[2].to_ascii_lowercase().as_str() {
-    //     "spheres" => basic_spheres(),
-    //     "big_scene" => many_spheres(),
-    //     "checks" => checkered_spheres(),
-    //     "perlin_sphere" => perlin_spheres(),
-    //     "triangle" => triangle(),
-    //     "tinted_glass" => tinted_glass(),
-    //     "basic_light" => basic_light(),
-    //     "cornell" => cornell_box(),
-    //     "perlin_tri" => perlin_triangle(),
-    //     "glass_box" => glass_box(),
-    //     "glass_square" => glass_square(),
-    //     "empty" => empty_scene(),
-    //     _ => panic!("Invalid scene"),
-    // };
     let camera = Camera::initialise(
         image_width,
         rays_per_pixel,
@@ -100,6 +62,7 @@ fn main() -> ImageResult<()> {
     image.save(output)
 }
 
+#[cfg(false)]
 fn basic_spheres() -> SceneInfo {
     let checkered_texture = Texture::Checker(CheckerTexture::new(
         Colour::new(0.2, 0.3, 0.1).to_texture(),
@@ -145,6 +108,7 @@ fn basic_spheres() -> SceneInfo {
     )
 }
 
+#[cfg(false)]
 fn many_spheres() -> SceneInfo {
     let checkered_texture = Texture::Checker(CheckerTexture::new(
         Colour::new(0.2, 0.3, 0.1).to_texture(),
@@ -220,6 +184,7 @@ fn many_spheres() -> SceneInfo {
     )
 }
 
+#[cfg(false)]
 fn checkered_spheres() -> SceneInfo {
     let checkered_texture = Texture::Checker(CheckerTexture::new(
         Colour::new(0.5, 0.5, 0.5).to_texture(),
@@ -246,6 +211,7 @@ fn checkered_spheres() -> SceneInfo {
     )
 }
 
+#[cfg(false)]
 fn perlin_spheres() -> SceneInfo {
     let perlin_texture =
         Texture::Perlin(PerlinTexture::new(5., Colour::new(1., 1., 1.)));
@@ -269,6 +235,7 @@ fn perlin_spheres() -> SceneInfo {
     )
 }
 
+#[cfg(false)]
 fn triangle() -> SceneInfo {
     #[allow(unused_variables)]
     let blue: Material =
@@ -302,6 +269,7 @@ fn triangle() -> SceneInfo {
     )
 }
 
+#[cfg(false)]
 fn tinted_glass() -> SceneInfo {
     let ground_material =
         Material::new_opaque(0., Colour::new(0.2, 0.3, 0.8).to_texture());
@@ -322,6 +290,7 @@ fn tinted_glass() -> SceneInfo {
     )
 }
 
+#[cfg(false)]
 fn basic_light() -> SceneInfo {
     let checkered_texture = Texture::Checker(CheckerTexture::new(
         Colour::new(0.2, 0.3, 0.1).to_texture(),
@@ -357,6 +326,7 @@ fn basic_light() -> SceneInfo {
     )
 }
 
+#[cfg(false)]
 fn cornell_box() -> SceneInfo {
     let white_texture = Colour::new(1., 1., 1.).to_texture();
     let glass = Material::new_glass(1.5, white_texture.clone());
@@ -372,6 +342,7 @@ fn cornell_box() -> SceneInfo {
     )
 }
 
+#[cfg(false)]
 fn perlin_triangle() -> SceneInfo {
     let tri_size = 5.;
     let material = Material::new_opaque(
@@ -391,6 +362,7 @@ fn perlin_triangle() -> SceneInfo {
     (world, Point3::new(0., 6., 0.), Point3::default(), 90.)
 }
 
+#[cfg(false)]
 fn glass_box() -> SceneInfo {
     let walls =
         Material::new_opaque(1., Colour::new(1., 0.3, 0.3).to_texture());
@@ -409,6 +381,7 @@ fn glass_box() -> SceneInfo {
     )
 }
 
+#[cfg(false)]
 fn glass_square() -> SceneInfo {
     let size = 3.;
     let glass = Material::new_glass(1.5, Colour::WHITE.to_texture());
@@ -433,11 +406,13 @@ fn glass_square() -> SceneInfo {
     )
 }
 
+#[cfg(false)]
 fn empty_scene() -> SceneInfo {
     let world = Default::default();
     (world, Point3::new(1., 0., 0.), Point3::default(), 90.)
 }
 
+#[cfg(false)]
 fn make_cube(
     size: f32,
     closed: bool,
