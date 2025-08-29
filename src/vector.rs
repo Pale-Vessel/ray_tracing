@@ -79,6 +79,7 @@ impl AddAssign<f32> for Point3 {
 }
 
 impl Point3 {
+    pub const ORIGIN: Self = Self::new(0., 0., 0.);
     pub const fn new(x: f32, y: f32, z: f32) -> Self {
         Self(Vec3::new(x, y, z))
     }

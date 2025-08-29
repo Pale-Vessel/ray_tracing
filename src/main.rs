@@ -90,6 +90,7 @@ fn main() -> ImageResult<()> {
             "cornell" => cornell_box(),
             "perlin_tri" => perlin_triangle(),
             "glass_box" => glass_box(),
+            "glass_square" => glass_square(),
             "empty" => empty_scene(),
             _ => panic!("Invalid scene"),
         };
@@ -150,7 +151,7 @@ fn basic_spheres() -> SceneInfo {
             .collect::<HittableList>()
             .optimise(),
         Point3::new(13., 2., 3.),
-        Point3::new(0., 0., 0.),
+        Point3::ORIGIN,
         20.,
     )
 }
@@ -225,7 +226,7 @@ fn many_spheres() -> SceneInfo {
             .collect::<HittableList>()
             .optimise(),
         Point3::new(13., 2., 3.),
-        Point3::new(0., 0., 0.),
+        Point3::ORIGIN,
         20.,
     )
 }
@@ -311,7 +312,7 @@ fn triangle() -> SceneInfo {
     (
         world,
         Point3::new(0., 10., 0.000_000_1),
-        Point3::new(0., 0., 0.),
+        Point3::ORIGIN,
         90.,
     )
 }
@@ -322,7 +323,7 @@ fn tinted_glass() -> SceneInfo {
     let glass = Material::new_glass(1.5, Colour::new(1., 0., 0.).to_texture());
     let world = [
         Sphere::new_still(Point3::new(0., -1000., 0.), 1000., ground_material),
-        Sphere::new_still(Point3::new(0., 0., 0.), 1., glass),
+        Sphere::new_still(Point3::ORIGIN, 1., glass),
     ];
     (
         world
@@ -331,7 +332,7 @@ fn tinted_glass() -> SceneInfo {
             .collect::<HittableList>()
             .optimise(),
         Point3::new(0., 3., 2.),
-        Point3::new(0., 0., 0.),
+        Point3::ORIGIN,
         90.,
     )
 }
@@ -367,7 +368,7 @@ fn basic_light() -> SceneInfo {
             .collect::<HittableList>()
             .optimise(),
         Point3::new(13., 2., 3.),
-        Point3::new(0., 0., 0.),
+        Point3::ORIGIN,
         30.,
     )
 }
@@ -375,14 +376,14 @@ fn basic_light() -> SceneInfo {
 fn cornell_box() -> SceneInfo {
     let white_texture = Colour::new(1., 1., 1.).to_texture();
     let glass = Material::new_glass(1.5, white_texture.clone());
-    // let ball_one = Sphere::new_still(Point3::new(0., 0., 0.), 1. / 3., glass.clone());
+    // let ball_one = Sphere::new_still(Point3::ORIGIN, 1. / 3., glass.clone());
     let world = make_cube(1.5, false, false, false, Some(glass), None);
     // world.push(SpheHit(ball_one));
 
     (
         world.into_iter().collect::<HittableList>().optimise(),
         Point3::new(0., 0., 1.5),
-        Point3::new(0., 0., 0.),
+        Point3::ORIGIN,
         90.,
     )
 }
@@ -419,7 +420,31 @@ fn glass_box() -> SceneInfo {
             .collect::<HittableList>()
             .optimise(),
         Point3::new(0., 0., 2.5),
-        Point3::new(0., 0., 0.),
+        Point3::ORIGIN,
+        90.,
+    )
+}
+
+fn glass_square() -> SceneInfo {
+    let size = 3.;
+    let glass = Material::new_glass(1.5, Colour::WHITE.to_texture());
+    let (square_one, square_two) = Triangle::new_quad(
+        (
+            Point3::new(0., size, size),
+            Point3::new(0., size, -size),
+            Point3::new(0., -size, size),
+            Point3::new(0., -size, -size),
+        ),
+        glass,
+        None,
+    );
+    (
+        [TriHit(square_one), TriHit(square_two)]
+            .into_iter()
+            .collect::<HittableList>()
+            .optimise(),
+        Point3::new(1.5, 0., 0.),
+        Point3::ORIGIN,
         90.,
     )
 }
