@@ -27,6 +27,7 @@ pub fn read_scene(path: String) -> (HittableList, Point3, Point3, f32) {
     let mut contents = String::new();
     file.read_to_string(&mut contents)
         .expect("Contents unreadable");
+    let mut points = HashMap::new();
     let mut textures = HashMap::new();
     let mut materials = HashMap::new();
     let mut colours = HashMap::new();
@@ -40,7 +41,7 @@ pub fn read_scene(path: String) -> (HittableList, Point3, Point3, f32) {
     let (look_from, look_at, fov) = parse_camera_data(first_line);
     let objects = lines
         .flat_map(|row| {
-            parse_row(row, &mut colours, &mut textures, &mut materials)
+            parse_row(row, &mut points, &mut colours, &mut textures, &mut materials)
         })
         .collect::<HittableList>()
         .optimise();
@@ -65,6 +66,7 @@ fn parse_camera_data(description: String) -> (Point3, Point3, f32) {
 
 fn parse_row(
     row: &str,
+    points: WriteDictionary<Point3>,
     colours: WriteDictionary<Colour>,
     textures: WriteDictionary<Texture>,
     materials: WriteDictionary<Material>,
@@ -77,17 +79,38 @@ fn parse_row(
         .split_once(";")
         .expect("Row type not properly delimited");
     if row_type == "object" {
-        return Some(parse_object(row_data, materials));
+        return Some(parse_object(row_data, materials, points));
     }
-    let (name, row_data) = row_data.split_once(";").expect("Name not provided");
+    let (name, description) = row_data.split_once(";").expect("Name not provided");
     let name = name.strip_prefix("name=").unwrap_or(name).to_string();
     match row_type {
-        "colour" => parse_colour(name, row_data, colours),
-        "texture" => parse_texture(name, row_data, textures, colours),
-        "material" => parse_material(name, row_data, materials, textures),
+        "point" => parse_point(name, description, points),
+        "colour" => parse_colour(name, description, colours),
+        "texture" => parse_texture(name, description, textures, colours),
+        "material" => parse_material(name, description, materials, textures),
         _ => panic!("{row_type} is not a valid row type"),
     }
     None
+}
+
+fn parse_point(
+    name: String,
+    description: &str,
+    points: WriteDictionary<Point3>,
+) {
+    let [x, y, z] = description
+        .split(",")
+        .collect::<Vec<_>>()
+        .try_into()
+        .unwrap_or_else(|_| {
+            panic!("Expected three parameters for colour, got {description}")
+        });
+    let point = Point3::new(
+        parse_f32(x),
+        parse_f32(y),
+        parse_f32(z)
+    );
+    points.insert(name, point);
 }
 
 fn parse_colour(
@@ -103,9 +126,9 @@ fn parse_colour(
             panic!("Expected three parameters for colour, got {description}")
         });
     let colour = Colour::new(
-        red.parse().expect("red was an invalid f32"),
-        green.parse().expect("green was an invalid f32"),
-        blue.parse().expect("blue was an invalid f32"),
+        parse_f32(red),
+        parse_f32(green),
+        parse_f32(blue)
     );
     colours.insert(name, colour);
 }
@@ -156,14 +179,15 @@ fn parse_material(
 fn parse_object(
     description: &str,
     materials: WriteDictionary<Material>,
+    points: ReadDictionary<Point3>,
 ) -> HittableObject {
     let (object_type, description) = description
         .split_once(";")
         .unwrap_or_else(|| panic!("Object type not given"));
     let object_type = object_type.strip_prefix("type=").unwrap_or(object_type);
     match object_type {
-        "sphere" => parse_sphere(description, materials),
-        "triangle" => parse_triangle(description, materials),
-        _ => unreachable!(),
+        "sphere" => parse_sphere(description, materials, points),
+        "triangle" => parse_triangle(description, materials, points),
+        _ => panic!("{object_type} is not a valid object"),
     }
 }
