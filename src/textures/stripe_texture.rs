@@ -1,6 +1,6 @@
 use crate::{
     colour::Colour,
-    texture::{GetTexture, Texture},
+    textures::texture::{GetTexture, Texture},
 };
 
 #[derive(Clone, Debug)]

@@ -1,6 +1,6 @@
 use crate::{
-    interval::Interval, solid_texture::SolidTexture, texture::Texture,
-    vector::VecRand,
+    geometry::vector::VecRand, interval::Interval,
+    textures::{solid_texture::SolidTexture, texture::Texture},
 };
 
 use std::ops::MulAssign;
@@ -8,9 +8,7 @@ use std::ops::MulAssign;
 use derive_more::{Add, Deref, Div, Mul, Sum};
 use glam::{Vec2, Vec3};
 
-#[derive(
-    Clone, Copy, Debug, Default, Deref, Add, Sum, Mul, Div, PartialEq,
-)]
+#[derive(Clone, Copy, Debug, Default, Deref, Add, Sum, Mul, Div, PartialEq)]
 pub struct Colour(Vec3);
 
 impl From<Vec2> for Colour {

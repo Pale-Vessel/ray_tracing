@@ -2,8 +2,8 @@ use derive_more::Constructor;
 
 use crate::{
     colour::Colour,
-    texture::{GetTexture, Texture},
-    vector::NearZero,
+    geometry::vector::NearZero,
+    textures::texture::{GetTexture, Texture},
 };
 
 use glam::{Vec2, Vec2Swizzles, Vec3, Vec3Swizzles};

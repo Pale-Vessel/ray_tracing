@@ -2,11 +2,13 @@ use std::sync::{Arc, Mutex};
 
 use crate::{
     colour::{Colour, map_colours},
-    hittable::{Hittable, HittableList},
+    geometry::{
+        ray::Ray,
+        vector::{Point3, VecRand},
+    },
+    hittables::hittable::{Hittable, HittableList},
     interval::Interval,
-    ray::Ray,
-    texture::GetTexture,
-    vector::{Point3, VecRand},
+    textures::texture::GetTexture,
 };
 use glam::Vec3;
 use image::{Rgb, RgbImage};

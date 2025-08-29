@@ -1,7 +1,10 @@
 use crate::{
-    checker_texture::CheckerTexture, colour::Colour,
-    gradient_texture::GradientTexture, perlin_texture::PerlinTexture,
-    solid_texture::SolidTexture, stripe_texture::StripeTexture,
+    colour::Colour,
+    textures::{
+        checker_texture::CheckerTexture, gradient_texture::GradientTexture,
+        perlin_texture::PerlinTexture, solid_texture::SolidTexture,
+        stripe_texture::StripeTexture,
+    },
 };
 
 pub trait GetTexture {

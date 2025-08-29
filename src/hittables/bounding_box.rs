@@ -2,7 +2,10 @@ use std::ops::Index;
 
 use derive_more::Constructor;
 
-use crate::{interval::Interval, ray::Ray, vector::Point3};
+use crate::{
+    geometry::{ray::Ray, vector::Point3},
+    interval::Interval,
+};
 
 #[derive(Debug, Copy, Clone, Constructor, Default)]
 pub struct AxisAlignedBoundingBox {

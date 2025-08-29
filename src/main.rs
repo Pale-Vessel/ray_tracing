@@ -1,23 +1,12 @@
 #![allow(clippy::cast_possible_truncation)]
 #![allow(clippy::cast_sign_loss)]
 
-mod bounding_box;
-mod bvh;
 mod camera;
-mod checker_texture;
 mod colour;
-mod gradient_texture;
-mod hittable;
+mod geometry;
+mod hittables;
 mod interval;
-mod material;
-mod perlin_texture;
-mod ray;
-mod solid_texture;
-mod sphere;
-mod stripe_texture;
-mod texture;
-mod triangle;
-mod vector;
+mod textures;
 
 use core::f32;
 use derive_more::Display;
@@ -29,23 +18,21 @@ use rand::{Rng, rng};
 
 use crate::{
     camera::Camera,
-    checker_texture::CheckerTexture,
     colour::Colour,
-    hittable::{
-        HittableList,
-        HittableObject::{self, Sphere as SpheHit, Triangle as TriHit},
+    geometry::vector::Point3,
+    hittables::{
+        hittable::{
+            HittableList,
+            HittableObject::{self, Sphere as SpheHit, Triangle as TriHit},
+        },
+        sphere::Sphere,
+        triangle::Triangle,
     },
-    material::Material,
-    perlin_texture::PerlinTexture,
-    sphere::Sphere,
-    stripe_texture::StripeTexture,
-    texture::Texture,
-    triangle::Triangle,
-    vector::Point3,
+    textures::{
+        checker_texture::CheckerTexture, material::Material,
+        perlin_texture::PerlinTexture, texture::Texture,
+    },
 };
-
-#[allow(unused_imports)]
-use crate::gradient_texture::GradientTexture;
 
 use glam::Vec3;
 
@@ -392,7 +379,7 @@ fn perlin_triangle() -> SceneInfo {
     let tri_size = 5.;
     let material = Material::new_no_refract(
         0.,
-        PerlinTexture::new(500., Colour::new(1., 1., 1.)).wrap(),
+        PerlinTexture::new(0.5, Colour::new(1., 1., 1.)).wrap(),
     );
     let triangle = Triangle::new(
         Point3::new(tri_size, 0., tri_size),

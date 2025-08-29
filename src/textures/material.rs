@@ -2,10 +2,12 @@ use derive_more::Constructor;
 use rand::{Rng, rng};
 
 use crate::{
-    hittable::HitRecord,
-    ray::Ray,
-    texture::Texture,
-    vector::{NearZero, VecRand},
+    geometry::{
+        ray::Ray,
+        vector::{NearZero, VecRand},
+    },
+    hittables::hittable::HitRecord,
+    textures::texture::Texture,
 };
 
 use glam::Vec3;

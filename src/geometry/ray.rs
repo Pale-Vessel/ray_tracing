@@ -1,4 +1,4 @@
-use crate::{colour::Colour, vector::Point3};
+use crate::{colour::Colour, geometry::vector::Point3};
 use glam::Vec3;
 
 #[derive(Copy, Clone, Debug)]

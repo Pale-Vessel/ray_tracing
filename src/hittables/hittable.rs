@@ -3,9 +3,12 @@ use std::ops::Index;
 use derive_more::Constructor;
 
 use crate::{
-    bounding_box::BoundingBox, bvh::BVHNode, interval::Interval,
-    material::Material, ray::Ray, sphere::Sphere, triangle::Triangle,
-    vector::Point3,
+    geometry::{ray::Ray, vector::Point3},
+    hittables::{
+        bounding_box::BoundingBox, bvh::BVHNode, sphere::Sphere,
+        triangle::Triangle,
+    },
+    interval::Interval, textures::material::Material,
 };
 
 use glam::Vec3;

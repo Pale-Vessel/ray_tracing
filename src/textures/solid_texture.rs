@@ -2,7 +2,7 @@ use derive_more::Constructor;
 
 use crate::{
     colour::Colour,
-    texture::{GetTexture, Texture},
+    textures::texture::{GetTexture, Texture},
 };
 
 #[derive(Copy, Clone, Constructor, Debug, Default)]

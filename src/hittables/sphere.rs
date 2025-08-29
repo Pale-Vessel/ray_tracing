@@ -3,12 +3,13 @@ use core::f32::consts::{PI, TAU};
 use derive_more::Constructor;
 
 use crate::{
-    bounding_box::BoundingBox,
-    hittable::{HitRecord, Hittable},
+    geometry::{ray::Ray, vector::Point3},
+    hittables::{
+        bounding_box::BoundingBox,
+        hittable::{HitRecord, Hittable},
+    },
     interval::Interval,
-    material::Material,
-    ray::Ray,
-    vector::Point3,
+    textures::material::Material,
 };
 
 use glam::Vec3;

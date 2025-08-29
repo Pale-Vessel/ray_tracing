@@ -1,10 +1,12 @@
 use std::cmp::Ordering;
 
 use crate::{
-    bounding_box::BoundingBox,
-    hittable::{HitRecord, Hittable, HittableList, HittableObject},
+    geometry::ray::Ray,
+    hittables::{
+        bounding_box::BoundingBox,
+        hittable::{HitRecord, Hittable, HittableList, HittableObject},
+    },
     interval::Interval,
-    ray,
 };
 
 #[derive(Clone, Debug)]
@@ -15,7 +17,7 @@ pub struct BVHNode {
 }
 
 impl Hittable for BVHNode {
-    fn did_hit(&self, ray: ray::Ray, interval: Interval) -> Option<HitRecord> {
+    fn did_hit(&self, ray: Ray, interval: Interval) -> Option<HitRecord> {
         if !self.bounds.did_hit(ray, interval) {
             return None;
         }
