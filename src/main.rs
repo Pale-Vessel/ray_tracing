@@ -323,10 +323,11 @@ fn triangle() -> SceneInfo {
 
 #[allow(dead_code)]
 fn tinted_glass() -> SceneInfo {
-    let noise = PerlinTexture::new(1., Colour::new(0.4, 0.4, 0.4));
-    let glass = Material::new_glass(1., Texture::Perlin(noise));
+    let ground_material =
+        Material::new_no_refract(0., Colour::new(0.2, 0.3, 0.8).to_texture());
+    let glass = Material::new_glass(1., Colour::WHITE.to_texture());
     let world = [
-        // Sphere::new_still(Point3::new(0., -1000., 0.), 1000., ground_material),
+        Sphere::new_still(Point3::new(0., -1000., 0.), 1000., ground_material),
         Sphere::new_still(Point3::new(0., 0., 0.), 1., glass),
     ];
     (
@@ -383,7 +384,7 @@ fn cornell_box() -> SceneInfo {
     let white_texture = Colour::new(1., 1., 1.).to_texture();
     let glass = Material::new_glass(1.5, white_texture.clone());
     // let ball_one = Sphere::new_still(Point3::new(0., 0., 0.), 1. / 3., glass.clone());
-    let world = make_cube(1.5, true, true, true, Some(glass), None);
+    let world = make_cube(1.5, false, false, false, Some(glass), None);
     // world.push(SpheHit(ball_one));
 
     (
