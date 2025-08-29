@@ -110,7 +110,6 @@ fn main() -> ImageResult<()> {
     image.save(output)
 }
 
-#[allow(dead_code)]
 fn basic_spheres() -> SceneInfo {
     let checkered_texture = Texture::Checker(CheckerTexture::new(
         Colour::new(0.2, 0.3, 0.1).to_texture(),
@@ -156,7 +155,6 @@ fn basic_spheres() -> SceneInfo {
     )
 }
 
-#[allow(dead_code)]
 fn many_spheres() -> SceneInfo {
     let checkered_texture = Texture::Checker(CheckerTexture::new(
         Colour::new(0.2, 0.3, 0.1).to_texture(),
@@ -232,7 +230,6 @@ fn many_spheres() -> SceneInfo {
     )
 }
 
-#[allow(dead_code)]
 fn checkered_spheres() -> SceneInfo {
     let checkered_texture = Texture::Checker(CheckerTexture::new(
         Colour::new(0.5, 0.5, 0.5).to_texture(),
@@ -259,7 +256,6 @@ fn checkered_spheres() -> SceneInfo {
     )
 }
 
-#[allow(dead_code)]
 fn perlin_spheres() -> SceneInfo {
     let perlin_texture =
         Texture::Perlin(PerlinTexture::new(5., Colour::new(1., 1., 1.)));
@@ -287,7 +283,6 @@ fn perlin_spheres() -> SceneInfo {
     )
 }
 
-#[allow(dead_code)]
 fn triangle() -> SceneInfo {
     #[allow(unused_variables)]
     let blue: Material =
@@ -321,11 +316,10 @@ fn triangle() -> SceneInfo {
     )
 }
 
-#[allow(dead_code)]
 fn tinted_glass() -> SceneInfo {
     let ground_material =
         Material::new_no_refract(0., Colour::new(0.2, 0.3, 0.8).to_texture());
-    let glass = Material::new_glass(1.5, Colour::WHITE.to_texture());
+    let glass = Material::new_glass(1.5, Colour::new(1., 0., 0.).to_texture());
     let world = [
         Sphere::new_still(Point3::new(0., -1000., 0.), 1000., ground_material),
         Sphere::new_still(Point3::new(0., 0., 0.), 1., glass),
@@ -338,11 +332,10 @@ fn tinted_glass() -> SceneInfo {
             .optimise(),
         Point3::new(0., 3., 2.),
         Point3::new(0., 0., 0.),
-        20.,
+        90.,
     )
 }
 
-#[allow(dead_code)]
 fn basic_light() -> SceneInfo {
     let checkered_texture = Texture::Checker(CheckerTexture::new(
         Colour::new(0.2, 0.3, 0.1).to_texture(),
@@ -379,7 +372,6 @@ fn basic_light() -> SceneInfo {
     )
 }
 
-#[allow(dead_code)]
 fn cornell_box() -> SceneInfo {
     let white_texture = Colour::new(1., 1., 1.).to_texture();
     let glass = Material::new_glass(1.5, white_texture.clone());
@@ -395,7 +387,6 @@ fn cornell_box() -> SceneInfo {
     )
 }
 
-#[allow(dead_code)]
 fn perlin_triangle() -> SceneInfo {
     let tri_size = 5.;
     let material = Material::new_no_refract(
@@ -415,7 +406,6 @@ fn perlin_triangle() -> SceneInfo {
     (world, Point3::new(0., 6., 0.), Point3::default(), 90.)
 }
 
-#[allow(dead_code)]
 fn glass_box() -> SceneInfo {
     let walls =
         Material::new_no_refract(1., Colour::new(1., 0.3, 0.3).to_texture());
@@ -439,7 +429,6 @@ fn empty_scene() -> SceneInfo {
     (world, Point3::new(1., 0., 0.), Point3::default(), 90.)
 }
 
-#[allow(dead_code)]
 fn make_cube(
     size: f32,
     closed: bool,
