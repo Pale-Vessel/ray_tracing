@@ -1,7 +1,4 @@
 use core::f32::consts::{PI, TAU};
-
-use derive_more::Constructor;
-
 use crate::{
     geometry::{ray::Ray, vector::Point3},
     hittables::{
@@ -14,9 +11,9 @@ use crate::{
 
 use glam::Vec3;
 
-#[derive(Clone, Debug, Constructor)]
+#[derive(Clone, Debug)]
 pub struct Sphere {
-    center: Ray,
+    center: Point3,
     radius: f32,
     material: Material,
     bounds: BoundingBox,
@@ -24,8 +21,7 @@ pub struct Sphere {
 
 impl Hittable for Sphere {
     fn did_hit(&self, ray: Ray, interval: Interval) -> Option<HitRecord> {
-        let current_center = self.center.at(ray.time);
-        let oc = *(current_center - ray.origin);
+        let oc = *(self.center - ray.origin);
         // a, b, and c are coefficients in the derived quadratic equation
         let a_coefficient = ray.direction.length_squared();
         let h_coefficient = ray.direction.dot(oc);
@@ -47,7 +43,7 @@ impl Hittable for Sphere {
         }
 
         let collision_point = ray.at(collision_time);
-        let outward_normal = *(collision_point - current_center) / self.radius;
+        let outward_normal = *(collision_point - self.center) / self.radius;
         let (front_face, normal_vector) =
             HitRecord::calc_front_face(ray, outward_normal);
         let (u, v) = self.get_uv(collision_point);
@@ -68,44 +64,17 @@ impl Hittable for Sphere {
 }
 
 impl Sphere {
-    pub fn new_still(center: Point3, radius: f32, material: Material) -> Self {
+    pub fn new(center: Point3, radius: f32, material: Material) -> Self {
         let radius_vector = Vec3::new(radius, radius, radius);
         let bounds = BoundingBox::new_from_corners(
             Point3::from_vector(*center - radius_vector),
             Point3::from_vector(*center + radius_vector),
         );
-        Self::new(
-            Ray::new_time_zero(center, Vec3::new(0., 0., 0.)),
-            radius,
-            material,
-            bounds,
-        )
-    }
-
-    #[allow(dead_code)]
-    pub fn new_from_two_points(
-        start_center: Point3,
-        end_center: Point3,
-        radius: f32,
-        material: Material,
-    ) -> Self {
-        let movement =
-            Ray::new_time_zero(start_center, *(end_center - start_center));
-        let radius_vector = Vec3::new(radius, radius, radius);
-        let box_one = BoundingBox::new_from_corners(
-            Point3::from_vector(*start_center - radius_vector),
-            Point3::from_vector(*start_center + radius_vector),
-        );
-        let box_two = BoundingBox::new_from_corners(
-            Point3::from_vector(*end_center - radius_vector),
-            Point3::from_vector(*end_center + radius_vector),
-        );
-        let bounds = BoundingBox::new_from_boxes(&box_one, &box_two);
-        Self::new(movement, radius, material, bounds)
+        Self { center, radius, material, bounds }
     }
 
     pub fn get_uv(&self, point: Point3) -> (f32, f32) {
-        let vector = (self.center.origin - point).normalize();
+        let vector = (self.center - point).normalize();
 
         (
             self.radius * (0.5 + (vector.x.atan2(vector.z) / TAU)),
