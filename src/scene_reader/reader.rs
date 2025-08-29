@@ -70,7 +70,7 @@ fn parse_row(
     materials: WriteDictionary<Material>,
 ) -> Option<HittableObject> {
     let row = row.split_whitespace().collect::<String>();
-    if row.starts_with("//") {
+    if row.is_empty() || row.starts_with("//") {
         return None;
     }
     let (row_type, row_data) = row
