@@ -43,8 +43,9 @@ fn main() -> ImageResult<()> {
         Profile::OvernightRender => (1920, 5_000, 10),
         Profile::ManyBounces => (800, 100, 50),
     };
+    let scene_name = &args[2];
     let (world, look_from, look_at, fov) = scene_reader::reader::read_scene(
-        format!("scenes/{}.scene", args[2].to_ascii_lowercase()),
+        format!("scenes/{}.scene", scene_name.to_ascii_lowercase()),
     );
     let camera = Camera::initialise(
         image_width,
@@ -58,7 +59,7 @@ fn main() -> ImageResult<()> {
         0.,
     );
     let image = camera.render(&world);
-    let path = format!("image{profile}.png");
+    let path = format!("{scene_name} - {}.png", profile.to_string().to_ascii_lowercase());
     let output = Path::new(&path);
     image.save(output)
 }
