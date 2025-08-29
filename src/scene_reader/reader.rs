@@ -5,7 +5,6 @@ use std::{collections::HashMap, fs::File, io::Read};
 use collar::CollectArray;
 
 use crate::{
-    SceneInfo,
     colour::Colour,
     geometry::vector::Point3,
     hittables::hittable::{HittableList, HittableObject},
@@ -23,7 +22,7 @@ use crate::{
 pub(super) type ReadDictionary<'a, T> = &'a HashMap<String, T>;
 type WriteDictionary<'a, T> = &'a mut HashMap<String, T>;
 
-pub fn read_scene(path: String) -> SceneInfo {
+pub fn read_scene(path: String) -> (HittableList, Point3, Point3, f32) {
     let mut file = File::open(path).expect("Unable to open the file");
     let mut contents = String::new();
     file.read_to_string(&mut contents)
