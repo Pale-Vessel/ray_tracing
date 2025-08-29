@@ -325,7 +325,7 @@ fn triangle() -> SceneInfo {
 fn tinted_glass() -> SceneInfo {
     let ground_material =
         Material::new_no_refract(0., Colour::new(0.2, 0.3, 0.8).to_texture());
-    let glass = Material::new_glass(1., Colour::WHITE.to_texture());
+    let glass = Material::new_glass(1.5, Colour::WHITE.to_texture());
     let world = [
         Sphere::new_still(Point3::new(0., -1000., 0.), 1000., ground_material),
         Sphere::new_still(Point3::new(0., 0., 0.), 1., glass),
@@ -336,7 +336,7 @@ fn tinted_glass() -> SceneInfo {
             .map(SpheHit)
             .collect::<HittableList>()
             .optimise(),
-        Point3::new(0., 10., 0.),
+        Point3::new(0., 3., 2.),
         Point3::new(0., 0., 0.),
         20.,
     )
