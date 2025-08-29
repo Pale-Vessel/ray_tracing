@@ -42,18 +42,18 @@ impl StripeTexture {
         even_texture: Texture,
         odd_texture: Texture,
         size: f32,
-        direction: &str
+        direction: &str,
     ) -> Option<Self> {
         let direction = match direction {
             "u" => Direction::U,
             "v" => Direction::V,
-            _ => return None
+            _ => return None,
         };
         Some(Self {
             even_texture: Box::new(even_texture),
             odd_texture: Box::new(odd_texture),
             inv_scale: 1. / size,
-            direction
+            direction,
         })
     }
 
