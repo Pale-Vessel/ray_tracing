@@ -10,7 +10,7 @@ pub struct Ray {
 }
 
 impl Ray {
-    pub const fn new(origin: Point3, direction: Vec3, time: f32) -> Self {
+    pub const fn new_white(origin: Point3, direction: Vec3, time: f32) -> Self {
         Self {
             origin,
             direction,
@@ -19,7 +19,7 @@ impl Ray {
         }
     }
 
-    pub const fn new_with_colour(
+    pub const fn new(
         origin: Point3,
         direction: Vec3,
         time: f32,

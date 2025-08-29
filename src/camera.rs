@@ -174,7 +174,7 @@ impl Camera {
         let mut rng = rng();
         let ray_time = rng.random();
 
-        Ray::new(ray_origin, ray_direction, ray_time)
+        Ray::new_white(ray_origin, ray_direction, ray_time)
     }
 
     fn sample_square(horiz_position: u32, vert_position: u32) -> Vec3 {

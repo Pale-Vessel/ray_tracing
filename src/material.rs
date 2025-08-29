@@ -41,12 +41,12 @@ impl Material {
             scatter_direction
         };
 
-        Ray::new(record.collision_point, scatter_direction, ray.time)
+        Ray::new_white(record.collision_point, scatter_direction, ray.time)
     }
 
     pub fn specular_reflection(ray: Ray, record: &HitRecord) -> Ray {
         let reflected = ray.direction.reflect(record.normal_vector);
-        Ray::new(record.collision_point, reflected, ray.time)
+        Ray::new_white(record.collision_point, reflected, ray.time)
     }
 
     pub fn lerp_reflect(&self, ray: Ray, record: &HitRecord) -> Ray {
@@ -54,7 +54,7 @@ impl Material {
         let specular_ray = Self::specular_reflection(ray, record);
         let direction = self.smoothness * specular_ray.direction
             + (1. - self.smoothness) * diffuse_ray.direction;
-        Ray::new_with_colour(
+        Ray::new(
             diffuse_ray.origin,
             direction.normalize(),
             ray.time,
@@ -84,7 +84,7 @@ impl Material {
         }
         .normalize();
 
-        Ray::new_with_colour(
+        Ray::new(
             record.collision_point,
             direction,
             ray.time,
