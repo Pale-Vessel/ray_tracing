@@ -69,7 +69,7 @@ fn main() -> ImageResult<()> {
         "insane" => Profile::Insane,
         "overnight" => Profile::OvernightRender,
         "bounce" => Profile::ManyBounces,
-        _ => unreachable!(),
+        _ => panic!("Invalid profile"),
     };
     let (image_width, rays_per_pixel, max_ray_bounces) = match profile {
         Profile::Debug => (800, 10, 10),
@@ -78,7 +78,20 @@ fn main() -> ImageResult<()> {
         Profile::OvernightRender => (1920, 5_000, 10),
         Profile::ManyBounces => (800, 100, 50),
     };
-    let (world, look_from, look_at, fov) = glass_box();
+    let (world, look_from, look_at, fov) = match args[2].to_ascii_lowercase() {
+        "spheres" => basic_spheres(),
+        "big_scene" => many_spheres(),
+        "checks" => checkered_spheres(),
+        "perlin_sphere" => perlin_spheres(),
+        "triangle" => triangle(),
+        "tinted_glass" => tinted_glass(),
+        "basic_light" => basic_light(),
+        "cornell" => cornell_box(),
+        "perlin_tri" => perlin_triangle(),
+        "glass_box" => glass_box()
+        _ => panic!("Invalid scene")
+    }
+    ;
     let camera = Camera::initialise(
         image_width,
         rays_per_pixel,
@@ -143,7 +156,7 @@ fn basic_spheres() -> SceneInfo {
 }
 
 #[allow(dead_code)]
-fn bouncing_spheres() -> SceneInfo {
+fn many_spheres() -> SceneInfo {
     let checkered_texture = Texture::Checker(CheckerTexture::new(
         Colour::new(0.2, 0.3, 0.1).to_texture(),
         Colour::new(0.9, 0.9, 0.9).to_texture(),
@@ -368,9 +381,9 @@ fn basic_light() -> SceneInfo {
 fn cornell_box() -> SceneInfo {
     let white_texture = Colour::new(1., 1., 1.).to_texture();
     let glass = Material::new_glass(1.5, white_texture.clone());
-    let ball_one = Sphere::new_still(Point3::new(0., 0., 0.), 1. / 3., glass);
-    let mut world = make_cube(1.5, true, true, true, None, None);
-    world.push(SpheHit(ball_one));
+    // let ball_one = Sphere::new_still(Point3::new(0., 0., 0.), 1. / 3., glass.clone());
+    let world = make_cube(1.5, true, true, true, Some(glass), None);
+    // world.push(SpheHit(ball_one));
 
     (
         world.into_iter().collect::<HittableList>().optimise(),
@@ -378,28 +391,6 @@ fn cornell_box() -> SceneInfo {
         Point3::new(0., 0., 0.),
         90.,
     )
-}
-
-#[allow(dead_code)]
-fn gradient_stripe_test() -> SceneInfo {
-    let world = [TriHit(Triangle::new(
-        Point3::new(0., 0., 0.),
-        Point3::new(0., 1., 0.),
-        Point3::new(0., 1., 1.),
-        Material::new_no_refract(
-            1.,
-            StripeTexture::new_u(
-                Colour::new(1., 0., 0.).to_texture(),
-                Colour::new(0., 1., 0.).to_texture(),
-                0.1,
-            )
-            .wrap(),
-        ),
-    ))]
-    .into_iter()
-    .collect::<HittableList>()
-    .optimise();
-    (world, Point3::new(1.5, 0., 0.), Point3::default(), 90.)
 }
 
 #[allow(dead_code)]
@@ -425,7 +416,7 @@ fn perlin_triangle() -> SceneInfo {
 #[allow(dead_code)]
 fn glass_box() -> SceneInfo {
     let walls =
-        Material::new_no_refract(1., Colour::new(0.8, 0.3, 0.3).to_texture());
+        Material::new_no_refract(1., Colour::new(1., 0.3, 0.3).to_texture());
     let world = make_cube(3., true, true, true, Some(walls), None);
     let glass = Material::new_glass(1., Colour::new(1., 1., 1.).to_texture());
     let small_cube = make_cube(0.75, true, false, false, Some(glass), None);
