@@ -53,7 +53,7 @@ fn parse_camera_data(description: String) -> (Point3, Point3, f32) {
     let Ok([from_x, from_y, from_z, at_x, at_y, at_z, fov]) =
         description.split(",").collect_array_checked()
     else {
-        panic!("{description} is not a valid description for a sphere")
+        panic!("{description:?} is not a valid description for the camera")
     };
     let [from_x, from_y, from_z, at_x, at_y, at_z, fov] =
         [from_x, from_y, from_z, at_x, at_y, at_z, fov].map(parse_f32);
@@ -77,7 +77,7 @@ fn parse_row(
     }
     let (row_type, row_data) = row
         .split_once(";")
-        .expect("Row type not properly delimited");
+        .unwrap_or_else(|| panic!("{row:?} - row type not properly delimited"));
     if row_type == "object" {
         return Some(parse_object(row_data, materials, points));
     }
@@ -88,7 +88,7 @@ fn parse_row(
         "colour" => parse_colour(name, description, colours),
         "texture" => parse_texture(name, description, textures, colours),
         "material" => parse_material(name, description, materials, textures),
-        _ => panic!("{row_type} is not a valid row type"),
+        _ => panic!("{row_type:?} is not a valid row type"),
     }
     None
 }
@@ -103,7 +103,7 @@ fn parse_point(
         .collect::<Vec<_>>()
         .try_into()
         .unwrap_or_else(|_| {
-            panic!("Expected three parameters for colour, got {description}")
+            panic!("Expected three parameters for colour, got {description:?}")
         });
     let point = Point3::new(
         parse_f32(x),
@@ -123,7 +123,7 @@ fn parse_colour(
         .collect::<Vec<_>>()
         .try_into()
         .unwrap_or_else(|_| {
-            panic!("Expected three parameters for colour, got {description}")
+            panic!("Expected three parameters for colour, got {description:?}")
         });
     let colour = Colour::new(
         parse_f32(red),
@@ -151,7 +151,7 @@ fn parse_texture(
         "stripe" => parse_stripe(description, textures),
         "gradient" => parse_gradient(description, textures),
         "uv" => Texture::UV,
-        _ => panic!("{texture_type} is not a valid texture"),
+        _ => panic!("{texture_type:?} is not a valid texture"),
     };
     textures.insert(name, texture);
 }
@@ -171,7 +171,7 @@ fn parse_material(
         "opaque" => parse_opaque(description, textures),
         "light" => parse_light(description, textures),
         "glass" => parse_glass(description, textures),
-        _ => panic!("{mode} is an invalid mode"),
+        _ => panic!("{mode:?} is an invalid mode"),
     };
     materials.insert(name, material);
 }
@@ -188,6 +188,6 @@ fn parse_object(
     match object_type {
         "sphere" => parse_sphere(description, materials, points),
         "triangle" => parse_triangle(description, materials, points),
-        _ => panic!("{object_type} is not a valid object"),
+        _ => panic!("{object_type:?} is not a valid object"),
     }
 }

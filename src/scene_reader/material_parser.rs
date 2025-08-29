@@ -22,7 +22,7 @@ pub(super) fn parse_full(
     ) = description.split(",").collect_array_checked()
     else {
         panic!(
-            "{description} is not a valid description for an opaque material"
+            "{description:?} is not a valid description for a material"
         )
     };
     let smoothness = parse_f32(smoothness);
@@ -47,7 +47,7 @@ pub(super) fn parse_opaque(
         description.split(",").collect_array_checked()
     else {
         panic!(
-            "{description} is not a valid description for an opaque material"
+            "{description:?} is not a valid description for an opaque material"
         )
     };
     let smoothness = parse_f32(smoothness);
@@ -63,7 +63,7 @@ pub(super) fn parse_light(
         description.split(",").collect_array_checked()
     else {
         panic!(
-            "{description} is not a valid description for an opaque material"
+            "{description:?} is not a valid description for a light material"
         )
     };
     let smoothness = parse_f32(smoothness);
@@ -79,7 +79,7 @@ pub(super) fn parse_glass(
         description.split(",").collect_array_checked()
     else {
         panic!(
-            "{description} is not a valid description for an opaque material"
+            "{description:?} is not a valid description for a glass material"
         )
     };
     let refractive_index = parse_f32(refractive_index);

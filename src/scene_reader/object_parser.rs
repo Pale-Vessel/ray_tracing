@@ -15,7 +15,7 @@ use crate::{
 fn get_point(point_name: &str, points: ReadDictionary<Point3>) -> Point3 {
     *points
         .get(point_name)
-        .unwrap_or_else(|| panic!("{point_name} is not a known point name"))
+        .unwrap_or_else(|| panic!("{point_name:?} is not a known point name"))
 }
 
 pub(super) fn parse_sphere(
@@ -43,7 +43,7 @@ pub(super) fn parse_sphere(
             let material = get_material(material_name, materials);
             (center, radius, material)
         }
-        _ => panic!("{description} is not a valid description of a sphere"),
+        _ => panic!("{description:?} is not a valid description of a sphere"),
     };
     Sphere::new(center, radius, material).wrap()
 }
@@ -107,7 +107,7 @@ pub(super) fn parse_triangle(
                 (corner_one, corner_two, corner_three, material)
             }
             _ => panic!(
-                "{description} is not a valid description for a triangle"
+                "{description:?} is not a valid description for a triangle"
             ),
         };
     Triangle::new(corner_one, corner_two, corner_three, material).wrap()

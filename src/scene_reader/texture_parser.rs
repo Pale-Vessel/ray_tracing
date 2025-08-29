@@ -13,7 +13,7 @@ use collar::*;
 fn get_colour(colour_name: &str, colours: ReadDictionary<Colour>) -> Colour {
     *colours
         .get(colour_name)
-        .unwrap_or_else(|| panic!("{colour_name} is not a known colour name"))
+        .unwrap_or_else(|| panic!("{colour_name:?} is not a known colour name"))
 }
 
 pub(super) fn get_texture(
@@ -22,7 +22,7 @@ pub(super) fn get_texture(
 ) -> Texture {
     textures
         .get(texture_name)
-        .unwrap_or_else(|| panic!("{texture_name} is not a known texture name"))
+        .unwrap_or_else(|| panic!("{texture_name:?} is not a known texture name"))
         .clone()
 }
 
@@ -33,7 +33,7 @@ pub(super) fn get_material(
     materials
         .get(material_name)
         .unwrap_or_else(|| {
-            panic!("{material_name} is not a known texture name")
+            panic!("{material_name:?} is not a known texture name")
         })
         .clone()
 }
@@ -56,7 +56,7 @@ pub(super) fn parse_perlin(
 ) -> Texture {
     let (scale, colour_name) = description.split_once(",").unwrap_or_else(|| {
         panic!(
-            "{description} is an insufficient description for perlin texture"
+            "{description:?} is an insufficient description for perlin texture"
         )
     });
     PerlinTexture::new(parse_f32(scale), get_colour(colour_name, colours))
@@ -70,7 +70,7 @@ pub(super) fn parse_checkerboard(
         description.split(",").collect_array_checked()
     else {
         panic!(
-            "{description} is an invalid description for checkerboard texture"
+            "{description:?} is an invalid description for checkerboard texture"
         )
     };
     CheckerTexture::new(
@@ -89,7 +89,7 @@ pub(super) fn parse_stripe(
         description.split(",").collect_array_checked()
     else {
         panic!(
-            "{description} is an invalid description for checkerboard texture"
+            "{description:?} is an invalid description for striped texture"
         )
     };
     StripeTexture::new_with_dir_name(
@@ -98,7 +98,7 @@ pub(super) fn parse_stripe(
         parse_f32(size),
         direction,
     )
-    .unwrap_or_else(|| panic!("{direction} is not a valid direction"))
+    .unwrap_or_else(|| panic!("{direction:?} is not a valid direction"))
     .wrap()
 }
 
@@ -110,7 +110,7 @@ pub(super) fn parse_gradient(
         description.split(",").collect_array_checked()
     else {
         panic!(
-            "{description} is an invalid description for checkerboard texture"
+            "{description:?} is an invalid description for gradient texture"
         )
     };
     GradientTexture::new_with_dir_name(
@@ -118,6 +118,6 @@ pub(super) fn parse_gradient(
         get_texture(top_texture, textures),
         direction,
     )
-    .unwrap_or_else(|| panic!("{direction} is not a valid direction"))
+    .unwrap_or_else(|| panic!("{direction:?} is not a valid direction"))
     .wrap()
 }
