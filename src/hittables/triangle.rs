@@ -2,7 +2,7 @@ use crate::{
     geometry::{ray::Ray, vector::Point3},
     hittables::{
         bounding_box::BoundingBox,
-        hittable::{HitRecord, Hittable},
+        hittable::{HitRecord, Hittable, HittableObject},
     },
     interval::Interval,
     textures::material::Material,
@@ -132,5 +132,9 @@ impl Triangle {
             Self::new(a, b, c, material_one),
             Self::new(d, c, b, material_two),
         )
+    }
+
+    pub fn wrap(self) -> HittableObject {
+        HittableObject::Triangle(self)
     }
 }

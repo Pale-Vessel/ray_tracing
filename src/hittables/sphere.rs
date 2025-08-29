@@ -6,7 +6,7 @@ use crate::{
     geometry::{ray::Ray, vector::Point3},
     hittables::{
         bounding_box::BoundingBox,
-        hittable::{HitRecord, Hittable},
+        hittable::{HitRecord, Hittable, HittableObject},
     },
     interval::Interval,
     textures::material::Material,
@@ -111,5 +111,9 @@ impl Sphere {
             self.radius * (0.5 + (vector.x.atan2(vector.z) / TAU)),
             self.radius * (0.5 + vector.y.asin() / PI),
         )
+    }
+
+    pub fn wrap(self) -> HittableObject {
+        HittableObject::Sphere(self)
     }
 }
