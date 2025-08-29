@@ -1,5 +1,4 @@
 use crate::{
-    geometry::vector::VecRand,
     interval::Interval,
     textures::{solid_texture::SolidTexture, texture::Texture},
 };
@@ -31,11 +30,6 @@ impl Colour {
     pub const BLACK: Self = Self::new(0., 0., 0.);
     pub const fn new(r: f32, g: f32, b: f32) -> Self {
         Self(Vec3::new(r, g, b))
-    }
-
-    pub fn new_random() -> Self {
-        let random = Vec3::rand_unit_vector();
-        Self(random)
     }
 
     pub fn to_texture(self) -> Texture {

@@ -121,6 +121,7 @@ impl Triangle {
         }
     }
 
+    #[cfg(false)]
     pub fn new_quad(
         points: (Point3, Point3, Point3, Point3),
         material_one: Material,
