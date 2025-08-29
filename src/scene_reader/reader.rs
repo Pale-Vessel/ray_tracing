@@ -139,7 +139,7 @@ fn parse_material(
         .expect("Material mode not provided");
     let material = match mode {
         "full" => parse_full(description, textures),
-        "solid" => parse_opaque(description, textures),
+        "opaque" => parse_opaque(description, textures),
         "light" => parse_light(description, textures),
         "glass" => parse_glass(description, textures),
         _ => panic!("{mode} is an invalid mode"),
