@@ -6,6 +6,7 @@ mod colour;
 mod geometry;
 mod hittables;
 mod interval;
+mod scene_reader;
 mod textures;
 
 use core::f32;
@@ -36,7 +37,7 @@ use crate::{
 
 use glam::Vec3;
 
-type SceneInfo = (HittableList, Point3, Point3, f32);
+pub type SceneInfo = (HittableList, Point3, Point3, f32);
 
 #[allow(dead_code)]
 #[derive(Display)]
@@ -66,21 +67,22 @@ fn main() -> ImageResult<()> {
         Profile::ManyBounces => (800, 100, 50),
     };
     let (world, look_from, look_at, fov) =
-        match args[2].to_ascii_lowercase().as_str() {
-            "spheres" => basic_spheres(),
-            "big_scene" => many_spheres(),
-            "checks" => checkered_spheres(),
-            "perlin_sphere" => perlin_spheres(),
-            "triangle" => triangle(),
-            "tinted_glass" => tinted_glass(),
-            "basic_light" => basic_light(),
-            "cornell" => cornell_box(),
-            "perlin_tri" => perlin_triangle(),
-            "glass_box" => glass_box(),
-            "glass_square" => glass_square(),
-            "empty" => empty_scene(),
-            _ => panic!("Invalid scene"),
-        };
+        scene_reader::reader::read_scene(String::from("spheres.scene"));
+    // match args[2].to_ascii_lowercase().as_str() {
+    //     "spheres" => basic_spheres(),
+    //     "big_scene" => many_spheres(),
+    //     "checks" => checkered_spheres(),
+    //     "perlin_sphere" => perlin_spheres(),
+    //     "triangle" => triangle(),
+    //     "tinted_glass" => tinted_glass(),
+    //     "basic_light" => basic_light(),
+    //     "cornell" => cornell_box(),
+    //     "perlin_tri" => perlin_triangle(),
+    //     "glass_box" => glass_box(),
+    //     "glass_square" => glass_square(),
+    //     "empty" => empty_scene(),
+    //     _ => panic!("Invalid scene"),
+    // };
     let camera = Camera::initialise(
         image_width,
         rays_per_pixel,
@@ -105,9 +107,9 @@ fn basic_spheres() -> SceneInfo {
         0.32,
     ));
 
-    let ground_material = Material::new_no_refract(0., checkered_texture);
+    let ground_material = Material::new_opaque(0., checkered_texture);
 
-    let mut world = vec![Sphere::new_still(
+    let mut world = vec![Sphere::new(
         Point3::new(0., -1000., -1.),
         1000.,
         ground_material,
@@ -117,14 +119,14 @@ fn basic_spheres() -> SceneInfo {
     let air =
         Material::new_glass(1. / 1.5, Colour::new(1., 1., 1.).to_texture());
     let rough =
-        Material::new_no_refract(1., Colour::new(0.4, 0.2, 0.1).to_texture());
+        Material::new_opaque(1., Colour::new(0.4, 0.2, 0.1).to_texture());
     let smooth =
-        Material::new_no_refract(1., Colour::new(1., 0.6, 0.5).to_texture());
+        Material::new_opaque(1., Colour::new(1., 0.6, 0.5).to_texture());
 
-    world.push(Sphere::new_still(Point3::new(0., 2., 1.), 1., glass));
-    world.push(Sphere::new_still(Point3::new(0., 2., 1.), 0.5, air));
-    world.push(Sphere::new_still(Point3::new(-4., 1., 0.), 1., rough));
-    world.push(Sphere::new_still(
+    world.push(Sphere::new(Point3::new(0., 2., 1.), 1., glass));
+    world.push(Sphere::new(Point3::new(0., 2., 1.), 0.5, air));
+    world.push(Sphere::new(Point3::new(-4., 1., 0.), 1., rough));
+    world.push(Sphere::new(
         // Point3::new(4., 0.5, 0.),
         Point3::new(4., 1.0, 0.),
         1.,
@@ -150,9 +152,9 @@ fn many_spheres() -> SceneInfo {
         0.32,
     ));
 
-    let ground_material = Material::new_no_refract(0., checkered_texture);
+    let ground_material = Material::new_opaque(0., checkered_texture);
 
-    let mut world = vec![Sphere::new_still(
+    let mut world = vec![Sphere::new(
         Point3::new(0., -1000., -1.),
         1000.,
         ground_material,
@@ -169,8 +171,8 @@ fn many_spheres() -> SceneInfo {
 
             if (center - Point3::new(4., 0.2, 0.)).length() > 0.9 {
                 let colour = Colour::new_random().to_texture();
-                let material = Material::new_no_refract(rng.random(), colour);
-                world.push(Sphere::new_still(center, 0.2, material));
+                let material = Material::new_opaque(rng.random(), colour);
+                world.push(Sphere::new(center, 0.2, material));
             }
         }
         for b in 3..5 {
@@ -183,7 +185,7 @@ fn many_spheres() -> SceneInfo {
             if (center - Point3::new(4., 0.2, 0.)).length() > 0.9 {
                 let colour = Colour::new_random().to_texture();
                 let material = Material::new_glass(1.5, colour);
-                world.push(Sphere::new_still(center, 0.2, material));
+                world.push(Sphere::new(center, 0.2, material));
             }
         }
     }
@@ -192,14 +194,14 @@ fn many_spheres() -> SceneInfo {
     let air =
         Material::new_glass(1. / 1.5, Colour::new(1., 1., 1.).to_texture());
     let rough =
-        Material::new_no_refract(1., Colour::new(0.4, 0.2, 0.1).to_texture());
+        Material::new_opaque(1., Colour::new(0.4, 0.2, 0.1).to_texture());
     let smooth =
-        Material::new_no_refract(1., Colour::new(1., 0.6, 0.5).to_texture());
+        Material::new_opaque(1., Colour::new(1., 0.6, 0.5).to_texture());
 
-    world.push(Sphere::new_still(Point3::new(0., 2., 1.), 1., glass));
-    world.push(Sphere::new_still(Point3::new(0., 2., 1.), 0.5, air));
-    world.push(Sphere::new_still(Point3::new(-4., 1., 0.), 1., rough));
-    world.push(Sphere::new_still(
+    world.push(Sphere::new(Point3::new(0., 2., 1.), 1., glass));
+    world.push(Sphere::new(Point3::new(0., 2., 1.), 0.5, air));
+    world.push(Sphere::new(Point3::new(-4., 1., 0.), 1., rough));
+    world.push(Sphere::new(
         // Point3::new(4., 0.5, 0.),
         Point3::new(4., 1.0, 0.),
         1.,
@@ -225,11 +227,11 @@ fn checkered_spheres() -> SceneInfo {
         4.,
     ));
 
-    let material = Material::new_no_refract(1., checkered_texture);
+    let material = Material::new_opaque(1., checkered_texture);
 
     let world = [
-        Sphere::new_still(Point3::new(0., -10., 0.), 10., material.clone()),
-        Sphere::new_still(Point3::new(0., 10., 0.), 10., material),
+        Sphere::new(Point3::new(0., -10., 0.), 10., material.clone()),
+        Sphere::new(Point3::new(0., 10., 0.), 10., material),
     ];
 
     (
@@ -248,15 +250,11 @@ fn perlin_spheres() -> SceneInfo {
     let perlin_texture =
         Texture::Perlin(PerlinTexture::new(5., Colour::new(1., 1., 1.)));
     let smooth_material =
-        Material::new_no_refract(0.5, Colour::new(0.7, 0.7, 0.5).to_texture());
-    let perlin_material = Material::new_no_refract(0., perlin_texture);
+        Material::new_opaque(0.5, Colour::new(0.7, 0.7, 0.5).to_texture());
+    let perlin_material = Material::new_opaque(0., perlin_texture);
     let world = [
-        Sphere::new_still(
-            Point3::new(0., -1000.0, 0.),
-            1000.0,
-            smooth_material,
-        ),
-        Sphere::new_still(Point3::new(5., 3., 0.), 3., perlin_material),
+        Sphere::new(Point3::new(0., -1000.0, 0.), 1000.0, smooth_material),
+        Sphere::new(Point3::new(5., 3., 0.), 3., perlin_material),
     ];
 
     (
@@ -275,7 +273,7 @@ fn triangle() -> SceneInfo {
     #[allow(unused_variables)]
     let blue: Material =
         Material::new_light(1., Colour::new(0., 0., 1.).to_texture());
-    let triangle_texture = Material::new_no_refract(
+    let triangle_texture = Material::new_opaque(
         1.,
         PerlinTexture::new(1., Colour::new(1., 1., 1.)).wrap(),
     );
@@ -306,11 +304,11 @@ fn triangle() -> SceneInfo {
 
 fn tinted_glass() -> SceneInfo {
     let ground_material =
-        Material::new_no_refract(0., Colour::new(0.2, 0.3, 0.8).to_texture());
+        Material::new_opaque(0., Colour::new(0.2, 0.3, 0.8).to_texture());
     let glass = Material::new_glass(1.5, Colour::new(1., 0., 0.).to_texture());
     let world = [
-        Sphere::new_still(Point3::new(0., -1000., 0.), 1000., ground_material),
-        Sphere::new_still(Point3::ORIGIN, 1., glass),
+        Sphere::new(Point3::new(0., -1000., 0.), 1000., ground_material),
+        Sphere::new(Point3::ORIGIN, 1., glass),
     ];
     (
         world
@@ -331,22 +329,21 @@ fn basic_light() -> SceneInfo {
         0.32,
     ));
 
-    let ground_material = Material::new_no_refract(0., checkered_texture);
+    let ground_material = Material::new_opaque(0., checkered_texture);
 
     let glass = Material::new_glass(1.5, Colour::new(1., 1., 1.).to_texture());
     let air =
         Material::new_glass(1. / 1.5, Colour::new(1., 1., 1.).to_texture());
-    let lamp =
-        Material::new_no_refract(0., Colour::new(1., 1., 1.).to_texture());
+    let lamp = Material::new_opaque(0., Colour::new(1., 1., 1.).to_texture());
     let smooth =
-        Material::new_no_refract(1., Colour::new(1., 0.6, 0.5).to_texture());
+        Material::new_opaque(1., Colour::new(1., 0.6, 0.5).to_texture());
 
     let world = vec![
-        Sphere::new_still(Point3::new(0., -1000., -1.), 1000., ground_material),
-        Sphere::new_still(Point3::new(0., 2., 1.), 1., glass),
-        Sphere::new_still(Point3::new(0., 2., 1.), 0.5, air),
-        Sphere::new_still(Point3::new(0., 1000., 0.), 900., lamp),
-        Sphere::new_still(Point3::new(4., 1.0, 0.), 1., smooth),
+        Sphere::new(Point3::new(0., -1000., -1.), 1000., ground_material),
+        Sphere::new(Point3::new(0., 2., 1.), 1., glass),
+        Sphere::new(Point3::new(0., 2., 1.), 0.5, air),
+        Sphere::new(Point3::new(0., 1000., 0.), 900., lamp),
+        Sphere::new(Point3::new(4., 1.0, 0.), 1., smooth),
     ];
     (
         world
@@ -377,7 +374,7 @@ fn cornell_box() -> SceneInfo {
 
 fn perlin_triangle() -> SceneInfo {
     let tri_size = 5.;
-    let material = Material::new_no_refract(
+    let material = Material::new_opaque(
         0.,
         PerlinTexture::new(0.5, Colour::new(1., 1., 1.)).wrap(),
     );
@@ -396,7 +393,7 @@ fn perlin_triangle() -> SceneInfo {
 
 fn glass_box() -> SceneInfo {
     let walls =
-        Material::new_no_refract(1., Colour::new(1., 0.3, 0.3).to_texture());
+        Material::new_opaque(1., Colour::new(1., 0.3, 0.3).to_texture());
     let world = make_cube(3., true, true, true, Some(walls), None);
     let glass = Material::new_glass(1., Colour::new(1., 1., 1.).to_texture());
     let small_cube = make_cube(0.75, true, false, false, Some(glass), None);
@@ -449,7 +446,7 @@ fn make_cube(
     material: Option<Material>,
     light_size: Option<f32>,
 ) -> Vec<HittableObject> {
-    let material = material.unwrap_or(Material::new_no_refract(
+    let material = material.unwrap_or(Material::new_opaque(
         0.8,
         Colour::new(0.8, 0.8, 0.8).to_texture(),
     ));
