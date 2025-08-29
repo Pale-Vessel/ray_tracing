@@ -44,7 +44,7 @@ fn main() -> ImageResult<()> {
         Profile::ManyBounces => (800, 100, 50),
     };
     let (world, look_from, look_at, fov) =
-        scene_reader::reader::read_scene(args[2].to_ascii_lowercase());
+        scene_reader::reader::read_scene(format!("scenes/{}.scene", args[2].to_ascii_lowercase()));
     let camera = Camera::initialise(
         image_width,
         rays_per_pixel,
