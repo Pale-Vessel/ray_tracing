@@ -38,6 +38,25 @@ impl GetTexture for StripeTexture {
 
 #[allow(dead_code)]
 impl StripeTexture {
+    pub fn new_with_dir_name(
+        even_texture: Texture,
+        odd_texture: Texture,
+        size: f32,
+        direction: &str
+    ) -> Option<Self> {
+        let direction = match direction {
+            "u" => Direction::U,
+            "v" => Direction::V,
+            _ => return None
+        };
+        Some(Self {
+            even_texture: Box::new(even_texture),
+            odd_texture: Box::new(odd_texture),
+            inv_scale: 1. / size,
+            direction
+        })
+    }
+
     pub fn new_u(
         even_texture: Texture,
         odd_texture: Texture,
