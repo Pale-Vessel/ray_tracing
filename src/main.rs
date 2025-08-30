@@ -14,9 +14,24 @@ use crate::{camera::Camera, file_utils::clean_scenes::clean_scenes};
 use glam::Vec3;
 use image::ImageResult;
 
+use clap::Parser;
+
+/// Program to render images from a `.scene` file
+#[derive(Debug, Parser)]
+#[command(version, about, long_about = None)]
+struct Args {
+    /// Profile to render image at
+    #[arg(short, long)]
+    profile: String,
+
+    /// Which image to render
+    #[arg(short, long)]
+    to_render: String,
+}
+
 fn main() -> ImageResult<()> {
-    let args = std::env::args().collect::<Vec<_>>();
-    let profile = args[1].to_ascii_lowercase();
+    let args = Args::parse();
+    let (profile, scene_name) = (args.profile, args.to_render);
     let (image_width, rays_per_pixel, max_ray_bounces) = match profile.as_str()
     {
         "debug" => (800, 10, 10),
@@ -30,7 +45,6 @@ fn main() -> ImageResult<()> {
         }
         _ => panic!("Invalid profile"),
     };
-    let scene_name = &args[2];
     let (world, look_from, look_at, fov) = scene_reader::reader::read_scene(
         format!("scenes/{}.scene", scene_name.to_ascii_lowercase()),
     );
