@@ -3,13 +3,14 @@
 
 mod camera;
 mod colour;
+mod file_utils;
 mod geometry;
 mod hittables;
 mod interval;
 mod scene_reader;
 mod textures;
 
-use crate::camera::Camera;
+use crate::{camera::Camera, file_utils::clean_scenes::clean_scenes};
 use glam::Vec3;
 use image::ImageResult;
 
@@ -23,6 +24,10 @@ fn main() -> ImageResult<()> {
         "insane" => (800, 1_000, 10),
         "overnight" => (1920, 5_000, 10),
         "bounce" => (800, 100, 50),
+        "clean_scenes" => {
+            clean_scenes();
+            return Ok(());
+        }
         _ => panic!("Invalid profile"),
     };
     let scene_name = &args[2];
@@ -42,8 +47,10 @@ fn main() -> ImageResult<()> {
     );
     let image = camera.render(&world);
     let dir_path = format!(r"images\{scene_name}");
-    let path =
-        format!(r"{dir_path}\{}.png", profile.to_string().to_ascii_lowercase());
+    let path = format!(
+        r"{dir_path}\{}.png",
+        profile.to_string().to_ascii_lowercase()
+    );
     std::fs::create_dir_all(dir_path).unwrap();
     image.save(path)
 }
