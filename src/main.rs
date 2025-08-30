@@ -12,7 +12,6 @@ mod textures;
 use crate::camera::Camera;
 use glam::Vec3;
 use image::ImageResult;
-use std::path::Path;
 
 fn main() -> ImageResult<()> {
     let args = std::env::args().collect::<Vec<_>>();
@@ -42,10 +41,9 @@ fn main() -> ImageResult<()> {
         0.,
     );
     let image = camera.render(&world);
-    let path = format!(
-        "{scene_name}/{}.png",
-        profile.to_string().to_ascii_lowercase()
-    );
-    let output = Path::new(&path);
-    image.save(output)
+    let dir_path = format!(r"images\{scene_name}");
+    let path =
+        format!(r"{dir_path}\{}.png", profile.to_string().to_ascii_lowercase());
+    std::fs::create_dir_all(dir_path).unwrap();
+    image.save(path)
 }
