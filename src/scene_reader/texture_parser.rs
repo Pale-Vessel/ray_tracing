@@ -58,7 +58,7 @@ pub(super) fn parse_perlin(
 ) -> Texture {
     let (scale, colour_name) = description.split_once(",").unwrap_or_else(|| {
         panic!(
-            "{description:?} is an insufficient description for perlin texture"
+            "{description:?} is an insufficient description for perlin texture - expected `scale, colour_name`"
         )
     });
     PerlinTexture::new(parse_f32(scale), get_colour(colour_name, colours))
@@ -72,7 +72,7 @@ pub(super) fn parse_checkerboard(
         description.split(",").collect_array_checked()
     else {
         panic!(
-            "{description:?} is an invalid description for checkerboard texture"
+            "{description:?} is an invalid description for checkerboard texture - expected `size, texture_one, texture, two`"
         )
     };
     CheckerTexture::new(
@@ -90,7 +90,9 @@ pub(super) fn parse_stripe(
     let Ok([size, even_texture, odd_texture, direction]) =
         description.split(",").collect_array_checked()
     else {
-        panic!("{description:?} is an invalid description for striped texture")
+        panic!(
+            "{description:?} is an invalid description for striped texture - expected `size, even_texture, odd_texture, direction`"
+        )
     };
     StripeTexture::new_with_dir_name(
         get_texture(even_texture, textures),
@@ -109,7 +111,9 @@ pub(super) fn parse_gradient(
     let Ok([bottom_texture, top_texture, direction]) =
         description.split(",").collect_array_checked()
     else {
-        panic!("{description:?} is an invalid description for gradient texture")
+        panic!(
+            "{description:?} is an invalid description for gradient texture - expected `bottom_texture, top_texture, direction`"
+        )
     };
     GradientTexture::new_with_dir_name(
         get_texture(bottom_texture, textures),

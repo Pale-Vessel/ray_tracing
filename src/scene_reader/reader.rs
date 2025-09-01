@@ -59,7 +59,10 @@ fn parse_camera_data(description: String) -> (Point3, Point3, f32) {
     let Ok([from_x, from_y, from_z, at_x, at_y, at_z, fov]) =
         description.split(",").collect_array_checked()
     else {
-        panic!("{description:?} is not a valid description for the camera")
+        panic!(
+            "{description:?} is not a valid description for the camera; 
+        expected (from_x, from_y, from_z), (at_x, at_y, at_z), fov"
+        )
     };
     let [from_x, from_y, from_z, at_x, at_y, at_z, fov] =
         [from_x, from_y, from_z, at_x, at_y, at_z, fov].map(parse_f32);
@@ -87,8 +90,9 @@ fn parse_row(
     if row_type == "object" {
         return Some(parse_object(row_data, materials, points));
     }
-    let (name, description) =
-        row_data.split_once(";").expect("Name not provided");
+    let (name, description) = row_data
+        .split_once(";")
+        .unwrap_or_else(|| panic!("Name not provided for row {row}"));
     let name = name.strip_prefix("name=").unwrap_or(name).to_string();
     match row_type {
         "point" => parse_point(name, description, points),
@@ -140,7 +144,7 @@ fn parse_texture(
 ) {
     let (texture_type, description) = description
         .split_once(";")
-        .expect("Type of texture not properly delimited");
+        .unwrap_or_else(|| panic!("Type of texture not properly delimited for {description}"));
     let texture_type =
         texture_type.strip_prefix("type=").unwrap_or(texture_type);
     let texture = match texture_type {
@@ -163,7 +167,7 @@ fn parse_material(
 ) {
     let (mode, description) = description
         .split_once(";")
-        .expect("Material mode not provided");
+        .unwrap_or_else(|| panic!("Material mode not provided for {description}"));
     let mode = mode.strip_prefix("type=").unwrap_or(mode);
     let material = match mode {
         "full" => parse_full(description, textures),
@@ -182,7 +186,7 @@ fn parse_object(
 ) -> HittableObject {
     let (object_type, description) = description
         .split_once(";")
-        .unwrap_or_else(|| panic!("Object type not given"));
+        .unwrap_or_else(|| panic!("Object type not given for {description}"));
     let object_type = object_type.strip_prefix("type=").unwrap_or(object_type);
     match object_type {
         "sphere" => parse_sphere(description, materials, points),
