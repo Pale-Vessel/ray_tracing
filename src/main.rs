@@ -32,6 +32,10 @@ struct Args {
 fn main() -> ImageResult<()> {
     let args = Args::parse();
     let (profile, scene_name) = (args.profile, args.to_render);
+    render(profile, scene_name)
+}
+
+pub fn render(profile: String, scene_name: String) -> ImageResult<()> {
     let (image_width, rays_per_pixel, max_ray_bounces) = match profile.as_str()
     {
         "debug" => (800, 10, 10),
