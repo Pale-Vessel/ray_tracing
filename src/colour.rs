@@ -34,7 +34,7 @@ impl Colour {
 }
 
 pub fn map_colours(colour: &Colour) -> (u8, u8, u8) {
-    let (r, g, b) = (colour.x, colour.y, colour.z);
+    let [r, g, b] = colour.to_array();
 
     let colour_interval = Interval::new(0., 1.0);
     let (rbyte, gbyte, bbyte) = (
