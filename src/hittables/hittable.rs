@@ -1,7 +1,5 @@
 use std::ops::Index;
 
-use derive_more::Constructor;
-
 use crate::{
     geometry::{ray::Ray, vector::Point3},
     hittables::{
@@ -14,7 +12,7 @@ use crate::{
 
 use glam::Vec3;
 
-#[derive(Clone, Debug, Default, Constructor)]
+#[derive(Clone, Debug, Default)]
 pub struct HitRecord {
     pub collision_point: Point3,
     pub normal_vector: Vec3,
@@ -26,6 +24,25 @@ pub struct HitRecord {
 }
 
 impl HitRecord {
+    pub fn new(
+        collision_point: Point3,
+        normal_vector: Vec3,
+        collision_time: f32,
+        front_face: bool,
+        material: Material,
+        u: f32,
+        v: f32,
+    ) -> HitRecord {
+        HitRecord {
+            collision_point,
+            normal_vector: normal_vector.normalize(),
+            collision_time,
+            front_face,
+            material,
+            u,
+            v,
+        }
+    }
     pub fn calc_front_face(ray: Ray, outward_normal: Vec3) -> (bool, Vec3) {
         let front_face = ray.direction.dot(outward_normal) < 0.;
         (
