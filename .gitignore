@@ -1,6 +1,5 @@
-/target
 cargo.lock
 rustfmt.toml
-*.ppm
-*.png
-*.scene
+images/
+scenes/
+target/
