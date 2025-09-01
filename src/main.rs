@@ -1,5 +1,5 @@
 extern crate ray_tracing;
-use clap::Parser;    
+use clap::Parser;
 
 /// Program to render images from a `.scene` file
 #[derive(Debug, Parser)]

@@ -34,7 +34,3 @@ lto = "thin"
 rpath = false
 strip = true
 incremental = true
-
-[[bench]]
-name = "my_benchmark"
-harness = false
