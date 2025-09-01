@@ -27,6 +27,7 @@ rayon = "1.11.0"
 lto = "thin"
 rpath = false
 strip = true
+incremental = true
 
 [dev-dependencies]
 criterion = { version = "0.5", features = ["html_reports"] }
