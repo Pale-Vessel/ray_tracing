@@ -11,11 +11,11 @@ struct Args {
 
     /// Which image to render
     #[arg(short, long)]
-    to_render: String,
+    scene: String,
 }
 
 fn main() {
     let args = Args::parse();
-    let (profile, scene_name) = (args.profile, args.to_render);
+    let (profile, scene_name) = (args.profile, args.scene);
     let _ = ray_tracing::render(&profile, &scene_name);
 }
