@@ -1,5 +1,5 @@
 extern crate ray_tracing;
-use clap::Parser;
+use clap::Parser;    
 
 /// Program to render images from a `.scene` file
 #[derive(Debug, Parser)]
@@ -17,5 +17,5 @@ struct Args {
 fn main() {
     let args = Args::parse();
     let (profile, scene_name) = (args.profile, args.to_render);
-    let _ = ray_tracing::render(profile, scene_name);
+    let _ = ray_tracing::render(&profile, &scene_name);
 }
