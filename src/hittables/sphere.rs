@@ -32,8 +32,8 @@ impl Sphere {
         let vector = (self.center - point).normalize();
 
         (
-            self.radius * (0.5 + (vector.x.atan2(vector.z) / TAU)),
-            self.radius * (0.5 + vector.y.asin() / PI),
+            (0.5 + (vector.x.atan2(vector.z) / TAU)),
+            (0.5 + vector.y.asin() / PI),
         )
     }
 
