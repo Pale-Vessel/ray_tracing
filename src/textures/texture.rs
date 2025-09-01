@@ -11,7 +11,6 @@ pub trait GetTexture {
     fn get_colour(&self, u: f32, v: f32) -> Colour;
 }
 
-#[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub enum Texture {
     Solid(SolidTexture),

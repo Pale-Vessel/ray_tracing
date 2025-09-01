@@ -36,7 +36,6 @@ impl GetTexture for StripeTexture {
     }
 }
 
-#[allow(dead_code)]
 impl StripeTexture {
     pub fn new_with_dir_name(
         even_texture: Texture,
@@ -55,32 +54,6 @@ impl StripeTexture {
             inv_scale: 1. / size,
             direction,
         })
-    }
-
-    pub fn new_u(
-        even_texture: Texture,
-        odd_texture: Texture,
-        size: f32,
-    ) -> Self {
-        Self {
-            even_texture: Box::new(even_texture),
-            odd_texture: Box::new(odd_texture),
-            inv_scale: 1. / size,
-            direction: Direction::U,
-        }
-    }
-
-    pub fn new_v(
-        even_texture: Texture,
-        odd_texture: Texture,
-        size: f32,
-    ) -> Self {
-        Self {
-            even_texture: Box::new(even_texture),
-            odd_texture: Box::new(odd_texture),
-            inv_scale: 1. / size,
-            direction: Direction::V,
-        }
     }
 
     pub fn wrap(self) -> Texture {

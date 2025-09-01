@@ -30,7 +30,6 @@ impl GetTexture for GradientTexture {
     }
 }
 
-#[allow(dead_code)]
 impl GradientTexture {
     pub fn new_with_dir_name(
         bottom_texture: Texture,
@@ -48,30 +47,6 @@ impl GradientTexture {
             top_texture: Box::new(top_texture),
             direction,
         })
-    }
-
-    pub fn new_u(bottom_texture: Texture, top_texture: Texture) -> Self {
-        Self {
-            bottom_texture: Box::new(bottom_texture),
-            top_texture: Box::new(top_texture),
-            direction: Direction::U,
-        }
-    }
-
-    pub fn new_v(bottom_texture: Texture, top_texture: Texture) -> Self {
-        Self {
-            bottom_texture: Box::new(bottom_texture),
-            top_texture: Box::new(top_texture),
-            direction: Direction::V,
-        }
-    }
-
-    pub fn new_uv(bottom_texture: Texture, top_texture: Texture) -> Self {
-        Self {
-            bottom_texture: Box::new(bottom_texture),
-            top_texture: Box::new(top_texture),
-            direction: Direction::UV,
-        }
     }
 
     pub fn wrap(self) -> Texture {

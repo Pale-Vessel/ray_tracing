@@ -33,8 +33,7 @@ impl CheckerTexture {
             inv_scale: 1. / size,
         }
     }
-
-    #[allow(dead_code)]
+    
     pub fn wrap(self) -> Texture {
         Texture::Checker(self)
     }

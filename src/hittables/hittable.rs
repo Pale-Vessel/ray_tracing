@@ -117,13 +117,6 @@ impl Hittable for HittableList {
 }
 
 impl HittableList {
-    #[allow(dead_code)]
-    pub fn empty() -> Self {
-        HittableList {
-            data: vec![],
-            bounds: BoundingBox::default(),
-        }
-    }
     pub fn optimise(self) -> HittableList {
         vec![HittableObject::BVHNode(BVHNode::new(self))]
             .into_iter()
