@@ -82,10 +82,19 @@ impl Material {
             unit.refract(record.normal_vector, refractive_index)
         } else {
             unit.reflect(record.normal_vector)
-        }
-        .normalize();
+        };
 
-        Ray::new(record.collision_point, direction, ray.collected_light)
+        let direction = if direction.x == 0. && direction.y == 0. && direction.z == 0. {
+            Vec3::new(1., 0., 0.)
+        } else {
+            direction
+        }.normalize();
+
+        Ray::new(
+            record.collision_point,
+            direction,
+            ray.collected_light,
+        )
     }
 
     fn reflectance(cosine: f32, refractive_index: f32) -> f32 {
