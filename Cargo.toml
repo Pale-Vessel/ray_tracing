@@ -4,7 +4,10 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-clap = { version = "4.5.46", features = ["derive"] }
+clap = { version = "4.5.46", default-features = false, features = [
+    "std",
+    "derive",
+] }
 collar = "1.0.1"
 derive_more = { version = "2.0.1", features = [
     "constructor",
@@ -15,12 +18,15 @@ derive_more = { version = "2.0.1", features = [
     "sum",
     "not",
     "deref",
-    "display"
+    "display",
 ] }
 glam = "0.30.5"
-image = "0.25.6"
-rand = "0.9.2"
-rand_distr = "0.5.1" 
+image = { version = "0.25.6", default-features = false, features = ["rayon"] }
+rand = { version = "0.9.2", default-features = false, features = [
+    "std",
+    "thread_rng",
+] }
+rand_distr = "0.5.1"
 rayon = "1.11.0"
 
 [profile.release]
