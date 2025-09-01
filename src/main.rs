@@ -39,7 +39,7 @@ fn main() -> ImageResult<()> {
         args.scene,
         match args.report_count.to_ascii_lowercase().as_str() {
             "false" => 0,
-            x => x.parse().unwrap()
+            x => x.parse().unwrap(),
         },
     );
     let (image_width, rays_per_pixel, max_ray_bounces) = match profile.as_str()

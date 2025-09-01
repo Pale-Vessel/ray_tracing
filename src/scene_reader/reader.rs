@@ -142,9 +142,10 @@ fn parse_texture(
     textures: WriteDictionary<Texture>,
     colours: ReadDictionary<Colour>,
 ) {
-    let (texture_type, description) = description
-        .split_once(";")
-        .unwrap_or_else(|| panic!("Type of texture not properly delimited for {description}"));
+    let (texture_type, description) =
+        description.split_once(";").unwrap_or_else(|| {
+            panic!("Type of texture not properly delimited for {description}")
+        });
     let texture_type =
         texture_type.strip_prefix("type=").unwrap_or(texture_type);
     let texture = match texture_type {
@@ -165,9 +166,10 @@ fn parse_material(
     materials: WriteDictionary<Material>,
     textures: ReadDictionary<Texture>,
 ) {
-    let (mode, description) = description
-        .split_once(";")
-        .unwrap_or_else(|| panic!("Material mode not provided for {description}"));
+    let (mode, description) =
+        description.split_once(";").unwrap_or_else(|| {
+            panic!("Material mode not provided for {description}")
+        });
     let mode = mode.strip_prefix("type=").unwrap_or(mode);
     let material = match mode {
         "full" => parse_full(description, textures),
