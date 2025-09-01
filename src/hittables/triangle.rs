@@ -121,20 +121,6 @@ impl Triangle {
         }
     }
 
-    #[cfg(false)]
-    pub fn new_quad(
-        points: (Point3, Point3, Point3, Point3),
-        material_one: Material,
-        material_two: Option<Material>,
-    ) -> (Self, Self) {
-        let (a, b, c, d) = points;
-        let material_two = material_two.unwrap_or(material_one.clone());
-        (
-            Self::new(a, b, c, material_one),
-            Self::new(d, c, b, material_two),
-        )
-    }
-
     pub fn wrap(self) -> HittableObject {
         HittableObject::Triangle(self)
     }
