@@ -11,7 +11,7 @@ use crate::{camera::Camera, file_utils::clean_scenes::clean_scenes, scene_reader
 use glam::Vec3;
 use image::ImageResult;
 
-pub fn render(profile: String, scene_name: String) -> ImageResult<()> {
+pub fn render(profile: &String, scene_name: &String) -> ImageResult<()> {
     let (image_width, rays_per_pixel, max_ray_bounces) = match profile.as_str()
     {
         "debug" => (800, 10, 10),

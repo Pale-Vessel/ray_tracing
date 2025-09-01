@@ -27,3 +27,10 @@ rayon = "1.11.0"
 lto = true
 rpath = false
 strip = true
+
+[dev-dependencies]
+criterion = { version = "0.5", features = ["html_reports"] }
+
+[[bench]]
+name = "my_benchmark"
+harness = false
