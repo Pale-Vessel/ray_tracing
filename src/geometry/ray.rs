@@ -14,7 +14,7 @@ impl Ray {
         Self {
             origin,
             direction,
-            collected_light: Colour::new(1., 1., 1.),
+            collected_light: Colour::WHITE
         }
     }
 
