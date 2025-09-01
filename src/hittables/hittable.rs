@@ -5,7 +5,7 @@ use derive_more::Constructor;
 use crate::{
     geometry::{ray::Ray, vector::Point3},
     hittables::{
-        bounding_box::BoundingBox, bvh::BVHNode, sphere::Sphere,
+        bounding_box::BoundingBox, bvh::BVHNode, solid_sphere::SolidSphere,
         triangle::Triangle,
     },
     interval::Interval,
@@ -46,7 +46,7 @@ pub trait Hittable {
 
 #[derive(Clone, Debug)]
 pub enum HittableObject {
-    Sphere(Sphere),
+    Sphere(SolidSphere),
     BVHNode(BVHNode),
     Triangle(Triangle),
 }

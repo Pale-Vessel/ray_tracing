@@ -2,7 +2,7 @@ use crate::{
     geometry::vector::Point3,
     hittables::{
         hittable::HittableObject::{self},
-        sphere::Sphere,
+        solid_sphere::SolidSphere,
         triangle::Triangle,
     },
     scene_reader::{
@@ -45,7 +45,7 @@ pub(super) fn parse_sphere(
         }
         _ => panic!("{description:?} is not a valid description of a sphere"),
     };
-    Sphere::new(center, radius, material).wrap()
+    SolidSphere::new(center, radius, material).wrap()
 }
 
 pub(super) fn parse_triangle(
