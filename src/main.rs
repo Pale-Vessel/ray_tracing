@@ -47,8 +47,9 @@ fn main() -> ImageResult<()> {
         "debug" => (800, 10, 10),
         "release" => (800, 100, 10),
         "insane" => (800, 1_000, 10),
-        "overnight" => (1920, 5_000, 10),
+        "overnight" => (1_920, 5_000, 100),
         "bounce" => (800, 100, 50),
+        "bounce_with_insane" => (1_920, 500, 50),
         "clean_scenes" => {
             clean_scenes();
             return Ok(());
