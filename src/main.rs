@@ -26,11 +26,22 @@ struct Args {
     /// Which image to render
     #[arg(short, long)]
     scene: String,
+
+    /// Whether to print progress reports
+    #[arg(short, long)]
+    report_count: String,
 }
 
 fn main() -> ImageResult<()> {
     let args = Args::parse();
-    let (profile, scene_name) = (args.profile, args.scene);
+    let (profile, scene_name, progress_reports) = (
+        args.profile,
+        args.scene,
+        match args.report_count.to_ascii_lowercase().as_str() {
+            "false" => 0,
+            x => x.parse().unwrap()
+        },
+    );
     let (image_width, rays_per_pixel, max_ray_bounces) = match profile.as_str()
     {
         "debug" => (800, 10, 10),
@@ -57,7 +68,7 @@ fn main() -> ImageResult<()> {
         10.,
         0.,
     );
-    let image = camera.render(&world);
+    let image = camera.render(&world, progress_reports);
     let dir_path = format!(r"images\{scene_name}");
     let path = format!(
         r"{dir_path}\{}.png",
