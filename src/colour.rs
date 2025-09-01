@@ -17,6 +17,12 @@ impl From<Vec2> for Colour {
     }
 }
 
+impl From<Vec3> for Colour {
+    fn from(value: Vec3) -> Self {
+        Self::new(value.x, value.y, value.z)
+    }
+}
+
 impl MulAssign for Colour {
     fn mul_assign(&mut self, rhs: Self) {
         *self = Self(**self * *rhs)

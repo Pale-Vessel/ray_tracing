@@ -134,8 +134,7 @@ impl Camera {
         let unit_vector = ray.direction.normalize();
         let vert_ratio = 0.5 * (unit_vector.y + 1.);
 
-        Self::SKY_BOTTOM_COLOUR * (1. - vert_ratio)
-            + Self::SKY_TOP_COLOUR * vert_ratio
+        Self::SKY_BOTTOM_COLOUR.lerp(*Self::SKY_TOP_COLOUR, vert_ratio).into()
     }
 
     pub fn render(&self, world: &HittableList, report_count: u32) -> RgbImage {
