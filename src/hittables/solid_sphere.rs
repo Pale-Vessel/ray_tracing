@@ -19,7 +19,7 @@ pub struct SolidSphere {
 }
 
 impl Hittable for SolidSphere {
-    fn did_hit(&self, ray: Ray, interval: Interval) -> Option<HitRecord> {
+    fn was_hit(&self, ray: Ray, interval: Interval) -> Option<HitRecord> {
         let collision_times = self.ray_intersections(ray, interval);
         let collision_time = collision_times.0.or(collision_times.1)?;
 

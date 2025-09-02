@@ -57,7 +57,7 @@ impl HitRecord {
 }
 
 pub trait Hittable {
-    fn did_hit(&self, ray: Ray, interval: Interval) -> Option<HitRecord>;
+    fn was_hit(&self, ray: Ray, interval: Interval) -> Option<HitRecord>;
     fn get_bounding_box(&self) -> BoundingBox;
 }
 
@@ -69,11 +69,11 @@ pub enum HittableObject {
 }
 
 impl Hittable for HittableObject {
-    fn did_hit(&self, ray: Ray, interval: Interval) -> Option<HitRecord> {
+    fn was_hit(&self, ray: Ray, interval: Interval) -> Option<HitRecord> {
         match self {
-            Self::Sphere(sphere) => sphere.did_hit(ray, interval),
-            Self::BVHNode(bvhnode) => bvhnode.did_hit(ray, interval),
-            Self::Triangle(triangle) => triangle.did_hit(ray, interval),
+            Self::Sphere(sphere) => sphere.was_hit(ray, interval),
+            Self::BVHNode(bvhnode) => bvhnode.was_hit(ray, interval),
+            Self::Triangle(triangle) => triangle.was_hit(ray, interval),
         }
     }
 
@@ -114,12 +114,12 @@ impl Index<usize> for HittableList {
 }
 
 impl Hittable for HittableList {
-    fn did_hit(&self, ray: Ray, interval: Interval) -> Option<HitRecord> {
+    fn was_hit(&self, ray: Ray, interval: Interval) -> Option<HitRecord> {
         let mut closest = interval.max;
         let mut out_data = None;
         self.data.iter().for_each(|object| {
             if let Some(data) =
-                object.did_hit(ray, Interval::new(interval.min, closest))
+                object.was_hit(ray, Interval::new(interval.min, closest))
             {
                 closest = data.collision_time;
                 out_data = Some(data);

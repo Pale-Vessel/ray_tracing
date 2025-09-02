@@ -17,12 +17,12 @@ pub struct BVHNode {
 }
 
 impl Hittable for BVHNode {
-    fn did_hit(&self, ray: Ray, interval: Interval) -> Option<HitRecord> {
+    fn was_hit(&self, ray: Ray, interval: Interval) -> Option<HitRecord> {
         if !self.bounds.did_hit(ray, interval) {
             return None;
         }
-        let hit_left = self.left.did_hit(ray, interval);
-        let hit_right = self.right.did_hit(
+        let hit_left = self.left.was_hit(ray, interval);
+        let hit_right = self.right.was_hit(
             ray,
             Interval::new(
                 interval.min,
