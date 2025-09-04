@@ -62,6 +62,7 @@ impl VecRand for Vec3 {
     Neg,
     Sum,
 )]
+#[repr(transparent)]
 pub struct Point3(Vec3);
 
 impl Add<f32> for Point3 {
