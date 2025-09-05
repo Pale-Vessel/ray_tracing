@@ -3,12 +3,11 @@ use crate::{
     textures::{solid_texture::SolidTexture, texture::Texture},
 };
 
-use std::ops::MulAssign;
-
-use derive_more::{Add, Deref, Div, Mul, Sum};
+use derive_more::{Add, Deref, Div, Mul, MulAssign, Sum};
 use glam::{Vec2, Vec3};
 
-#[derive(Clone, Copy, Debug, Default, Deref, Add, Sum, Mul, Div, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Deref, Add, Sum, Mul, MulAssign, Div, PartialEq)]
+#[mul_assign(forward)]
 pub struct Colour(Vec3);
 
 impl From<Vec2> for Colour {
@@ -20,12 +19,6 @@ impl From<Vec2> for Colour {
 impl From<Vec3> for Colour {
     fn from(value: Vec3) -> Self {
         Self::new(value.x, value.y, value.z)
-    }
-}
-
-impl MulAssign for Colour {
-    fn mul_assign(&mut self, rhs: Self) {
-        Vec3::mul_assign(&mut self.0, rhs.0);
     }
 }
 
