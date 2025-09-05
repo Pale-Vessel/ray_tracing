@@ -25,7 +25,7 @@ impl From<Vec3> for Colour {
 
 impl MulAssign for Colour {
     fn mul_assign(&mut self, rhs: Self) {
-        *self = Self(**self * *rhs)
+        Vec3::mul_assign(&mut self.0, rhs.0);
     }
 }
 
