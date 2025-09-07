@@ -1,10 +1,9 @@
+use collar::CollectArray;
+
 use crate::{
-    scene_reader::{
-        get_texture, parse_bool, parse_f32, scene_parser::ReadDictionary,
-    },
+    scene_reader::{ReadDictionary, get_texture, parse_bool, parse_f32},
     textures::{material::Material, texture::Texture},
 };
-use collar::*;
 
 pub(super) fn parse_full(
     description: &str,

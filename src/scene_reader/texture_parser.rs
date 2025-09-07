@@ -1,16 +1,14 @@
+use collar::CollectArray;
+
 use crate::{
     colour::Colour,
-    scene_reader::{
-        get_colour, get_texture, parse_f32, scene_parser::ReadDictionary,
-    },
+    scene_reader::{ReadDictionary, get_colour, get_texture, parse_f32},
     textures::{
         checker_texture::CheckerTexture, gradient_texture::GradientTexture,
         perlin_texture::PerlinTexture, stripe_texture::StripeTexture,
         texture::Texture,
     },
 };
-
-use collar::*;
 
 pub(super) fn parse_solid(
     description: &str,

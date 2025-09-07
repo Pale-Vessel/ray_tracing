@@ -1,13 +1,18 @@
+use std::collections::HashMap;
+
 use crate::{
     colour::Colour,
-    scene_reader::scene_parser::ReadDictionary,
     textures::{material::Material, texture::Texture},
 };
 
 mod material_parser;
 mod object_parser;
+mod row_parser;
 pub mod scene_parser;
 mod texture_parser;
+
+pub(super) type ReadDictionary<'a, T> = &'a HashMap<String, T>;
+type WriteDictionary<'a, T> = &'a mut HashMap<String, T>;
 
 pub(super) fn get_colour(
     colour_name: &str,
