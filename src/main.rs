@@ -9,7 +9,7 @@ mod textures;
 
 use crate::{
     camera::Camera, file_utils::clean_scenes::clean_scenes,
-    scene_reader::reader::read_scene,
+    scene_reader::scene_parser::read_scene,
 };
 use clap::Parser;
 use glam::Vec3;

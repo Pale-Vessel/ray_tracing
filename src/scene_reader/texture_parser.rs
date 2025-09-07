@@ -1,7 +1,7 @@
 use crate::{
     colour::Colour,
     scene_reader::{
-        get_colour, get_texture, parse_f32, reader::ReadDictionary,
+        get_colour, get_texture, parse_f32, scene_parser::ReadDictionary,
     },
     textures::{
         checker_texture::CheckerTexture, gradient_texture::GradientTexture,

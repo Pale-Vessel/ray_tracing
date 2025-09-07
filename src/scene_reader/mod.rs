@@ -1,12 +1,12 @@
 use crate::{
     colour::Colour,
-    scene_reader::reader::ReadDictionary,
+    scene_reader::scene_parser::ReadDictionary,
     textures::{material::Material, texture::Texture},
 };
 
 mod material_parser;
 mod object_parser;
-pub mod reader;
+pub mod scene_parser;
 mod texture_parser;
 
 pub(super) fn get_colour(
