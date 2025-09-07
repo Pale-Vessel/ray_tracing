@@ -2,7 +2,7 @@ use crate::{
     geometry::vector::Point3,
     hittables::{
         hittable::HittableObject::{self},
-        solid_sphere::SolidSphere,
+        sphere::SolidSphere,
         triangle::Triangle,
     },
     scene_reader::{get_material, parse_f32, reader::ReadDictionary},
