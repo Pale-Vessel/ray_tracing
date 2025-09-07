@@ -120,8 +120,7 @@ impl Camera {
                 ray.collected_light *= material.texture.get_colour(u, v);
             }
 
-            let mut rng = rng();
-            if rng.random_bool(material.refraction_chance as f64) {
+            if material.is_glass {
                 let refracted_ray = material.refract(ray, &data);
                 return material.texture.get_colour(u, v)
                     * *self.ray_colour(refracted_ray, world, depth + 1);

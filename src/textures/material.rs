@@ -16,23 +16,23 @@ use glam::Vec3;
 pub struct Material {
     smoothness: f32,
     pub texture: Texture,
-    pub refraction_chance: f32,
+    pub is_glass: bool,
     refractive_index: f32,
     pub is_light: bool,
 }
 
 impl Material {
     pub const fn new_opaque(smoothness: f32, texture: Texture) -> Self {
-        Self::new(smoothness, texture, 0., 0., false)
+        Self::new(smoothness, texture, false, 0., false)
     }
 
     pub const fn new_glass(refractive_index: f32, texture: Texture) -> Self {
         let refractive_index = f32::max(refractive_index, 0.000_000_1);
-        Self::new(0., texture, 1., refractive_index, false)
+        Self::new(0., texture, true, refractive_index, false)
     }
 
     pub const fn new_light(smoothness: f32, texture: Texture) -> Self {
-        Self::new(smoothness, texture, 0., 0., true)
+        Self::new(smoothness, texture, false, 0., true)
     }
 
     pub fn diffuse_reflection(record: &HitRecord) -> Ray {
