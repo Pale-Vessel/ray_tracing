@@ -13,7 +13,7 @@ use crate::{
 use glam::Vec3;
 use image::{Rgb, RgbImage};
 use rand::{Rng, rng};
-use rayon::prelude::*;
+use rayon::iter::{IntoParallelIterator, ParallelIterator};
 
 #[derive(Debug)]
 pub struct Camera {
