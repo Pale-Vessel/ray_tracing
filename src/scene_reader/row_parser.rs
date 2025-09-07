@@ -9,6 +9,7 @@ use crate::{
         material_parser::{parse_full, parse_glass, parse_light, parse_opaque},
         object_parser::{parse_sphere, parse_triangle},
         parse_f32,
+        scene_parser::read_scene,
         texture_parser::{
             parse_checkerboard, parse_gradient, parse_perlin, parse_solid,
             parse_stripe,
@@ -53,6 +54,9 @@ pub(super) fn parse_row(
     if row_type == "object" {
         return Some(parse_object(row_data, materials, points));
     }
+    if row_type == "inherit" {
+        return Some(parse_scene(row_data));
+    }
     let (name, description) = row_data
         .split_once(";")
         .unwrap_or_else(|| panic!("Name not provided for row {row}"));
@@ -65,6 +69,12 @@ pub(super) fn parse_row(
         _ => panic!("{row_type:?} is not a valid row type"),
     }
     None
+}
+
+fn parse_scene(scene_name: &str) -> Vec<HittableObject> {
+    read_scene(format!("scenes/{}.scene", scene_name.to_ascii_lowercase()))
+        .0
+        .data
 }
 
 fn parse_point(
