@@ -1,7 +1,7 @@
 use crate::{
     scene_reader::{
-        reader::ReadDictionary,
-        texture_parser::{get_texture, parse_f32},
+        get_texture, parse_bool, parse_f32, reader::ReadDictionary
+        
     },
     textures::{material::Material, texture::Texture},
 };
@@ -25,7 +25,7 @@ pub(super) fn parse_full(
     };
     let smoothness = parse_f32(smoothness);
     let texture = get_texture(texture_name, textures);
-    let refraction_chance = parse_f32(refraction_chance);
+    let refraction_chance = parse_bool(refraction_chance);
     let refractive_index = parse_f32(refractive_index);
     let is_light = is_light == "true";
     Material::new(

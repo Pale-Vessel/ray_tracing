@@ -6,8 +6,7 @@ use crate::{
         triangle::Triangle,
     },
     scene_reader::{
-        reader::ReadDictionary,
-        texture_parser::{get_material, parse_f32},
+        get_material, parse_f32, reader::ReadDictionary
     },
     textures::material::Material,
 };

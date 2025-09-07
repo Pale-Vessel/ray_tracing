@@ -1,49 +1,14 @@
 use crate::{
     colour::Colour,
-    scene_reader::reader::ReadDictionary,
+    scene_reader::{get_colour, get_texture, parse_f32, reader::ReadDictionary},
     textures::{
         checker_texture::CheckerTexture, gradient_texture::GradientTexture,
-        material::Material, perlin_texture::PerlinTexture,
+        perlin_texture::PerlinTexture,
         stripe_texture::StripeTexture, texture::Texture,
     },
 };
 
 use collar::*;
-
-fn get_colour(colour_name: &str, colours: ReadDictionary<Colour>) -> Colour {
-    *colours
-        .get(colour_name)
-        .unwrap_or_else(|| panic!("{colour_name:?} is not a known colour name"))
-}
-
-pub(super) fn get_texture(
-    texture_name: &str,
-    textures: ReadDictionary<Texture>,
-) -> Texture {
-    textures
-        .get(texture_name)
-        .unwrap_or_else(|| {
-            panic!("{texture_name:?} is not a known texture name")
-        })
-        .clone()
-}
-
-pub(super) fn get_material(
-    material_name: &str,
-    materials: ReadDictionary<Material>,
-) -> Material {
-    materials
-        .get(material_name)
-        .unwrap_or_else(|| {
-            panic!("{material_name:?} is not a known texture name")
-        })
-        .clone()
-}
-
-pub(super) fn parse_f32(num: &str) -> f32 {
-    num.parse()
-        .unwrap_or_else(|_| panic!("{num:?} is an invalid f32"))
-}
 
 pub(super) fn parse_solid(
     description: &str,
