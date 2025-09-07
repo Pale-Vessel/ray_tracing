@@ -3,7 +3,7 @@ use std::ops::Index;
 use crate::{
     geometry::{ray::Ray, vector::Point3},
     hittables::{
-        bounding_box::BoundingBox, bvh::BVHNode, sphere::SolidSphere,
+        bounding_box::BoundingBox, bvh::BVHNode, sphere::Sphere,
         triangle::Triangle,
     },
     interval::Interval,
@@ -63,7 +63,7 @@ pub trait Hittable {
 
 #[derive(Clone, Debug)]
 pub enum HittableObject {
-    Sphere(SolidSphere),
+    Sphere(Sphere),
     BVHNode(BVHNode),
     Triangle(Triangle),
 }

@@ -13,14 +13,14 @@ use crate::{
 };
 
 #[derive(Clone, Debug)]
-pub struct SolidSphere {
+pub struct Sphere {
     pub center: Point3,
     pub radius: f32,
     pub bounds: BoundingBox,
     material: Material,
 }
 
-impl Hittable for SolidSphere {
+impl Hittable for Sphere {
     fn was_hit(&self, ray: Ray, interval: Interval) -> Option<HitRecord> {
         let collision_times = self.ray_intersections(ray, interval);
         let collision_time = collision_times.0.or(collision_times.1)?;
@@ -46,7 +46,7 @@ impl Hittable for SolidSphere {
     }
 }
 
-impl SolidSphere {
+impl Sphere {
     pub fn new(center: Point3, radius: f32, material: Material) -> Self {
         let radius_vector = Vec3::new(radius, radius, radius);
         let bounds = BoundingBox::new_from_corners(
