@@ -28,8 +28,8 @@ struct Args {
     scene: String,
 
     /// Whether to print progress reports
-    #[arg(short, long)]
-    report_count: String,
+    #[arg(short, long, default_value_t = 10)]
+    report_count: u32,
 }
 
 fn main() -> ImageResult<()> {
@@ -37,10 +37,7 @@ fn main() -> ImageResult<()> {
     let (profile, scene_name, progress_reports) = (
         args.profile,
         args.scene,
-        match args.report_count.to_ascii_lowercase().as_str() {
-            "false" => 0,
-            x => x.parse().unwrap(),
-        },
+        args.report_count
     );
     let (image_width, rays_per_pixel, max_ray_bounces) = match profile.as_str()
     {
