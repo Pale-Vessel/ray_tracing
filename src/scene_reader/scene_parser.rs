@@ -35,6 +35,7 @@ pub fn read_scene(path: String) -> (HittableList, Point3, Point3, f32) {
                 &mut materials,
             )
         })
+        .flatten()
         .collect::<HittableList>()
         .optimise();
     (objects, look_from, look_at, fov)

@@ -42,7 +42,7 @@ pub(super) fn parse_row(
     colours: WriteDictionary<Colour>,
     textures: WriteDictionary<Texture>,
     materials: WriteDictionary<Material>,
-) -> Option<HittableObject> {
+) -> Option<Vec<HittableObject>> {
     let row = row.split_whitespace().collect::<String>();
     if row.is_empty() || row.starts_with("//") {
         return None;
@@ -148,14 +148,14 @@ fn parse_object(
     description: &str,
     materials: WriteDictionary<Material>,
     points: ReadDictionary<Point3>,
-) -> HittableObject {
+) -> Vec<HittableObject> {
     let (object_type, description) = description
         .split_once(";")
         .unwrap_or_else(|| panic!("Object type not given for {description}"));
     let object_type = object_type.strip_prefix("type=").unwrap_or(object_type);
-    match object_type {
+    vec![match object_type {
         "sphere" => parse_sphere(description, materials, points),
         "triangle" => parse_triangle(description, materials, points),
         _ => panic!("{object_type:?} is not a valid object"),
-    }
+    }]
 }
