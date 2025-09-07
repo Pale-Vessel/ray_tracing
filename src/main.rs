@@ -34,11 +34,8 @@ struct Args {
 
 fn main() -> ImageResult<()> {
     let args = Args::parse();
-    let (profile, scene_name, progress_reports) = (
-        args.profile,
-        args.scene,
-        args.report_count
-    );
+    let (profile, scene_name, progress_reports) =
+        (args.profile, args.scene, args.report_count);
     let (image_width, rays_per_pixel, max_ray_bounces) = match profile.as_str()
     {
         "debug" => (800, 10, 10),

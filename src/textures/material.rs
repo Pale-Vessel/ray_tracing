@@ -84,7 +84,9 @@ impl Material {
             unit.reflect(record.normal_vector)
         };
 
-        let direction = direction.try_normalize().unwrap_or_else(|| unit.reflect(record.normal_vector));
+        let direction = direction
+            .try_normalize()
+            .unwrap_or_else(|| unit.reflect(record.normal_vector));
 
         Ray::new(record.collision_point, direction, ray.collected_light)
     }

@@ -1,11 +1,18 @@
-use crate::{colour::Colour, scene_reader::reader::ReadDictionary, textures::{material::Material, texture::Texture}};
+use crate::{
+    colour::Colour,
+    scene_reader::reader::ReadDictionary,
+    textures::{material::Material, texture::Texture},
+};
 
 mod material_parser;
 mod object_parser;
 pub mod reader;
 mod texture_parser;
 
-pub (super) fn get_colour(colour_name: &str, colours: ReadDictionary<Colour>) -> Colour {
+pub(super) fn get_colour(
+    colour_name: &str,
+    colours: ReadDictionary<Colour>,
+) -> Colour {
     *colours
         .get(colour_name)
         .unwrap_or_else(|| panic!("{colour_name:?} is not a known colour name"))

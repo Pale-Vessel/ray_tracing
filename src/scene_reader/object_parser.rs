@@ -5,9 +5,7 @@ use crate::{
         solid_sphere::SolidSphere,
         triangle::Triangle,
     },
-    scene_reader::{
-        get_material, parse_f32, reader::ReadDictionary
-    },
+    scene_reader::{get_material, parse_f32, reader::ReadDictionary},
     textures::material::Material,
 };
 

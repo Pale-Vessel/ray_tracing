@@ -9,10 +9,13 @@ use crate::{
     geometry::vector::Point3,
     hittables::hittable::{HittableList, HittableObject},
     scene_reader::{
-        material_parser::{parse_full, parse_glass, parse_light, parse_opaque}, object_parser::{parse_sphere, parse_triangle}, parse_f32, texture_parser::{
-            parse_checkerboard, parse_gradient, parse_perlin,
-            parse_solid, parse_stripe,
-        }
+        material_parser::{parse_full, parse_glass, parse_light, parse_opaque},
+        object_parser::{parse_sphere, parse_triangle},
+        parse_f32,
+        texture_parser::{
+            parse_checkerboard, parse_gradient, parse_perlin, parse_solid,
+            parse_stripe,
+        },
     },
     textures::{material::Material, texture::Texture},
 };

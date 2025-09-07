@@ -6,7 +6,9 @@ use crate::{
 use derive_more::{Add, Deref, Div, Mul, MulAssign, Sum};
 use glam::{Vec2, Vec3};
 
-#[derive(Clone, Copy, Debug, Default, Deref, Add, Sum, Mul, MulAssign, Div, PartialEq)]
+#[derive(
+    Clone, Copy, Debug, Default, Deref, Add, Sum, Mul, MulAssign, Div, PartialEq,
+)]
 #[mul_assign(forward)]
 pub struct Colour(Vec3);
 

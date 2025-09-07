@@ -1,7 +1,6 @@
 use crate::{
     scene_reader::{
-        get_texture, parse_bool, parse_f32, reader::ReadDictionary
-        
+        get_texture, parse_bool, parse_f32, reader::ReadDictionary,
     },
     textures::{material::Material, texture::Texture},
 };
