@@ -37,6 +37,24 @@ pub(super) fn parse_camera_data(description: String) -> (Point3, Point3, f32) {
     )
 }
 
+pub(super) fn parse_sky_colour(description: String) -> (Colour, Colour) {
+    let description = description.replace("(", "").replace(")", "");
+    let Ok([r1, g1, b1, r2, g2, b2]) =
+        description.split(",").collect_array_checked()
+    else {
+        panic!(
+            "{description:?} is not a valid description for the sky colour; 
+        expected (r1, g1, b1), (r2, g2, b2)"
+        )
+    };
+    let [r1, g1, b1, r2, g2, b2] =
+        [r1, g1, b1, r2, g2, b2].map(parse_f32);
+    (
+        Colour::new(r1, g1, b1),
+        Colour::new(r2, g2, b2),
+    )
+}
+
 pub(super) fn parse_row(
     row: &str,
     points: WriteDictionary<Point3>,

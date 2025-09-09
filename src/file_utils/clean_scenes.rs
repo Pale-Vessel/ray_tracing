@@ -35,6 +35,7 @@ fn split_punctuation(mut scene: String) -> String {
 fn order_lines(scene: String) -> String {
     let lines = scene.lines().collect::<Vec<_>>();
     let (camera_info, other_lines) = lines.split_at(1);
+    let (sky_colours, other_lines) = other_lines.split_at(1);
     let lines = other_lines
         .iter()
         .filter_map(|line| {
@@ -46,7 +47,7 @@ fn order_lines(scene: String) -> String {
         })
         .collect::<MultiMap<_, _>>();
 
-    let mut ordered_scene = format!("{}\n\n", camera_info[0]);
+    let mut ordered_scene = format!("{}\n{}\n\n", camera_info[0], sky_colours[0]);
 
     for kind in ["point", "colour", "texture", "material", "object"] {
         if let Some(lines_of_kind) = lines.get_vec(kind) {

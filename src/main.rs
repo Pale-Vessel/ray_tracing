@@ -50,7 +50,7 @@ fn main() -> ImageResult<()> {
         }
         _ => panic!("Invalid profile"),
     };
-    let (world, look_from, look_at, fov) =
+    let (world, look_from, look_at, fov, sky_top_colour, sky_bottom_colour) =
         read_scene(format!("scenes/{}.scene", scene_name.to_ascii_lowercase()));
     let camera = Camera::initialise(
         image_width,
@@ -59,6 +59,8 @@ fn main() -> ImageResult<()> {
         fov,
         look_from,
         look_at,
+        sky_top_colour,
+        sky_bottom_colour,
         Vec3::new(0., 1., 1e-9),
         10.,
         0.,
