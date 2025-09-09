@@ -11,17 +11,13 @@ use derive_more::{Add, Div, Mul as MulDerive, MulAssign, Sum};
     Clone, Copy, Debug, Default, Add, Sum, MulDerive, MulAssign, Div, PartialEq,
 )]
 #[mul(forward)]
-pub struct Colour {
-    r: f32,
-    g: f32,
-    b: f32,
-}
+pub struct Colour(f32, f32, f32);
 
 impl Mul<f32> for Colour {
     type Output = Self;
 
     fn mul(self, rhs: f32) -> Self::Output {
-        Self::new(self.r * rhs, self.g * rhs, self.b * rhs)
+        Self::new(self.0 * rhs, self.1 * rhs, self.2 * rhs)
     }
 }
 
@@ -38,7 +34,7 @@ impl Colour {
     pub const BLACK: Self = Colour::new(0., 0., 0.);
 
     pub const fn new(r: f32, g: f32, b: f32) -> Self {
-        Self { r, g, b }
+        Self(r, g, b)
     }
 
     pub fn to_texture(self) -> Texture {
@@ -51,11 +47,12 @@ impl Colour {
 }
 
 pub fn map_colours(colour: &Colour) -> (u8, u8, u8) {
+    let (r, g, b) = (colour.0, colour.1, colour.2);
     let colour_interval = Interval::new(0., 1.0);
     let (rbyte, gbyte, bbyte) = (
-        (colour_interval.clamp(colour.r) * 255.) as u8,
-        (colour_interval.clamp(colour.g) * 255.) as u8,
-        (colour_interval.clamp(colour.b) * 255.) as u8,
+        (colour_interval.clamp(r) * 255.) as u8,
+        (colour_interval.clamp(g) * 255.) as u8,
+        (colour_interval.clamp(b) * 255.) as u8,
     );
     (rbyte, gbyte, bbyte)
 }
