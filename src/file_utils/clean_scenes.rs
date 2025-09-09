@@ -1,4 +1,7 @@
-use crate::file_utils::clean_scenes::{order_scenes::order_lines, syntax_cleaner::{lowercase, split_punctuation}};
+use crate::file_utils::clean_scenes::{
+    order_scenes::order_lines,
+    syntax_cleaner::{lowercase, split_punctuation},
+};
 
 pub(super) fn clean_scene(scene: String) -> String {
     split_punctuation(order_lines(lowercase(scene)))
@@ -21,36 +24,53 @@ mod syntax_cleaner {
 }
 
 mod order_scenes {
-    use itertools::Itertools;
-    use multimap::MultiMap;
+    use std::collections::HashMap;
+
+    const LINE_TYPES: [&str; 5] =
+        ["point", "colour", "texture", "material", "object"];
 
     pub(super) fn order_lines(scene: String) -> String {
         let lines = scene.lines().collect::<Vec<_>>();
         let (camera_info, other_lines) = lines.split_at(1);
         let (sky_colours, other_lines) = other_lines.split_at(1);
+
         let lines = other_lines
             .iter()
-            .filter_map(|line| {
-                if line.is_empty() {
-                    None
-                } else {
-                    line.split_once(";")
-                }
-            })
-            .collect::<MultiMap<_, _>>();
+            .map(|line| line.split_once(";").unwrap_or((line, "")))
+            .collect::<Vec<_>>();
 
-        let mut ordered_scene =
+        let ordered_scene =
             format!("{}\n{}\n\n", camera_info[0], sky_colours[0]);
 
-        for kind in ["point", "colour", "texture", "material", "object"] {
-            if let Some(lines_of_kind) = lines.get_vec(kind) {
-                ordered_scene += &lines_of_kind
-                    .iter()
-                    .map(|line| format!("{kind};{line}"))
-                    .join("\n");
-                ordered_scene += "\n\n"
+        ordered_scene + &sort_if_comment(lines)
+    }
+
+    fn sort_if_comment(to_sort: Vec<(&str, &str)>) -> String {
+        let line_order: HashMap<_, _> = LINE_TYPES
+            .into_iter()
+            .enumerate()
+            .map(|(index, name)| (name, index))
+            .collect();
+        let mut lines = to_sort
+            .clone()
+            .into_iter()
+            .filter(|(line_type, _)| LINE_TYPES.contains(line_type))
+            .collect::<Vec<_>>();
+        lines.sort_by_cached_key(|&(line_type, _)| line_order.get(line_type));
+        let mut sorted = lines.into_iter();
+        let mut output = String::new();
+
+        for (line_type, _) in to_sort.iter() {
+            if LINE_TYPES.contains(line_type) {
+                let (line_type, line_content) = sorted.next().unwrap();
+                output += line_type;
+                output += "; ";
+                output += line_content
+            } else {
+                output += line_type
             }
+            output.push('\n');
         }
-        ordered_scene
+        output
     }
 }
