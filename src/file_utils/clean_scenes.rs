@@ -30,9 +30,10 @@ fn split_punctuation(mut scene: String) -> String {
 }
 
 fn order_lines(scene: String) -> String {
-    let lines = scene
-        .lines()
-        .skip(1) // First line is camera info
+    let lines = scene.lines().collect::<Vec<_>>();
+    let (camera_info, other_lines) = lines.split_at(1);
+    let lines = other_lines
+        .iter()
         .filter_map(|line| {
             if line.is_empty() {
                 None
@@ -42,7 +43,7 @@ fn order_lines(scene: String) -> String {
         })
         .collect::<MultiMap<_, _>>();
 
-    let mut ordered_scene = String::new();
+    let mut ordered_scene = format!("{}\n\n", camera_info[0]);
 
     for kind in ["point", "colour", "texture", "material", "object"] {
         if let Some(lines_of_kind) = lines.get_vec(kind) {
