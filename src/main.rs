@@ -36,7 +36,7 @@ fn main() -> ImageResult<()> {
     let args = Args::parse();
     let (profile, scene_name, progress_reports) =
         (args.profile, args.scene, args.report_count);
-    let (image_width, rays_per_pixel, max_ray_bounces) = match profile.as_str()
+    let profile_data = match profile.as_str()
     {
         "debug" => (800, 10, 10),
         "release" => (800, 100, 10),
@@ -52,23 +52,11 @@ fn main() -> ImageResult<()> {
     };
     let (
         world,
-        look_from,
-        look_at,
-        fov,
-        aspect_ratio,
-        sky_top_colour,
-        sky_bottom_colour,
+        scene_info
     ) = read_scene(format!("scenes/{}.scene", scene_name.to_ascii_lowercase()));
     let camera = Camera::initialise(
-        image_width,
-        rays_per_pixel,
-        max_ray_bounces,
-        fov,
-        aspect_ratio,
-        look_from,
-        look_at,
-        sky_top_colour,
-        sky_bottom_colour,
+        profile_data,
+        scene_info,
         Vec3::new(0., 1., 1e-9),
         10.,
         0.,

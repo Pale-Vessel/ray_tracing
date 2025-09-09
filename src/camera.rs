@@ -34,23 +34,21 @@ pub struct Camera {
 }
 
 impl Camera {
-    #[allow(clippy::too_many_arguments)]
     pub fn initialise(
-        image_width: u32,
-        rays_per_pixel: u16,
-        max_ray_bounces: u16,
-        fov: f32,
-        aspect_ratio: f32,
-        look_from: Point3,
-        look_at: Point3,
-        sky_top_colour: Colour,
-        sky_bottom_colour: Colour,
+        (image_width, rays_per_pixel, max_ray_bounces): (u32, u16, u16),
+        (
+            look_from,
+            look_at,
+            fov,
+            aspect_ratio,
+            sky_top_colour,
+            sky_bottom_colour,
+        ): (Point3, Point3, f32, f32, Colour, Colour),
         up_vector: Vec3,
         focus_distance: f32,
         defocus_angle: f32,
     ) -> Camera {
-        let image_height =
-            (image_width as f32 / aspect_ratio).floor() as u32;
+        let image_height = (image_width as f32 / aspect_ratio).floor() as u32;
         let pixel_sample_scale = 1. / f32::from(rays_per_pixel);
 
         let camera_center = look_from;
@@ -139,7 +137,8 @@ impl Camera {
         let unit_vector = ray.direction.normalize();
         let vert_ratio = 0.5 * (unit_vector.y + 1.);
 
-        Vec3::lerp(*self.sky_bottom_colour, *self.sky_top_colour, vert_ratio).into()
+        Vec3::lerp(*self.sky_bottom_colour, *self.sky_top_colour, vert_ratio)
+            .into()
     }
 
     pub fn render(&self, world: &HittableList, report_count: u32) -> RgbImage {
