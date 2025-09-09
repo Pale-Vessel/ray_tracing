@@ -127,18 +127,18 @@ impl Camera {
             if material.is_glass {
                 let refracted_ray = material.refract(ray, &data);
                 return material.texture.get_colour(u, v)
-                    * *self.ray_colour(refracted_ray, world, depth + 1);
+                    * self.ray_colour(refracted_ray, world, depth + 1);
             }
             let scattered_ray = material.lerp_reflect(ray, &data);
+            println!("scatter -> {:?}", scattered_ray.collected_light);
             return material.texture.get_colour(u, v)
-                * *self.ray_colour(scattered_ray, world, depth + 1);
+                * self.ray_colour(scattered_ray, world, depth + 1);
         }
 
         let unit_vector = ray.direction.normalize();
         let vert_ratio = 0.5 * (unit_vector.y + 1.);
 
-        Vec3::lerp(*self.sky_bottom_colour, *self.sky_top_colour, vert_ratio)
-            .into()
+        Colour::lerp(self.sky_bottom_colour, self.sky_top_colour, vert_ratio)
     }
 
     pub fn render(&self, world: &HittableList, report_count: u32) -> RgbImage {
