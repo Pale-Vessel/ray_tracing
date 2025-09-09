@@ -10,9 +10,13 @@ pub fn clean_scenes() {
 }
 
 fn clean_scene(scene: String) -> String {
-    lowercase(scene)
+    split_punctuation(lowercase(scene))
 }
 
 fn lowercase(scene: String) -> String {
     scene.to_ascii_lowercase()
+}
+
+fn split_punctuation(scene: String) -> String {
+    scene.replace(";", "; ").replace(",", ", ").replace("  ", " ")
 }

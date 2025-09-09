@@ -20,11 +20,11 @@ use image::ImageResult;
 #[command(version, about, long_about = None)]
 struct Args {
     /// Profile to render image at
-    #[arg(short, long)]
+    #[arg(short, long, default_value = "clean_scenes")]
     profile: String,
 
     /// Which image to render
-    #[arg(short, long)]
+    #[arg(short, long, default_value = "")]
     scene: String,
 
     /// Whether to print progress reports
