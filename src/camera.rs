@@ -154,7 +154,7 @@ impl Camera {
                     let mut done = done_pixels.lock().unwrap();
                     *done += 1;
                     if *done % pixel_report_increment == 0 {
-                        println!("{}% done", 100 * *done / pixel_count)
+                        println!("{}% done ({}/{})", 100 * *done / pixel_count, done, pixel_count)
                     }
                     colour
                 },
