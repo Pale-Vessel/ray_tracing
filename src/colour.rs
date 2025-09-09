@@ -47,7 +47,7 @@ impl Colour {
 }
 
 pub fn map_colours(colour: &Colour) -> (u8, u8, u8) {
-    let (r, g, b) = (colour.0, colour.1, colour.2);
+    let Colour(r, g, b) = colour;
     let colour_interval = Interval::new(0., 1.0);
     let (rbyte, gbyte, bbyte) = (
         (colour_interval.clamp(r) * 255.) as u8,
