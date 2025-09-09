@@ -1,8 +1,7 @@
 use crate::{colour::Colour, geometry::vector::Point3};
-use derive_more::Constructor;
 use glam::Vec3;
 
-#[derive(Copy, Clone, Debug, Constructor)]
+#[derive(Copy, Clone, Debug)]
 pub struct Ray {
     pub origin: Point3,
     pub direction: Vec3,
@@ -10,11 +9,23 @@ pub struct Ray {
 }
 
 impl Ray {
-    pub const fn new_white(origin: Point3, direction: Vec3) -> Self {
+    pub const fn new_with_colour(
+        origin: Point3,
+        direction: Vec3,
+        collected_light: Option<Colour>,
+    ) -> Ray {
+        Ray {
+            origin,
+            direction,
+            collected_light,
+        }
+    }
+
+    pub const fn new(origin: Point3, direction: Vec3) -> Self {
         Self {
             origin,
             direction,
-            collected_light: Some(Colour::WHITE),
+            collected_light: None,
         }
     }
 
