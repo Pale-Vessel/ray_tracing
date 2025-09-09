@@ -6,7 +6,7 @@ use glam::Vec3;
 pub struct Ray {
     pub origin: Point3,
     pub direction: Vec3,
-    pub collected_light: Colour,
+    pub collected_light: Option<Colour>,
 }
 
 impl Ray {
@@ -14,7 +14,7 @@ impl Ray {
         Self {
             origin,
             direction,
-            collected_light: Colour::WHITE,
+            collected_light: Some(Colour::WHITE),
         }
     }
 

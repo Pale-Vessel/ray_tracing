@@ -107,7 +107,7 @@ impl Camera {
         depth: u16,
     ) -> Colour {
         if depth > self.max_ray_bounces {
-            return ray.collected_light;
+            return ray.collected_light.unwrap_or(Colour::BLACK);
         }
         if let Some(data) =
             world.was_hit(ray, Interval::new(0.001, f32::INFINITY))
@@ -117,7 +117,10 @@ impl Camera {
             let material = data.clone().material;
 
             if material.is_light {
-                ray.collected_light *= material.texture.get_colour(u, v);
+                ray.collected_light = ray
+                    .collected_light
+                    .or(Some(Colour::WHITE))
+                    .map(|colour| colour * material.texture.get_colour(u, v))
             }
 
             if material.is_glass {

@@ -24,6 +24,14 @@ impl From<Vec3> for Colour {
     }
 }
 
+impl std::ops::Mul<Self> for Colour {
+    type Output = Self;
+
+    fn mul(self, rhs: Self) -> Self::Output {
+        Self(self.0 * rhs.0)
+    }
+}
+
 impl Colour {
     pub const WHITE: Self = Colour::new(1., 1., 1.);
     pub const BLACK: Self = Colour::new(0., 0., 0.);
