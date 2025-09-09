@@ -50,13 +50,21 @@ fn main() -> ImageResult<()> {
         }
         _ => panic!("Invalid profile"),
     };
-    let (world, look_from, look_at, fov, sky_top_colour, sky_bottom_colour) =
-        read_scene(format!("scenes/{}.scene", scene_name.to_ascii_lowercase()));
+    let (
+        world,
+        look_from,
+        look_at,
+        fov,
+        aspect_ratio,
+        sky_top_colour,
+        sky_bottom_colour,
+    ) = read_scene(format!("scenes/{}.scene", scene_name.to_ascii_lowercase()));
     let camera = Camera::initialise(
         image_width,
         rays_per_pixel,
         max_ray_bounces,
         fov,
+        aspect_ratio,
         look_from,
         look_at,
         sky_top_colour,

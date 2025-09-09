@@ -13,7 +13,7 @@ use crate::{
 
 pub fn read_scene(
     path: String,
-) -> (HittableList, Point3, Point3, f32, Colour, Colour) {
+) -> (HittableList, Point3, Point3, f32, f32, Colour, Colour) {
     let mut file = File::open(path).expect("Unable to open the file");
     let mut contents = String::new();
     file.read_to_string(&mut contents)
@@ -31,7 +31,7 @@ pub fn read_scene(
         .expect("camera data not given")
         .split_whitespace()
         .collect::<String>();
-    let (look_from, look_at, fov) = parse_camera_data(first_line);
+    let (look_from, look_at, fov, aspect_ratio) = parse_camera_data(first_line);
 
     let second_line = lines
         .next()
@@ -58,6 +58,7 @@ pub fn read_scene(
         look_from,
         look_at,
         fov,
+        aspect_ratio,
         sky_top_colour,
         sky_bottom_colour,
     )

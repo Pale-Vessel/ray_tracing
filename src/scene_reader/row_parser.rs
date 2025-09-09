@@ -18,22 +18,23 @@ use crate::{
     textures::{material::Material, texture::Texture},
 };
 
-pub(super) fn parse_camera_data(description: String) -> (Point3, Point3, f32) {
+pub(super) fn parse_camera_data(description: String) -> (Point3, Point3, f32, f32) {
     let description = description.replace("(", "").replace(")", "");
-    let Ok([from_x, from_y, from_z, at_x, at_y, at_z, fov]) =
+    let Ok([from_x, from_y, from_z, at_x, at_y, at_z, fov, aspect_ratio]) =
         description.split(",").collect_array_checked()
     else {
         panic!(
             "{description:?} is not a valid description for the camera; 
-        expected (from_x, from_y, from_z), (at_x, at_y, at_z), fov"
+        expected (from_x, from_y, from_z), (at_x, at_y, at_z), fov, aspect_ratio"
         )
     };
-    let [from_x, from_y, from_z, at_x, at_y, at_z, fov] =
-        [from_x, from_y, from_z, at_x, at_y, at_z, fov].map(parse_f32);
+    let [from_x, from_y, from_z, at_x, at_y, at_z, fov, aspect_ratio] =
+        [from_x, from_y, from_z, at_x, at_y, at_z, fov, aspect_ratio].map(parse_f32);
     (
         Point3::new(from_x, from_y, from_z),
         Point3::new(at_x, at_y, at_z),
         fov,
+        aspect_ratio
     )
 }
 

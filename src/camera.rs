@@ -34,14 +34,13 @@ pub struct Camera {
 }
 
 impl Camera {
-    const IDEAL_ASPECT_RATIO: f32 = 1.;
-
     #[allow(clippy::too_many_arguments)]
     pub fn initialise(
         image_width: u32,
         rays_per_pixel: u16,
         max_ray_bounces: u16,
         fov: f32,
+        aspect_ratio: f32,
         look_from: Point3,
         look_at: Point3,
         sky_top_colour: Colour,
@@ -51,7 +50,7 @@ impl Camera {
         defocus_angle: f32,
     ) -> Camera {
         let image_height =
-            (image_width as f32 / Self::IDEAL_ASPECT_RATIO).floor() as u32;
+            (image_width as f32 / aspect_ratio).floor() as u32;
         let pixel_sample_scale = 1. / f32::from(rays_per_pixel);
 
         let camera_center = look_from;
