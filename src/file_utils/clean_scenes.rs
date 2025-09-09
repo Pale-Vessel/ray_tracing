@@ -1,10 +1,10 @@
 use crate::file_utils::clean_scenes::{
     order_scenes::order_lines,
-    syntax_cleaner::{lowercase, split_punctuation},
+    syntax_cleaner::{clean_whitespace, lowercase, split_punctuation},
 };
 
 pub(super) fn clean_scene(scene: String) -> String {
-    split_punctuation(order_lines(lowercase(scene)))
+    clean_whitespace(split_punctuation(order_lines(lowercase(scene))))
 }
 
 mod syntax_cleaner {
@@ -14,15 +14,24 @@ mod syntax_cleaner {
 
     const PUNCTUATION_MARKS: [&str; 3] = [";", ",", "//"];
 
-    pub(super) fn split_punctuation(mut scene: String) -> String {
-        for mark in PUNCTUATION_MARKS {
+    pub(super) fn split_punctuation(scene: String) -> String {
+        PUNCTUATION_MARKS.into_iter().fold(scene, |scene, mark| {
             let mark_space = &format!("{mark} ");
-            scene = scene.replace(mark, mark_space);
-        }
-        let mut changed = scene.replace("  ", " ").replace("\n\n\n", "\n\n");
+            scene.replace(mark, mark_space)
+        })
+    }
+
+    pub(super) fn clean_whitespace(mut scene: String) -> String {
+        scene = scene
+            .lines()
+            .map(|line| line.split_whitespace().collect::<Vec<_>>().join(" "))
+            .collect::<Vec<_>>()
+            .join("\n");
+
+        let mut changed = scene.replace("\n\n\n", "\n\n");
         while scene != changed {
             scene = changed.clone();
-            changed = scene.replace("  ", " ").replace("\n\n\n", "\n\n");
+            changed = scene.replace("\n\n\n", "\n\n");
         }
         scene
     }
