@@ -19,7 +19,12 @@ mod syntax_cleaner {
             let mark_space = &format!("{mark} ");
             scene = scene.replace(mark, mark_space);
         }
-        scene.replace("  ", " ")
+        let mut changed = scene.replace("  ", " ").replace("\n\n\n", "\n\n");
+        while scene != changed {
+            scene = changed.clone();
+            changed = scene.replace("  ", " ").replace("\n\n\n", "\n\n");
+        }
+        scene
     }
 }
 
