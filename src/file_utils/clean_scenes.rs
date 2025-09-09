@@ -32,7 +32,7 @@ fn split_punctuation(mut scene: String) -> String {
 fn order_lines(scene: String) -> String {
     let lines = scene
         .lines()
-        .skip(1)
+        .skip(1) // First line is camera info
         .filter_map(|line| {
             if line.is_empty() {
                 None
