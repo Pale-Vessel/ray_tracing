@@ -1,5 +1,5 @@
-use multimap::MultiMap;
 use itertools::Itertools;
+use multimap::MultiMap;
 use std::fs::read_dir;
 
 pub fn clean_scenes() {
@@ -20,7 +20,10 @@ fn lowercase(scene: String) -> String {
 }
 
 fn split_punctuation(scene: String) -> String {
-    scene.replace(";", "; ").replace(",", ", ").replace("  ", " ")
+    scene
+        .replace(";", "; ")
+        .replace(",", ", ")
+        .replace("  ", " ")
 }
 
 fn order_lines(scene: String) -> String {
@@ -40,7 +43,10 @@ fn order_lines(scene: String) -> String {
 
     for kind in ["point", "colour", "texture", "material", "object"] {
         if let Some(lines_of_kind) = lines.get_vec(kind) {
-            ordered_scene += &lines_of_kind.iter().map(|line| format!("{kind};{line}")).join("\n");
+            ordered_scene += &lines_of_kind
+                .iter()
+                .map(|line| format!("{kind};{line}"))
+                .join("\n");
             ordered_scene += "\n\n"
         }
     }
