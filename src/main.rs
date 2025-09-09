@@ -8,7 +8,7 @@ mod scene_reader;
 mod textures;
 
 use crate::{
-    camera::Camera, file_utils::clean_scenes::clean_scenes,
+    camera::Camera, file_utils::clean_scenes,
     scene_reader::scene_parser::read_scene,
 };
 use clap::Parser;
