@@ -19,11 +19,14 @@ fn lowercase(scene: String) -> String {
     scene.to_ascii_lowercase()
 }
 
-fn split_punctuation(scene: String) -> String {
-    scene
-        .replace(";", "; ")
-        .replace(",", ", ")
-        .replace("  ", " ")
+const PUNCTUATION_MARKS: [&str; 3] = [";", ",", "//"];
+
+fn split_punctuation(mut scene: String) -> String {
+    for mark in PUNCTUATION_MARKS {
+        let mark_space = &format!("{mark} ");
+        scene = scene.replace(mark, mark_space);
+    }
+    scene.replace("  ", " ")
 }
 
 fn order_lines(scene: String) -> String {
