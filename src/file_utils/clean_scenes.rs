@@ -7,7 +7,7 @@ pub fn clean_scenes() {
         let path = path.unwrap().path();
         let file = std::fs::read(&path).unwrap();
         if file.is_empty() {
-            continue
+            continue;
         }
         let cleaned = clean_scene(file.into_iter().map(char::from).collect());
         std::fs::write(path, cleaned).unwrap();
@@ -47,7 +47,8 @@ fn order_lines(scene: String) -> String {
         })
         .collect::<MultiMap<_, _>>();
 
-    let mut ordered_scene = format!("{}\n{}\n\n", camera_info[0], sky_colours[0]);
+    let mut ordered_scene =
+        format!("{}\n{}\n\n", camera_info[0], sky_colours[0]);
 
     for kind in ["point", "colour", "texture", "material", "object"] {
         if let Some(lines_of_kind) = lines.get_vec(kind) {

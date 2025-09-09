@@ -36,8 +36,7 @@ fn main() -> ImageResult<()> {
     let args = Args::parse();
     let (profile, scene_name, progress_reports) =
         (args.profile, args.scene, args.report_count);
-    let profile_data = match profile.as_str()
-    {
+    let profile_data = match profile.as_str() {
         "debug" => (800, 10, 10),
         "release" => (800, 100, 10),
         "insane" => (800, 1_000, 10),
@@ -50,10 +49,8 @@ fn main() -> ImageResult<()> {
         }
         _ => panic!("Invalid profile"),
     };
-    let (
-        world,
-        scene_info
-    ) = read_scene(format!("scenes/{}.scene", scene_name.to_ascii_lowercase()));
+    let (world, scene_info) =
+        read_scene(format!("scenes/{}.scene", scene_name.to_ascii_lowercase()));
     let camera = Camera::initialise(
         profile_data,
         scene_info,

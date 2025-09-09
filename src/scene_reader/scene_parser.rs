@@ -55,11 +55,13 @@ pub fn read_scene(
         .optimise();
     (
         objects,
-        (look_from,
-        look_at,
-        fov,
-        aspect_ratio,
-        sky_top_colour,
-        sky_bottom_colour,)
+        (
+            look_from,
+            look_at,
+            fov,
+            aspect_ratio,
+            sky_top_colour,
+            sky_bottom_colour,
+        ),
     )
 }
