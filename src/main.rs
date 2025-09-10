@@ -49,11 +49,11 @@ fn main() -> ImageResult<()> {
         }
         _ => panic!("Invalid profile"),
     };
-    let (world, scene_info) =
+    let (world, camera_info) =
         read_scene(format!("scenes/{}.scene", scene_name.to_ascii_lowercase()));
     let camera = Camera::initialise(
         profile_data,
-        scene_info,
+        camera_info,
         Vec3::new(0., 1., 1e-9),
         10.,
         0.,
