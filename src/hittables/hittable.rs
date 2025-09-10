@@ -3,7 +3,7 @@ use std::ops::Index;
 use crate::{
     geometry::{ray::Ray, vector::Point3},
     hittables::{
-        bounding_box::BoundingBox, bvh::BVHNode, sphere::Sphere,
+        bounding_box::BoundingBox, sphere::Sphere,
         triangle::Triangle,
     },
     interval::Interval,
@@ -64,7 +64,6 @@ pub trait Hittable {
 #[derive(Clone, Debug)]
 pub enum HittableObject {
     Sphere(Sphere),
-    BVHNode(BVHNode),
     Triangle(Triangle),
 }
 
@@ -72,7 +71,6 @@ impl Hittable for HittableObject {
     fn was_hit(&self, ray: Ray, interval: Interval) -> Option<HitRecord> {
         match self {
             Self::Sphere(sphere) => sphere.was_hit(ray, interval),
-            Self::BVHNode(bvhnode) => bvhnode.was_hit(ray, interval),
             Self::Triangle(triangle) => triangle.was_hit(ray, interval),
         }
     }
@@ -80,7 +78,6 @@ impl Hittable for HittableObject {
     fn get_bounding_box(&self) -> BoundingBox {
         match self {
             Self::Sphere(sphere) => sphere.get_bounding_box(),
-            Self::BVHNode(bvhnode) => bvhnode.get_bounding_box(),
             Self::Triangle(triangle) => triangle.get_bounding_box(),
         }
     }
@@ -130,13 +127,5 @@ impl Hittable for HittableList {
 
     fn get_bounding_box(&self) -> BoundingBox {
         self.bounds
-    }
-}
-
-impl HittableList {
-    pub fn optimise(self) -> HittableList {
-        vec![HittableObject::BVHNode(BVHNode::new(self))]
-            .into_iter()
-            .collect()
     }
 }

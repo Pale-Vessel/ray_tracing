@@ -52,7 +52,7 @@ pub fn read_scene(
         })
         .flatten()
         .collect::<HittableList>()
-        .optimise();
+    /* .optimise()*/;
     (
         objects,
         (

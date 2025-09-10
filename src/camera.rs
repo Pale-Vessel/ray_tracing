@@ -130,7 +130,7 @@ impl Camera {
                     * self.ray_colour(refracted_ray, world, depth + 1);
             }
             let scattered_ray = material.lerp_reflect(ray, &data);
-            println!("scatter -> {:?}", scattered_ray.collected_light);
+            // println!("scatter -> {:?}", scattered_ray.collected_light);
             return material.texture.get_colour(u, v)
                 * self.ray_colour(scattered_ray, world, depth + 1);
         }

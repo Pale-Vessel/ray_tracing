@@ -30,9 +30,6 @@ impl Index<usize> for AxisAlignedBoundingBox {
 }
 
 impl AxisAlignedBoundingBox {
-    pub const EMPTY: Self =
-        Self::new(Interval::EMPTY, Interval::EMPTY, Interval::EMPTY);
-
     pub fn new_from_corners(corner_one: Point3, corner_two: Point3) -> Self {
         let x = if corner_one.x < corner_two.x {
             Interval::new(corner_one.x, corner_two.x)
@@ -59,11 +56,7 @@ impl AxisAlignedBoundingBox {
         Self::new(x, y, z)
     }
 
-    pub fn grow_to_box(&mut self, other: &Self) {
-        *self = Self::new_from_boxes(self, other);
-    }
-
-    pub fn did_hit(&self, ray: Ray, ray_time: Interval) -> bool {
+    pub fn was_hit(&self, ray: Ray, interval: Interval) -> bool {
         let origin = ray.origin;
         let direction = ray.direction;
 
@@ -80,23 +73,12 @@ impl AxisAlignedBoundingBox {
                 (time_zero, time_one)
             };
 
-            let minimum = f32::max(time_zero, ray_time.min);
-            let maximum = f32::min(time_one, ray_time.max);
+            let minimum = f32::max(time_zero, interval.min);
+            let maximum = f32::min(time_one, interval.max);
             if maximum < minimum {
                 return false;
             }
         }
         true
-    }
-
-    pub fn longest_axis(self) -> usize {
-        let (x, y, z) = (self.x.size(), self.y.size(), self.z.size());
-        if x > y {
-            if x > z { 0 } else { 2 }
-        } else if y > z {
-            1
-        } else {
-            2
-        }
     }
 }
