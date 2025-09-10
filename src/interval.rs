@@ -7,12 +7,6 @@ pub struct Interval {
 }
 
 impl Interval {
-    pub const EMPTY: Self = Self::new(f32::INFINITY, f32::NEG_INFINITY);
-
-    pub fn size(&self) -> f32 {
-        self.max - self.min
-    }
-
     pub fn surrounds(&self, value: f32) -> bool {
         self.min < value && value < self.max
     }
