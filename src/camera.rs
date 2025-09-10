@@ -151,6 +151,7 @@ impl Camera {
     pub fn render(&self, world: &HittableList, report_count: u32) -> RgbImage {
         if report_count != 0 {
             let pixel_count = self.image_height * self.image_width;
+            println!("0% done (0/{pixel_count})");
             let pixel_report_increment = pixel_count / report_count;
             let done_pixels = Arc::new(Mutex::new(0));
             RgbImage::from_par_fn(
@@ -162,10 +163,8 @@ impl Camera {
                     *done += 1;
                     if *done % pixel_report_increment == 0 {
                         println!(
-                            "{}% done ({}/{})",
+                            "{}% done ({done}/{pixel_count})",
                             100 * *done / pixel_count,
-                            done,
-                            pixel_count
                         )
                     }
                     colour
