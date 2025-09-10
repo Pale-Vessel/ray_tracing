@@ -11,6 +11,7 @@ use derive_more::{Add, Div, Mul as MulDerive, MulAssign, Sum};
     Clone, Copy, Debug, Default, Add, Sum, MulDerive, MulAssign, Div, PartialEq,
 )]
 #[mul(forward)]
+#[mul_assign(forward)]
 pub struct Colour(f32, f32, f32);
 
 impl Mul<f32> for Colour {

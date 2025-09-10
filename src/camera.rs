@@ -103,38 +103,46 @@ impl Camera {
 
     fn ray_colour(
         &self,
-        ray: Ray,
+        mut ray: Ray,
         world: &HittableList,
-        depth: u16,
     ) -> Colour {
-        if depth > self.max_ray_bounces {
-            return Colour::BLACK;
-        }
-        if let Some(data) =
-            world.was_hit(ray, Interval::new(0.001, f32::INFINITY))
-        {
-            let (u, v) = (data.u, data.v);
+        let mut accumulated = Colour::WHITE;
+        let mut light_hit = false;
+        for _ in 0..self.max_ray_bounces {
+            if let Some(data) =
+                world.was_hit(ray, Interval::new(0.001, f32::INFINITY))
+            {
+                let (u, v) = (data.u, data.v);
 
-            let material = data.clone().material;
+                let material = data.clone().material;
 
-            if material.is_light {
-                return material.texture.get_colour(u, v);
+                if material.is_light {
+                    accumulated *= material.texture.get_colour(u, v);
+                    light_hit = true;
+                    break;
+                }
+
+                ray = if material.is_glass {
+                    material.refract(ray, &data)
+                } else {
+                    material.lerp_reflect(ray, &data)
+                };
+
+                accumulated *= material.texture.get_colour(u, v);
             }
-
-            if material.is_glass {
-                let refracted_ray = material.refract(ray, &data);
-                return material.texture.get_colour(u, v)
-                    * self.ray_colour(refracted_ray, world, depth + 1);
-            }
-            let scattered_ray = material.lerp_reflect(ray, &data);
-            return material.texture.get_colour(u, v)
-                * self.ray_colour(scattered_ray, world, depth + 1);
         }
+        if light_hit {
+            accumulated
+        } else {
+            let unit_vector = ray.direction.normalize();
+            let vert_ratio = 0.5 * (unit_vector.y + 1.);
 
-        let unit_vector = ray.direction.normalize();
-        let vert_ratio = 0.5 * (unit_vector.y + 1.);
-
-        Colour::lerp(self.sky_bottom_colour, self.sky_top_colour, vert_ratio)
+            Colour::lerp(
+                self.sky_bottom_colour,
+                self.sky_top_colour,
+                vert_ratio,
+            )
+        }
     }
 
     pub fn render(&self, world: &HittableList, report_count: u32) -> RgbImage {
@@ -179,7 +187,7 @@ impl Camera {
             .into_par_iter()
             .map(|_| {
                 let ray = self.get_ray(i, j);
-                self.ray_colour(ray, world, 0)
+                self.ray_colour(ray, world)
             })
             .sum::<Colour>()
             * self.pixel_sample_scale;
