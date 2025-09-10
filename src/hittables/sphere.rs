@@ -22,9 +22,6 @@ pub struct Sphere {
 
 impl Hittable for Sphere {
     fn was_hit(&self, ray: Ray, interval: Interval) -> Option<HitRecord> {
-        if !self.bounds.was_hit(ray, interval) {
-            return None
-        }
         let collision_times = self.ray_intersections(ray, interval);
         let collision_time = collision_times.0.or(collision_times.1)?;
 
