@@ -33,6 +33,8 @@ pub struct Camera {
     sky_bottom_colour: Colour,
 }
 
+pub type CameraInfo = (Point3, Point3, f32, f32, Colour, Colour, f32, f32);
+
 impl Camera {
     pub fn initialise(
         (image_width, rays_per_pixel, max_ray_bounces): (u32, u16, u16),
@@ -43,9 +45,9 @@ impl Camera {
             aspect_ratio,
             sky_top_colour,
             sky_bottom_colour,
-            focus_distance, 
-            defocus_angle
-        ): (Point3, Point3, f32, f32, Colour, Colour, f32, f32),
+            focus_distance,
+            defocus_angle,
+        ): CameraInfo,
     ) -> Camera {
         let image_height = (image_width as f32 / aspect_ratio).floor() as u32;
         let pixel_sample_scale = 1. / f32::from(rays_per_pixel);
@@ -100,11 +102,7 @@ impl Camera {
         }
     }
 
-    fn ray_colour(
-        &self,
-        mut ray: Ray,
-        world: &HittableList,
-    ) -> Colour {
+    fn ray_colour(&self, mut ray: Ray, world: &HittableList) -> Colour {
         let mut accumulated = Colour::WHITE;
         let mut light_hit = false;
         for _ in 0..self.max_ray_bounces {

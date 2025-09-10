@@ -1,21 +1,14 @@
 use std::{collections::HashMap, fs::File, io::Read};
 
 use crate::{
-    colour::Colour,
-    geometry::vector::Point3,
+    camera::CameraInfo,
     hittables::hittable::HittableList,
     scene_reader::row_parser::{
         parse_camera_data, parse_row, parse_sky_colour,
     },
 };
 
-#[allow(clippy::type_complexity)]
-pub fn read_scene(
-    path: String,
-) -> (
-    HittableList,
-    (Point3, Point3, f32, f32, Colour, Colour, f32, f32),
-) {
+pub fn read_scene(path: String) -> (HittableList, CameraInfo) {
     let mut file = File::open(path).expect("Unable to open the file");
     let mut contents = String::new();
     file.read_to_string(&mut contents)
