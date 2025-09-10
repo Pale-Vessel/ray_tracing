@@ -43,10 +43,9 @@ impl Camera {
             aspect_ratio,
             sky_top_colour,
             sky_bottom_colour,
-        ): (Point3, Point3, f32, f32, Colour, Colour),
-        up_vector: Vec3,
-        focus_distance: f32,
-        defocus_angle: f32,
+            focus_distance, 
+            defocus_angle
+        ): (Point3, Point3, f32, f32, Colour, Colour, f32, f32),
     ) -> Camera {
         let image_height = (image_width as f32 / aspect_ratio).floor() as u32;
         let pixel_sample_scale = 1. / f32::from(rays_per_pixel);
@@ -60,7 +59,7 @@ impl Camera {
             viewport_height * ((image_width as f32) / (image_height as f32));
 
         let w = (look_from - look_at).normalize();
-        let u = up_vector.cross(w).normalize();
+        let u = Vec3::new(0., 1., 1e-10).cross(w).normalize();
         let v = w.cross(u);
 
         let viewport_horizontal = viewport_width * u;

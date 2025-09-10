@@ -12,7 +12,6 @@ use crate::{
     scene_reader::scene_parser::read_scene,
 };
 use clap::Parser;
-use glam::Vec3;
 use image::ImageResult;
 
 /// Program to render images from a `.scene` file
@@ -54,9 +53,6 @@ fn main() -> ImageResult<()> {
     let camera = Camera::initialise(
         profile_data,
         camera_info,
-        Vec3::new(0., 1., 1e-9),
-        10.,
-        0.,
     );
     let image = camera.render(&world, progress_reports);
     let dir_path = format!(r"images\{scene_name}");
