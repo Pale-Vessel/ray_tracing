@@ -103,12 +103,12 @@ impl Camera {
 
     fn ray_colour(
         &self,
-        mut ray: Ray,
+        ray: Ray,
         world: &HittableList,
         depth: u16,
     ) -> Colour {
         if depth > self.max_ray_bounces {
-            return ray.collected_light.unwrap_or(Colour::BLACK);
+            return Colour::BLACK;
         }
         if let Some(data) =
             world.was_hit(ray, Interval::new(0.001, f32::INFINITY))
@@ -118,10 +118,7 @@ impl Camera {
             let material = data.clone().material;
 
             if material.is_light {
-                ray.collected_light = ray
-                    .collected_light
-                    .or(Some(Colour::WHITE))
-                    .map(|colour| colour * material.texture.get_colour(u, v))
+                return material.texture.get_colour(u, v);
             }
 
             if material.is_glass {
@@ -130,7 +127,6 @@ impl Camera {
                     * self.ray_colour(refracted_ray, world, depth + 1);
             }
             let scattered_ray = material.lerp_reflect(ray, &data);
-            // println!("scatter -> {:?}", scattered_ray.collected_light);
             return material.texture.get_colour(u, v)
                 * self.ray_colour(scattered_ray, world, depth + 1);
         }

@@ -56,10 +56,9 @@ impl Material {
         let specular_ray = Self::specular_reflection(ray, record);
         let direction = self.smoothness * specular_ray.direction
             + (1. - self.smoothness) * diffuse_ray.direction;
-        Ray::new_with_colour(
+        Ray::new(
             diffuse_ray.origin,
             direction.normalize(),
-            ray.collected_light,
         )
     }
 
@@ -88,10 +87,9 @@ impl Material {
             .try_normalize()
             .unwrap_or_else(|| unit.reflect(record.normal_vector));
 
-        Ray::new_with_colour(
+        Ray::new(
             record.collision_point,
             direction,
-            ray.collected_light,
         )
     }
 
