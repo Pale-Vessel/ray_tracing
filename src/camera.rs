@@ -126,19 +126,25 @@ impl Camera {
                 };
 
                 accumulated *= material.texture.get_colour(u, v);
+            } else {
+                light_hit = true;
+                accumulated *= {
+                    let unit_vector = ray.direction.normalize();
+                    let vert_ratio = 0.5 * (unit_vector.y + 1.);
+
+                    Colour::lerp(
+                        self.sky_bottom_colour,
+                        self.sky_top_colour,
+                        vert_ratio,
+                    )
+                };
+                break;
             }
         }
         if light_hit {
             accumulated
         } else {
-            let unit_vector = ray.direction.normalize();
-            let vert_ratio = 0.5 * (unit_vector.y + 1.);
-
-            Colour::lerp(
-                self.sky_bottom_colour,
-                self.sky_top_colour,
-                vert_ratio,
-            )
+            Colour::BLACK
         }
     }
 
