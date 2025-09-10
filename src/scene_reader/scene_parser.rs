@@ -1,5 +1,3 @@
-#![allow(unused_variables)]
-
 use std::{collections::HashMap, fs::File, io::Read};
 
 use crate::{
