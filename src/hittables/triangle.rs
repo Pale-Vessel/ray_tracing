@@ -23,7 +23,7 @@ pub struct Triangle {
 impl Hittable for Triangle {
     fn was_hit(&self, ray: Ray, interval: Interval) -> Option<HitRecord> {
         if !self.bounds.was_hit(ray, interval) {
-            return None
+            return None;
         }
         let (collision_time, u, v) =
             self.moller_trumbore_intersection(ray.origin, ray.direction)?;

@@ -1,4 +1,4 @@
-use crate::{geometry::vector::Point3};
+use crate::geometry::vector::Point3;
 use derive_more::Constructor;
 use glam::Vec3;
 

@@ -3,8 +3,7 @@ use std::ops::Index;
 use crate::{
     geometry::{ray::Ray, vector::Point3},
     hittables::{
-        bounding_box::BoundingBox, sphere::Sphere,
-        triangle::Triangle,
+        bounding_box::BoundingBox, sphere::Sphere, triangle::Triangle,
     },
     interval::Interval,
     textures::material::Material,

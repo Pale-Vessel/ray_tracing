@@ -50,10 +50,7 @@ fn main() -> ImageResult<()> {
     };
     let (world, camera_info) =
         read_scene(format!("scenes/{}.scene", scene_name.to_ascii_lowercase()));
-    let camera = Camera::initialise(
-        profile_data,
-        camera_info,
-    );
+    let camera = Camera::initialise(profile_data, camera_info);
     let image = camera.render(&world, progress_reports);
     let dir_path = format!(r"images\{scene_name}");
     let path = format!(
