@@ -38,6 +38,7 @@ mod syntax_cleaner {
 }
 
 mod order_scenes {
+    use std::fmt::Write;
     use std::collections::HashMap;
 
     const LINE_TYPES: [&str; 5] =
@@ -77,9 +78,7 @@ mod order_scenes {
         for (line_type, _) in to_sort.iter() {
             if LINE_TYPES.contains(line_type) {
                 let (line_type, line_content) = sorted.next().unwrap();
-                output += line_type;
-                output += "; ";
-                output += line_content
+                let _ = write!(output, "{line_type}; {line_content}");
             } else {
                 output += line_type
             }
