@@ -3,4 +3,3 @@ rustfmt.toml
 images/
 scenes/
 target/
-config.toml
