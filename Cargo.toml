@@ -34,3 +34,5 @@ lto = "thin"
 rpath = false
 strip = true
 incremental = true
+
+RUSTFLAGS='-C target-cpu=native'
