@@ -55,16 +55,15 @@ pub(super) fn parse_light(
     description: &str,
     textures: ReadDictionary<Texture>,
 ) -> Material {
-    let Ok([smoothness, texture_name]) =
+    let Ok([texture_name]) =
         description.split(",").collect_array_checked()
     else {
         panic!(
             "{description:?} is not a valid description for a light material"
         )
     };
-    let smoothness = parse_f32(smoothness);
     let texture = get_texture(texture_name, textures);
-    Material::new_light(smoothness, texture)
+    Material::new_light(texture)
 }
 
 pub(super) fn parse_glass(

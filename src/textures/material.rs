@@ -31,8 +31,8 @@ impl Material {
         Self::new(0., texture, true, refractive_index, false)
     }
 
-    pub const fn new_light(smoothness: f32, texture: Texture) -> Self {
-        Self::new(smoothness, texture, false, 0., true)
+    pub const fn new_light(texture: Texture) -> Self {
+        Self::new(0., texture, false, 0., true)
     }
 
     pub fn diffuse_reflection(record: &HitRecord) -> Ray {
