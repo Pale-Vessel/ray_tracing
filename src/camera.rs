@@ -33,11 +33,12 @@ pub struct Camera {
     sky_bottom_colour: Colour,
 }
 
+pub type ProfileInfo = (u32, u16, u16);
 pub type CameraInfo = (Point3, Point3, f32, f32, Colour, Colour, f32, f32);
 
 impl Camera {
     pub fn initialise(
-        (image_width, rays_per_pixel, max_ray_bounces): (u32, u16, u16),
+        (image_width, rays_per_pixel, max_ray_bounces): ProfileInfo,
         (
             look_from,
             look_at,
