@@ -27,17 +27,17 @@ pub fn read_scene(path: String) -> (HittableList, CameraInfo) {
         .split_whitespace()
         .collect::<String>();
     let (look_from, look_at, fov, aspect_ratio, focus_distance, defocus_angle) =
-        parse_camera_data(first_line);
+        parse_camera_data(&first_line);
 
     let second_line = lines
         .next()
         .expect("sky colour data not given")
         .split_whitespace()
         .collect::<String>();
-    let (sky_top_colour, sky_bottom_colour) = parse_sky_colour(second_line);
+    let (sky_top_colour, sky_bottom_colour) = parse_sky_colour(&second_line);
 
     let objects = lines
-        .flat_map(|row| {
+        .filter_map(|row| {
             parse_row(
                 row,
                 &mut points,

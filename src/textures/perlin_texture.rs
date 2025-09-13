@@ -23,11 +23,11 @@ impl GetTexture for PerlinTexture {
         );
 
         let mut corner_values = Vec::new();
-        for x in 0..=1 {
-            for y in 0..=1 {
+        for x in [0., 1.] {
+            for y in [0., 1.] {
                 let corner_point = Vec2::new(
-                    origin_corner.x + (x as f32) * self.scale,
-                    origin_corner.y + (y as f32) * self.scale,
+                    origin_corner.x + x * self.scale,
+                    origin_corner.y + y * self.scale,
                 );
                 let grid_vector = Self::hash_point_to_vec(corner_point);
                 let offset_vector = point - corner_point;

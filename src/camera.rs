@@ -165,7 +165,7 @@ impl Camera {
                         println!(
                             "{}% done ({done}/{pixel_count})",
                             100 * *done / pixel_count,
-                        )
+                        );
                     }
                     colour
                 },

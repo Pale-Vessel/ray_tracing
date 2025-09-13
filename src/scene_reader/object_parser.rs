@@ -20,8 +20,8 @@ pub(super) fn parse_sphere(
     materials: ReadDictionary<Material>,
     points: ReadDictionary<Point3>,
 ) -> HittableObject {
-    let description = description.replace("(", "").replace(")", "");
-    let description_parts = description.split(",").collect::<Vec<_>>();
+    let description = description.replace(['(', ')'], "");
+    let description_parts = description.split(',').collect::<Vec<_>>();
     let (center, radius, material) = match description_parts.len() {
         3 => {
             let [point_name, radius, material_name] =
@@ -50,8 +50,8 @@ pub(super) fn parse_triangle(
     materials: ReadDictionary<Material>,
     points: ReadDictionary<Point3>,
 ) -> HittableObject {
-    let description = description.replace("(", "").replace(")", "");
-    let description_parts = description.split(",").collect::<Vec<_>>();
+    let description = description.replace(['(', ')'], "");
+    let description_parts = description.split(',').collect::<Vec<_>>();
     let (corner_one, corner_two, corner_three, material) =
         match description_parts.len() {
             4 => {

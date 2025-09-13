@@ -17,7 +17,7 @@ pub(super) fn parse_full(
             refractive_index,
             is_light,
         ],
-    ) = description.split(",").collect_array_checked()
+    ) = description.split(',').collect_array_checked()
     else {
         panic!("{description:?} is not a valid description for a material")
     };
@@ -40,7 +40,7 @@ pub(super) fn parse_opaque(
     textures: ReadDictionary<Texture>,
 ) -> Material {
     let Ok([smoothness, texture_name]) =
-        description.split(",").collect_array_checked()
+        description.split(',').collect_array_checked()
     else {
         panic!(
             "{description:?} is not a valid description for an opaque material"
@@ -56,7 +56,7 @@ pub(super) fn parse_light(
     textures: ReadDictionary<Texture>,
 ) -> Material {
     let Ok([texture_name]) =
-        description.split(",").collect_array_checked()
+        description.split(',').collect_array_checked()
     else {
         panic!(
             "{description:?} is not a valid description for a light material"
@@ -71,7 +71,7 @@ pub(super) fn parse_glass(
     textures: ReadDictionary<Texture>,
 ) -> Material {
     let Ok([refractive_index, texture_name]) =
-        description.split(",").collect_array_checked()
+        description.split(',').collect_array_checked()
     else {
         panic!(
             "{description:?} is not a valid description for a glass material"

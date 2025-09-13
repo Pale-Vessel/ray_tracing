@@ -3,12 +3,12 @@ use crate::file_utils::clean_scenes::{
     syntax_cleaner::{clean_whitespace, lowercase, split_punctuation},
 };
 
-pub(super) fn clean_scene(scene: String) -> String {
-    clean_whitespace(split_punctuation(order_lines(lowercase(scene))))
+pub(super) fn clean_scene(scene: &str) -> String {
+    clean_whitespace(split_punctuation(order_lines(&lowercase(scene))))
 }
 
 mod syntax_cleaner {
-    pub(super) fn lowercase(scene: String) -> String {
+    pub(super) fn lowercase(scene: &str) -> String {
         scene.to_ascii_lowercase()
     }
 
@@ -30,7 +30,7 @@ mod syntax_cleaner {
 
         let mut changed = scene.replace("\n\n\n", "\n\n");
         while scene != changed {
-            scene = changed.clone();
+            scene.clone_from(&changed);
             changed = scene.replace("\n\n\n", "\n\n");
         }
         scene
@@ -38,49 +38,48 @@ mod syntax_cleaner {
 }
 
 mod order_scenes {
-    use std::fmt::Write;
     use std::collections::HashMap;
+    use std::fmt::Write;
 
     const LINE_TYPES: [&str; 5] =
         ["point", "colour", "texture", "material", "object"];
 
-    pub(super) fn order_lines(scene: String) -> String {
+    pub(super) fn order_lines(scene: &str) -> String {
         let lines = scene.lines().collect::<Vec<_>>();
         let (camera_info, other_lines) = lines.split_at(1);
         let (sky_colours, other_lines) = other_lines.split_at(1);
 
         let lines = other_lines
             .iter()
-            .map(|line| line.split_once(";").unwrap_or((line, "")))
+            .map(|line| line.split_once(';').unwrap_or((line, "")))
             .collect::<Vec<_>>();
 
         let ordered_scene =
             format!("{}\n{}\n\n", camera_info[0], sky_colours[0]);
 
-        ordered_scene + &sort_if_comment(lines)
+        ordered_scene + &sort_if_comment(&lines)
     }
 
-    fn sort_if_comment(to_sort: Vec<(&str, &str)>) -> String {
+    fn sort_if_comment(to_sort: &[(&str, &str)]) -> String {
         let line_order: HashMap<_, _> = LINE_TYPES
             .into_iter()
             .enumerate()
             .map(|(index, name)| (name, index))
             .collect();
         let mut lines = to_sort
-            .clone()
-            .into_iter()
+            .iter()
             .filter(|(line_type, _)| LINE_TYPES.contains(line_type))
             .collect::<Vec<_>>();
         lines.sort_by_cached_key(|&(line_type, _)| line_order.get(line_type));
         let mut sorted = lines.into_iter();
         let mut output = String::new();
 
-        for (line_type, _) in to_sort.iter() {
+        for (line_type, _) in to_sort {
             if LINE_TYPES.contains(line_type) {
                 let (line_type, line_content) = sorted.next().unwrap();
                 let _ = write!(output, "{line_type}; {line_content}");
             } else {
-                output += line_type
+                output += line_type;
             }
             output.push('\n');
         }

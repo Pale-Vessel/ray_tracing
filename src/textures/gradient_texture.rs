@@ -22,7 +22,7 @@ impl GetTexture for GradientTexture {
         let ratio = match self.direction {
             Direction::U => u,
             Direction::V => v,
-            Direction::UV => (u + v) / 2.,
+            Direction::UV => f32::midpoint(u, v),
         };
         let bottom_colour = self.bottom_texture.get_colour(u, v);
         let top_colour = self.top_texture.get_colour(u, v);

@@ -19,9 +19,9 @@ use crate::{
 };
 
 pub(super) fn parse_camera_data(
-    description: String,
+    description: &str,
 ) -> (Point3, Point3, f32, f32, f32, f32) {
-    let description = description.replace("(", "").replace(")", "");
+    let description = description.replace(['(', ')'], "");
     let Ok(
         [
             from_x,
@@ -35,7 +35,7 @@ pub(super) fn parse_camera_data(
             focus_distance,
             defocus_angle,
         ],
-    ) = description.split(",").collect_array_checked()
+    ) = description.split(',').collect_array_checked()
     else {
         panic!(
             "{description:?} is not a valid description for the camera; 
@@ -76,10 +76,10 @@ pub(super) fn parse_camera_data(
     )
 }
 
-pub(super) fn parse_sky_colour(description: String) -> (Colour, Colour) {
-    let description = description.replace("(", "").replace(")", "");
+pub(super) fn parse_sky_colour(description: &str) -> (Colour, Colour) {
+    let description = description.replace(['(', ')'], "");
     let Ok([r1, g1, b1, r2, g2, b2]) =
-        description.split(",").collect_array_checked()
+        description.split(',').collect_array_checked()
     else {
         panic!(
             "{description:?} is not a valid description for the sky colour; 
@@ -102,7 +102,7 @@ pub(super) fn parse_row(
         return None;
     }
     let (row_type, row_data) = row
-        .split_once(";")
+        .split_once(';')
         .unwrap_or_else(|| panic!("{row:?} - row type not properly delimited"));
     if row_type == "object" {
         return Some(parse_object(row_data, materials, points));
@@ -111,7 +111,7 @@ pub(super) fn parse_row(
         return Some(parse_scene(row_data));
     }
     let (name, description) = row_data
-        .split_once(";")
+        .split_once(';')
         .unwrap_or_else(|| panic!("Name not provided for row {row}"));
     let name = name.strip_prefix("name=").unwrap_or(name).to_string();
     match row_type {
@@ -136,7 +136,7 @@ fn parse_point(
     points: WriteDictionary<Point3>,
 ) {
     let [x, y, z] = description
-        .split(",")
+        .split(',')
         .collect::<Vec<_>>()
         .try_into()
         .unwrap_or_else(|_| {
@@ -152,7 +152,7 @@ fn parse_colour(
     colours: WriteDictionary<Colour>,
 ) {
     let [red, green, blue] = description
-        .split(",")
+        .split(',')
         .collect::<Vec<_>>()
         .try_into()
         .unwrap_or_else(|_| {
@@ -169,7 +169,7 @@ fn parse_texture(
     colours: ReadDictionary<Colour>,
 ) {
     let (texture_type, description) =
-        description.split_once(";").unwrap_or_else(|| {
+        description.split_once(';').unwrap_or_else(|| {
             panic!("Type of texture not properly delimited for {description}")
         });
     let texture_type =
@@ -193,7 +193,7 @@ fn parse_material(
     textures: ReadDictionary<Texture>,
 ) {
     let (mode, description) =
-        description.split_once(";").unwrap_or_else(|| {
+        description.split_once(';').unwrap_or_else(|| {
             panic!("Material mode not provided for {description}")
         });
     let mode = mode.strip_prefix("type=").unwrap_or(mode);
@@ -213,7 +213,7 @@ fn parse_object(
     points: ReadDictionary<Point3>,
 ) -> Vec<HittableObject> {
     let (object_type, description) = description
-        .split_once(";")
+        .split_once(';')
         .unwrap_or_else(|| panic!("Object type not given for {description}"));
     let object_type = object_type.strip_prefix("type=").unwrap_or(object_type);
     vec![match object_type {

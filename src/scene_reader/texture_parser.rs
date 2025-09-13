@@ -21,7 +21,7 @@ pub(super) fn parse_perlin(
     description: &str,
     colours: ReadDictionary<Colour>,
 ) -> Texture {
-    let (scale, colour_name) = description.split_once(",").unwrap_or_else(|| {
+    let (scale, colour_name) = description.split_once(',').unwrap_or_else(|| {
         panic!(
             "{description:?} is an insufficient description for perlin texture - expected `scale, colour_name`"
         )
@@ -34,7 +34,7 @@ pub(super) fn parse_checkerboard(
     textures: ReadDictionary<Texture>,
 ) -> Texture {
     let Ok([size, texture_one, texture_two]) =
-        description.split(",").collect_array_checked()
+        description.split(',').collect_array_checked()
     else {
         panic!(
             "{description:?} is an invalid description for checkerboard texture - expected `size, texture_one, texture, two`"
@@ -53,7 +53,7 @@ pub(super) fn parse_stripe(
     textures: ReadDictionary<Texture>,
 ) -> Texture {
     let Ok([size, even_texture, odd_texture, direction]) =
-        description.split(",").collect_array_checked()
+        description.split(',').collect_array_checked()
     else {
         panic!(
             "{description:?} is an invalid description for striped texture - expected `size, even_texture, odd_texture, direction`"
@@ -74,7 +74,7 @@ pub(super) fn parse_gradient(
     textures: ReadDictionary<Texture>,
 ) -> Texture {
     let Ok([bottom_texture, top_texture, direction]) =
-        description.split(",").collect_array_checked()
+        description.split(',').collect_array_checked()
     else {
         panic!(
             "{description:?} is an invalid description for gradient texture - expected `bottom_texture, top_texture, direction`"

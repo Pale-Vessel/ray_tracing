@@ -7,15 +7,15 @@ pub struct Interval {
 }
 
 impl Interval {
-    pub fn surrounds(&self, value: f32) -> bool {
+    pub fn surrounds(self, value: f32) -> bool {
         self.min < value && value < self.max
     }
 
-    pub fn clamp(&self, value: f32) -> f32 {
+    pub fn clamp(self, value: f32) -> f32 {
         value.clamp(self.min, self.max)
     }
 
-    pub fn enclose(&self, interval_two: Self) -> Self {
+    pub fn enclose(self, interval_two: Self) -> Self {
         let minimum = f32::min(self.min, interval_two.min);
         let maximum = f32::max(self.max, interval_two.max);
         Interval::new(minimum, maximum)
