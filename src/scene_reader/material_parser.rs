@@ -55,8 +55,7 @@ pub(super) fn parse_light(
     description: &str,
     textures: ReadDictionary<Texture>,
 ) -> Material {
-    let Ok([texture_name]) =
-        description.split(',').collect_array_checked()
+    let Ok([texture_name]) = description.split(',').collect_array_checked()
     else {
         panic!(
             "{description:?} is not a valid description for a light material"

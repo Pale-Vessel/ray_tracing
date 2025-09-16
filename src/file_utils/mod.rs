@@ -11,7 +11,8 @@ pub fn clean_scenes() {
         if file.is_empty() {
             continue;
         }
-        let cleaned = clean_scene(&file.into_iter().map(char::from).collect::<String>());
+        let cleaned =
+            clean_scene(&file.into_iter().map(char::from).collect::<String>());
         std::fs::write(path, cleaned).unwrap();
     }
 }

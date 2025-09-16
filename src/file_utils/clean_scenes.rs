@@ -38,8 +38,7 @@ mod syntax_cleaner {
 }
 
 mod order_scenes {
-    use std::collections::HashMap;
-    use std::fmt::Write;
+    use std::{collections::HashMap, fmt::Write};
 
     const LINE_TYPES: [&str; 5] =
         ["point", "colour", "texture", "material", "object"];

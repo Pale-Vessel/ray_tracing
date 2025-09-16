@@ -231,4 +231,3 @@ impl Camera {
             + Point3::from_vector(point.y * self.defocus_disk_vert_radius)
     }
 }
-
