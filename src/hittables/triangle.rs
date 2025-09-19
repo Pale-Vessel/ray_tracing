@@ -123,8 +123,4 @@ impl Triangle {
             None
         }
     }
-
-    pub fn wrap(self) -> HittableObject {
-        HittableObject::Triangle(self)
-    }
 }

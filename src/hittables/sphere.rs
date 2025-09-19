@@ -61,10 +61,6 @@ impl Sphere {
         }
     }
 
-    pub fn wrap(self) -> HittableObject {
-        HittableObject::Sphere(self)
-    }
-
     pub fn get_uv(&self, point: Point3) -> (f32, f32) {
         let vector = (self.center - point).normalize();
 

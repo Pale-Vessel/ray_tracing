@@ -42,7 +42,7 @@ pub(super) fn parse_sphere(
         }
         _ => panic!("{description:?} is not a valid description of a sphere"),
     };
-    Sphere::new(center, radius, material).wrap()
+    Sphere::new(center, radius, material).into()
 }
 
 pub(super) fn parse_triangle(
@@ -107,5 +107,5 @@ pub(super) fn parse_triangle(
                 "{description:?} is not a valid description for a triangle"
             ),
         };
-    Triangle::new(corner_one, corner_two, corner_three, material).wrap()
+    Triangle::new(corner_one, corner_two, corner_three, material).into()
 }
