@@ -2,7 +2,7 @@ use crate::{
     geometry::{ray::Ray, vector::Point3},
     hittables::{
         bounding_box::BoundingBox,
-        hittable::{HitRecord, Hittable, HittableObject},
+        hittable::{HitRecord, Hittable},
     },
     interval::Interval,
     textures::material::Material,
