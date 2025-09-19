@@ -1,4 +1,5 @@
 use std::ops::Index;
+use enum_dispatch::enum_dispatch;
 
 use crate::{
     geometry::{ray::Ray, vector::Point3},
@@ -55,31 +56,17 @@ impl HitRecord {
     }
 }
 
+#[enum_dispatch]
 pub trait Hittable {
     fn was_hit(&self, ray: Ray, interval: Interval) -> Option<HitRecord>;
     fn get_bounding_box(&self) -> BoundingBox;
 }
 
+#[enum_dispatch(Hittable)]
 #[derive(Clone, Debug)]
 pub enum HittableObject {
-    Sphere(Sphere),
-    Triangle(Triangle),
-}
-
-impl Hittable for HittableObject {
-    fn was_hit(&self, ray: Ray, interval: Interval) -> Option<HitRecord> {
-        match self {
-            Self::Sphere(sphere) => sphere.was_hit(ray, interval),
-            Self::Triangle(triangle) => triangle.was_hit(ray, interval),
-        }
-    }
-
-    fn get_bounding_box(&self) -> BoundingBox {
-        match self {
-            Self::Sphere(sphere) => sphere.get_bounding_box(),
-            Self::Triangle(triangle) => triangle.get_bounding_box(),
-        }
-    }
+    Sphere,
+    Triangle
 }
 
 #[derive(Debug, Default)]
