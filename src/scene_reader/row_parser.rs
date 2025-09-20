@@ -113,7 +113,7 @@ pub(super) fn parse_row(
     let (name, description) = row_data
         .split_once(';')
         .unwrap_or_else(|| panic!("Name not provided for row {row}"));
-    let name = name.strip_prefix("name=").unwrap_or(name).to_string();
+    let name = name.strip_prefix("name=").unwrap_or(name).to_owned();
     match row_type {
         "point" => parse_point(name, description, points),
         "colour" => parse_colour(name, description, colours),

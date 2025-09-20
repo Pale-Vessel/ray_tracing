@@ -55,7 +55,7 @@ fn main() -> ImageResult<()> {
     let dir_path = format!(r"images\{scene_name}");
     let path = format!(
         r"{dir_path}\{}.png",
-        profile.to_string().to_ascii_lowercase()
+        profile.to_owned().to_ascii_lowercase()
     );
     std::fs::create_dir_all(dir_path).unwrap();
     image.save(path)
