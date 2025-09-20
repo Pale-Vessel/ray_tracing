@@ -72,13 +72,11 @@ impl Camera {
         let vertical_pixel_delta = viewport_vertical / (image_height as f32);
 
         let viewport_upper_left = camera_center
-            - Point3::from_vector(focus_distance * w)
-            - Point3::from_vector(viewport_horizontal / 2.)
-            - Point3::from_vector(viewport_vertical / 2.);
+            - (focus_distance * w)
+            - (viewport_horizontal / 2.)
+            - (viewport_vertical / 2.);
         let pixel_upper_left = viewport_upper_left
-            + Point3::from_vector(
-                horizontal_pixel_delta + vertical_pixel_delta / 2.,
-            );
+            + (horizontal_pixel_delta + vertical_pixel_delta / 2.);
 
         let defocus_radius =
             focus_distance * (defocus_angle / 2.).to_radians().tan();
@@ -227,7 +225,7 @@ impl Camera {
     fn defocus_disk_sample(&self) -> Point3 {
         let point = Vec3::random_on_unit_disk();
         self.center
-            + Point3::from_vector(point.x * self.defocus_disk_horiz_radius)
-            + Point3::from_vector(point.y * self.defocus_disk_vert_radius)
+            + (point.x * self.defocus_disk_horiz_radius)
+            + (point.y * self.defocus_disk_vert_radius)
     }
 }

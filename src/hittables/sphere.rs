@@ -50,8 +50,8 @@ impl Sphere {
     pub fn new(center: Point3, radius: f32, material: Material) -> Self {
         let radius_vector = Vec3::new(radius, radius, radius);
         let bounds = BoundingBox::new_from_corners(
-            Point3::from_vector(*center - radius_vector),
-            Point3::from_vector(*center + radius_vector),
+            (*center - radius_vector).into(),
+            (*center + radius_vector).into(),
         );
         Self {
             center,

@@ -1,8 +1,6 @@
-use std::ops::{Add, AddAssign};
-
 use glam::{Vec2, Vec3};
 
-use derive_more::{
+use derive_more::with_trait::{
     Add, AddAssign, Deref, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign,
     Sum,
 };
@@ -65,6 +63,22 @@ impl VecRand for Vec3 {
 #[repr(transparent)]
 pub struct Point3(Vec3);
 
+impl Add<Vec3> for Point3 {
+    type Output = Point3;
+
+    fn add(self, rhs: Vec3) -> Self::Output {
+        self + Point3::from(rhs)
+    }
+}
+
+impl Sub<Vec3> for Point3 {
+    type Output = Point3;
+
+    fn sub(self, rhs: Vec3) -> Self::Output {
+        self - Point3::from(rhs)
+    }
+}
+
 impl Add<f32> for Point3 {
     type Output = Self;
 
@@ -79,13 +93,15 @@ impl AddAssign<f32> for Point3 {
     }
 }
 
+impl From<Vec3> for Point3 {
+    fn from(value: Vec3) -> Self {
+        Self(value)
+    }
+}
+
 impl Point3 {
     pub const fn new(x: f32, y: f32, z: f32) -> Self {
         Self(Vec3::new(x, y, z))
-    }
-
-    pub const fn from_vector(vec: Vec3) -> Self {
-        Self(vec)
     }
 }
 

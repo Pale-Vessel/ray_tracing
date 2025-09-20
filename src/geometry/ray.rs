@@ -10,6 +10,6 @@ pub struct Ray {
 
 impl Ray {
     pub fn at(&self, time: f32) -> Point3 {
-        self.origin + Point3::from_vector(time * self.direction)
+        self.origin + Point3::from(time * self.direction)
     }
 }
