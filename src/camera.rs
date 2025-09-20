@@ -152,10 +152,10 @@ impl Camera {
     pub fn render(&self, world: &HittableList, report_count: u32) -> RgbImage {
         if report_count != 0 {
             let pixel_count = self.image_height * self.image_width;
-            assert!(pixel_count % report_count == 0);
+            assert!(pixel_count.is_multiple_of(report_count));
             println!("0% done (0/{pixel_count})");
             let pixel_report_increment = pixel_count / report_count;
-            let done_pixels = Arc::new(Mutex::new(0));
+            let done_pixels = Arc::new(Mutex::new(0u32));
             RgbImage::from_par_fn(
                 self.image_width,
                 self.image_height,
@@ -163,7 +163,7 @@ impl Camera {
                     let colour = self.get_pixel_colour(i, j, world);
                     let mut done = done_pixels.lock().unwrap();
                     *done += 1;
-                    if *done % pixel_report_increment == 0 {
+                    if (*done).is_multiple_of(pixel_report_increment) {
                         println!(
                             "{}% done ({done}/{pixel_count})",
                             100. * (*done as f64) / (pixel_count as f64),
