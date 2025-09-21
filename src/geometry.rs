@@ -123,4 +123,3 @@ impl Ray {
         self.origin + Point3::from(time * self.direction)
     }
 }
-

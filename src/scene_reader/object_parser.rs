@@ -1,5 +1,5 @@
 use crate::{
-    geometry::{Point3},
+    geometry::Point3,
     hittables::{
         hittable::HittableObject::{self},
         sphere::Sphere,

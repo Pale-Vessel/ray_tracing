@@ -2,8 +2,7 @@ use derive_more::Constructor;
 use rand::{Rng, rng};
 
 use crate::{
-        geometry::{NearZero, VecRand, Ray},
-    
+    geometry::{NearZero, Ray, VecRand},
     hittables::hittable::HitRecord,
     textures::texture::Texture,
 };

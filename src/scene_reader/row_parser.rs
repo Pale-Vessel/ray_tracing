@@ -2,7 +2,7 @@ use collar::CollectArray;
 
 use crate::{
     colour::Colour,
-    geometry::{Point3},
+    geometry::Point3,
     hittables::hittable::HittableObject,
     scene_reader::{
         ReadDictionary, WriteDictionary,

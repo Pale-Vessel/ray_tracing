@@ -1,5 +1,5 @@
-use std::ops::Index;
 use enum_dispatch::enum_dispatch;
+use std::ops::Index;
 
 use crate::{
     geometry::{Point3, Ray},
@@ -66,7 +66,7 @@ pub trait Hittable {
 #[derive(Clone, Debug)]
 pub enum HittableObject {
     Sphere,
-    Triangle
+    Triangle,
 }
 
 #[derive(Debug, Default)]
