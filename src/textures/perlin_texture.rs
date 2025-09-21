@@ -2,7 +2,7 @@ use derive_more::Constructor;
 
 use crate::{
     colour::Colour,
-    geometry::vector::NearZero,
+    geometry::NearZero,
     textures::texture::{GetTexture, Texture},
 };
 

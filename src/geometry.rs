@@ -110,3 +110,17 @@ impl NearZero for Vec2 {
         self.x.abs() < Self::EPSILON && self.y.abs() < Self::EPSILON
     }
 }
+use derive_more::Constructor;
+
+#[derive(Copy, Clone, Debug, Constructor)]
+pub struct Ray {
+    pub origin: Point3,
+    pub direction: Vec3,
+}
+
+impl Ray {
+    pub fn at(&self, time: f32) -> Point3 {
+        self.origin + Point3::from(time * self.direction)
+    }
+}
+

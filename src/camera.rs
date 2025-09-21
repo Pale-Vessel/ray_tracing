@@ -2,10 +2,8 @@ use std::sync::{Arc, Mutex};
 
 use crate::{
     colour::{Colour, map_colours},
-    geometry::{
-        ray::Ray,
-        vector::{Point3, VecRand},
-    },
+        geometry::{Point3, VecRand, Ray},
+    
     hittables::hittable::{Hittable, HittableList},
     interval::Interval,
     textures::texture::GetTexture,

@@ -3,7 +3,7 @@ use std::ops::Index;
 use derive_more::Constructor;
 
 use crate::{
-    geometry::{ray::Ray, vector::Point3},
+    geometry::{Point3, Ray},
     interval::Interval,
 };
 

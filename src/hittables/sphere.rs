@@ -3,7 +3,7 @@ use std::f32::consts::{PI, TAU};
 use glam::Vec3;
 
 use crate::{
-    geometry::{ray::Ray, vector::Point3},
+    geometry::{Point3, Ray},
     hittables::{
         bounding_box::BoundingBox,
         hittable::{HitRecord, Hittable},

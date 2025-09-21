@@ -2,7 +2,7 @@ use std::ops::Index;
 use enum_dispatch::enum_dispatch;
 
 use crate::{
-    geometry::{ray::Ray, vector::Point3},
+    geometry::{Point3, Ray},
     hittables::{
         bounding_box::BoundingBox, sphere::Sphere, triangle::Triangle,
     },
