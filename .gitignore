@@ -3,3 +3,4 @@ rustfmt.toml
 images/
 scenes/
 target/
+benches/
