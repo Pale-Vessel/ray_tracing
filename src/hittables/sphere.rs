@@ -1,22 +1,21 @@
 use std::f32::consts::{PI, TAU};
 
-use glam::Vec3;
+use derive_more::Constructor;
 
 use crate::{
     geometry::{Point3, Ray},
     hittables::{
-        bounding_box::BoundingBox,
         hittable::{HitRecord, Hittable},
     },
     interval::Interval,
     textures::material::Material,
 };
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Constructor)]
 pub struct Sphere {
     pub center: Point3,
     pub radius: f32,
-    pub bounds: BoundingBox,
+    
     material: Material,
 }
 
@@ -40,27 +39,9 @@ impl Hittable for Sphere {
             v,
         ))
     }
-
-    fn get_bounding_box(&self) -> BoundingBox {
-        self.bounds
-    }
 }
 
 impl Sphere {
-    pub fn new(center: Point3, radius: f32, material: Material) -> Self {
-        let radius_vector = Vec3::new(radius, radius, radius);
-        let bounds = BoundingBox::new_from_corners(
-            (*center - radius_vector).into(),
-            (*center + radius_vector).into(),
-        );
-        Self {
-            center,
-            radius,
-            bounds,
-            material,
-        }
-    }
-
     pub fn get_uv(&self, point: Point3) -> (f32, f32) {
         let vector = (self.center - point).normalize();
 

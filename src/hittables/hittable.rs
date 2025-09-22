@@ -4,7 +4,7 @@ use std::ops::Index;
 use crate::{
     geometry::{Point3, Ray},
     hittables::{
-        bounding_box::BoundingBox, sphere::Sphere, triangle::Triangle,
+        sphere::Sphere, triangle::Triangle,
     },
     interval::Interval,
     textures::material::Material,
@@ -59,7 +59,6 @@ impl HitRecord {
 #[enum_dispatch]
 pub trait Hittable {
     fn was_hit(&self, ray: Ray, interval: Interval) -> Option<HitRecord>;
-    fn get_bounding_box(&self) -> BoundingBox;
 }
 
 #[enum_dispatch(Hittable)]
@@ -72,19 +71,11 @@ pub enum HittableObject {
 #[derive(Debug, Default)]
 pub struct HittableList {
     pub data: Vec<HittableObject>,
-    bounds: BoundingBox,
 }
 
 impl FromIterator<HittableObject> for HittableList {
     fn from_iter<T: IntoIterator<Item = HittableObject>>(iter: T) -> Self {
-        let mut bounds = BoundingBox::default();
-        let mut data = Vec::new();
-        for item in iter {
-            data.push(item.clone());
-            bounds =
-                BoundingBox::new_from_boxes(&bounds, &item.get_bounding_box());
-        }
-        Self { data, bounds }
+        Self { data: iter.into_iter().collect() }
     }
 }
 
@@ -109,9 +100,5 @@ impl Hittable for HittableList {
             }
         });
         out_data
-    }
-
-    fn get_bounding_box(&self) -> BoundingBox {
-        self.bounds
     }
 }

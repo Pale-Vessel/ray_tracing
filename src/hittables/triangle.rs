@@ -1,7 +1,6 @@
 use crate::{
     geometry::{Point3, Ray},
     hittables::{
-        bounding_box::BoundingBox,
         hittable::{HitRecord, Hittable},
     },
     interval::Interval,
@@ -17,7 +16,6 @@ pub struct Triangle {
     corner_three: Point3,
     material: Material,
     normal: Vec3,
-    bounds: BoundingBox,
 }
 
 impl Hittable for Triangle {
@@ -43,10 +41,6 @@ impl Hittable for Triangle {
             v,
         ))
     }
-
-    fn get_bounding_box(&self) -> BoundingBox {
-        self.bounds
-    }
 }
 
 impl Triangle {
@@ -71,14 +65,13 @@ impl Triangle {
                 .max(corner_three[axis]);
             intervals[axis] = Interval::new(axis_min, axis_max);
         }
-        let bounds = BoundingBox::new(intervals[0], intervals[1], intervals[2]);
+        
         Self {
             corner_one,
             corner_two,
             corner_three,
             material,
             normal,
-            bounds,
         }
     }
 

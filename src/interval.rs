@@ -14,10 +14,4 @@ impl Interval {
     pub fn clamp(self, value: f32) -> f32 {
         value.clamp(self.min, self.max)
     }
-
-    pub fn enclose(self, interval_two: Self) -> Self {
-        let minimum = f32::min(self.min, interval_two.min);
-        let maximum = f32::max(self.max, interval_two.max);
-        Interval::new(minimum, maximum)
-    }
 }
