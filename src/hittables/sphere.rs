@@ -4,9 +4,7 @@ use derive_more::Constructor;
 
 use crate::{
     geometry::{Point3, Ray},
-    hittables::{
-        hittable::{HitRecord, Hittable},
-    },
+    hittables::hittable::{HitRecord, Hittable},
     interval::Interval,
     textures::material::Material,
 };
@@ -15,7 +13,7 @@ use crate::{
 pub struct Sphere {
     pub center: Point3,
     pub radius: f32,
-    
+
     material: Material,
 }
 

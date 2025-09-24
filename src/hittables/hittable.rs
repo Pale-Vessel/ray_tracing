@@ -3,9 +3,7 @@ use std::ops::Index;
 
 use crate::{
     geometry::{Point3, Ray},
-    hittables::{
-        sphere::Sphere, triangle::Triangle,
-    },
+    hittables::{sphere::Sphere, triangle::Triangle},
     interval::Interval,
     textures::material::Material,
 };
@@ -75,7 +73,9 @@ pub struct HittableList {
 
 impl FromIterator<HittableObject> for HittableList {
     fn from_iter<T: IntoIterator<Item = HittableObject>>(iter: T) -> Self {
-        Self { data: iter.into_iter().collect() }
+        Self {
+            data: iter.into_iter().collect(),
+        }
     }
 }
 

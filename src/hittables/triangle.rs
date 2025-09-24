@@ -1,8 +1,6 @@
 use crate::{
     geometry::{Point3, Ray},
-    hittables::{
-        hittable::{HitRecord, Hittable},
-    },
+    hittables::hittable::{HitRecord, Hittable},
     interval::Interval,
     textures::material::Material,
 };
@@ -65,7 +63,7 @@ impl Triangle {
                 .max(corner_three[axis]);
             intervals[axis] = Interval::new(axis_min, axis_max);
         }
-        
+
         Self {
             corner_one,
             corner_two,
