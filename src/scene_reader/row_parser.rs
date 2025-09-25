@@ -180,9 +180,10 @@ fn parse_texture(
         "checker" => parse_checkerboard(description, textures),
         "stripe" => parse_stripe(description, textures),
         "gradient" => parse_gradient(description, textures),
-        "uv" => Texture::UV,
+        "uv" => Ok(Texture::UV),
         _ => panic!("{texture_type:?} is not a valid texture"),
-    };
+    }
+    .unwrap();
     textures.insert(name, texture);
 }
 
@@ -203,7 +204,8 @@ fn parse_material(
         "light" => parse_light(description, textures),
         "glass" => parse_glass(description, textures),
         _ => panic!("{mode:?} is an invalid mode"),
-    };
+    }
+    .unwrap();
     materials.insert(name, material);
 }
 
@@ -220,5 +222,5 @@ fn parse_object(
         "sphere" => parse_sphere(description, materials, points),
         "triangle" => parse_triangle(description, materials, points),
         _ => panic!("{object_type:?} is not a valid object"),
-    }]
+    }.unwrap()]
 }
