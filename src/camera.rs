@@ -156,12 +156,12 @@ impl Camera {
                 self.image_height,
                 |i, j| {
                     let colour = self.get_pixel_colour(i, j, world);
-                    let mut done = done_pixels.lock().unwrap();
-                    *done += 1;
-                    if (*done).is_multiple_of(pixel_report_increment) {
+                    let mut done = *done_pixels.lock().unwrap();
+                    done += 1;
+                    if done.is_multiple_of(pixel_report_increment) {
                         println!(
                             "{}% done ({done}/{pixel_count})",
-                            100. * (*done as f64) / (pixel_count as f64),
+                            100. * (done as f64) / (pixel_count as f64),
                         );
                     }
                     colour
