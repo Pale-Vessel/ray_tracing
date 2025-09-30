@@ -16,7 +16,7 @@ pub enum ObjectError {
     #[error("{0} is not a valid description of a sphere")]
     Sphere(String),
     #[error("{0} is not a valid description of a triangle")]
-    Triangle(String)
+    Triangle(String),
 }
 
 type ObjectResult = Result<HittableObject, ObjectError>;
@@ -52,7 +52,7 @@ pub(super) fn parse_sphere(
             let material = get_material(material_name, materials);
             Ok((center, radius, material))
         }
-        _ => Err(ObjectError::Sphere(description.to_owned()))//panic!("{description:?} is not a valid description of a sphere"),
+        _ => Err(ObjectError::Sphere(description.to_owned())), //panic!("{description:?} is not a valid description of a sphere"),
     }?;
     Ok(Sphere::new(center, radius, material).into())
 }
@@ -115,7 +115,7 @@ pub(super) fn parse_triangle(
                 );
                 Ok((corner_one, corner_two, corner_three, material))
             }
-            _ => Err(ObjectError::Triangle(description.to_owned()))
+            _ => Err(ObjectError::Triangle(description.to_owned())),
         }?;
     Ok(Triangle::new(corner_one, corner_two, corner_three, material).into())
 }

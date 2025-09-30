@@ -26,8 +26,15 @@ pub fn read_scene(path: String) -> (HittableList, CameraInfo) {
         .expect("camera data not given")
         .split_whitespace()
         .collect::<String>();
-    let (look_from, look_at, fov, aspect_ratio, focus_distance, defocus_angle) =
-        parse_camera_data(&first_line);
+    let (
+        look_from,
+        look_at,
+        camera_tilt,
+        fov,
+        aspect_ratio,
+        focus_distance,
+        defocus_angle,
+    ) = parse_camera_data(&first_line);
 
     let second_line = lines
         .next()
@@ -54,6 +61,7 @@ pub fn read_scene(path: String) -> (HittableList, CameraInfo) {
         (
             look_from,
             look_at,
+            camera_tilt,
             fov,
             aspect_ratio,
             sky_top_colour,

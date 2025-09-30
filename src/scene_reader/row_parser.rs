@@ -20,7 +20,7 @@ use crate::{
 
 pub(super) fn parse_camera_data(
     description: &str,
-) -> (Point3, Point3, f32, f32, f32, f32) {
+) -> (Point3, Point3, f32, f32, f32, f32, f32) {
     let description = description.replace(['(', ')'], "");
     let Ok(
         [
@@ -30,6 +30,7 @@ pub(super) fn parse_camera_data(
             at_x,
             at_y,
             at_z,
+            camera_tilt,
             fov,
             aspect_ratio,
             focus_distance,
@@ -49,6 +50,7 @@ pub(super) fn parse_camera_data(
         at_x,
         at_y,
         at_z,
+        camera_tilt,
         fov,
         aspect_ratio,
         focus_distance,
@@ -60,6 +62,7 @@ pub(super) fn parse_camera_data(
         at_x,
         at_y,
         at_z,
+        camera_tilt,
         fov,
         aspect_ratio,
         focus_distance,
@@ -69,6 +72,7 @@ pub(super) fn parse_camera_data(
     (
         Point3::new(from_x, from_y, from_z),
         Point3::new(at_x, at_y, at_z),
+        camera_tilt,
         fov,
         aspect_ratio,
         focus_distance,
@@ -218,9 +222,12 @@ fn parse_object(
         .split_once(';')
         .unwrap_or_else(|| panic!("Object type not given for {description}"));
     let object_type = object_type.strip_prefix("type=").unwrap_or(object_type);
-    vec![match object_type {
-        "sphere" => parse_sphere(description, materials, points),
-        "triangle" => parse_triangle(description, materials, points),
-        _ => panic!("{object_type:?} is not a valid object"),
-    }.unwrap()]
+    vec![
+        match object_type {
+            "sphere" => parse_sphere(description, materials, points),
+            "triangle" => parse_triangle(description, materials, points),
+            _ => panic!("{object_type:?} is not a valid object"),
+        }
+        .unwrap(),
+    ]
 }
