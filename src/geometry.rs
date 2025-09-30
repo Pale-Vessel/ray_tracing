@@ -125,7 +125,7 @@ impl Ray {
 }
 
 
-pub fn rotation_between(from: Vec3, to: Vec3) -> Mat3 {
+fn rotation_between(from: Vec3, to: Vec3) -> Mat3 {
     // https://math.stackexchange.com/questions/180418/calculate-rotation-matrix-to-align-vector-a-to-vector-b-in-3d
     let rotation_axis = from.cross(to);
     let rotation_angle = from.dot(to);
@@ -143,4 +143,12 @@ pub fn rotation_between(from: Vec3, to: Vec3) -> Mat3 {
     Mat3::IDENTITY
         + cross_product_matrix
         + cross_product_matrix * cross_product_matrix / (1. + rotation_angle)
+}
+
+pub fn make_basis(from: Point3, to: Point3, theta: f32) -> (Vec3, Vec3, Vec3) {
+    let basis_frame_x = (from - to).normalize();
+    let basis_rotation = rotation_between(Vec3::X, basis_frame_x) * Mat3::from_rotation_x(theta);
+    let basis_frame_y = basis_rotation * Vec3::Y;
+    let basis_frame_z = basis_rotation * Vec3::Z;
+    (basis_frame_x, basis_frame_y, basis_frame_z)
 }

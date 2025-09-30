@@ -2,7 +2,7 @@ use std::sync::{Arc, Mutex};
 
 use crate::{
     colour::{map_colours, Colour},
-    geometry::{rotation_between, Point3, Ray, VecRand},
+    geometry::{make_basis, Point3, Ray, VecRand},
     hittables::hittable::{Hittable, HittableList},
     interval::Interval,
     textures::texture::GetTexture,
@@ -58,10 +58,8 @@ impl Camera {
         let viewport_width =
             viewport_height * ((image_width as f32) / (image_height as f32));
 
-        let basis_frame_x = (look_from - look_at).normalize();
-        let basis_rotation = rotation_between(Vec3::X, basis_frame_x);
-        let basis_frame_y = basis_rotation * Vec3::Y;
-        let basis_frame_z = basis_rotation * Vec3::Z;
+        let theta = std::f32::consts::PI / 2.;
+        let (basis_frame_x, basis_frame_y, basis_frame_z) = make_basis(look_from, look_at, theta);
 
         let viewport_horizontal = viewport_width * basis_frame_z;
         let viewport_vertical = viewport_height * -basis_frame_y;
