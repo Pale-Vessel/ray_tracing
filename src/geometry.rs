@@ -1,4 +1,4 @@
-use glam::{Vec2, Vec3};
+use glam::{Mat3, Vec2, Vec3};
 
 use derive_more::with_trait::{
     Add, AddAssign, Deref, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign,
@@ -122,4 +122,25 @@ impl Ray {
     pub fn at(&self, time: f32) -> Point3 {
         self.origin + Point3::from(time * self.direction)
     }
+}
+
+
+pub fn rotation_between(from: Vec3, to: Vec3) -> Mat3 {
+    // https://math.stackexchange.com/questions/180418/calculate-rotation-matrix-to-align-vector-a-to-vector-b-in-3d
+    let rotation_axis = from.cross(to);
+    let rotation_angle = from.dot(to);
+    let cross_product_matrix = Mat3::from_cols_array(&[
+        0.,
+        rotation_axis.z,
+        -rotation_axis.y,
+        -rotation_axis.z,
+        0.,
+        rotation_axis.x,
+        rotation_axis.y,
+        -rotation_axis.x,
+        0.,
+    ]);
+    Mat3::IDENTITY
+        + cross_product_matrix
+        + cross_product_matrix * cross_product_matrix / (1. + rotation_angle)
 }
