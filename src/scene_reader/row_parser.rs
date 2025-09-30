@@ -40,7 +40,7 @@ pub(super) fn parse_camera_data(
     else {
         panic!(
             "{description:?} is not a valid description for the camera; 
-        expected (from_x, from_y, from_z), (at_x, at_y, at_z), fov, aspect_ratio, focus_distance, defocus_angle"
+        expected (from_x, from_y, from_z), (at_x, at_y, at_z), camera_tilt fov, aspect_ratio, focus_distance, defocus_angle"
         )
     };
     let [
