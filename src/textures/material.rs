@@ -32,31 +32,30 @@ impl Material {
         Self::new(0., texture, false, 0., true)
     }
 
-    pub fn diffuse_reflection(record: &HitRecord) -> Ray {
+    pub fn diffuse_reflection(record: &HitRecord) -> Vec3 {
         let scatter_direction = record.normal_vector + Vec3::rand_unit_vector();
-        let scatter_direction = if scatter_direction.near_zero() {
+
+        if scatter_direction.near_zero() {
             record.normal_vector
         } else {
             scatter_direction
-        };
-
-        Ray::new(record.collision_point, scatter_direction)
+        }
     }
 
-    pub fn specular_reflection(ray: Ray, record: &HitRecord) -> Ray {
-        let reflected = ray.direction.reflect(record.normal_vector);
-        Ray::new(record.collision_point, reflected)
+    pub fn specular_reflection(ray: &Ray, record: &HitRecord) -> Vec3 {
+        ray.direction.reflect(record.normal_vector)
     }
 
-    pub fn lerp_reflect(&self, ray: Ray, record: &HitRecord) -> Ray {
-        let diffuse_ray = Self::diffuse_reflection(record);
-        let specular_ray = Self::specular_reflection(ray, record);
-        let direction = self.smoothness * specular_ray.direction
-            + (1. - self.smoothness) * diffuse_ray.direction;
-        Ray::new(diffuse_ray.origin, direction.normalize())
+    pub fn lerp_reflect(&self, ray: &mut Ray, record: &HitRecord) {
+        let diffuse_direction = Self::diffuse_reflection(record);
+        let specular_direction = Self::specular_reflection(ray, record);
+        let direction = self.smoothness * specular_direction
+            + (1. - self.smoothness) * diffuse_direction;
+        ray.origin = record.collision_point;
+        ray.direction = direction
     }
 
-    pub fn refract(&self, ray: Ray, record: &HitRecord) -> Ray {
+    pub fn refract(&self, ray: &mut Ray, record: &HitRecord) {
         let refractive_index = if record.front_face {
             1. / self.refractive_index
         } else {
@@ -81,7 +80,8 @@ impl Material {
             .try_normalize()
             .unwrap_or_else(|| unit.reflect(record.normal_vector));
 
-        Ray::new(record.collision_point, direction)
+        ray.origin = record.collision_point;
+        ray.direction = direction
     }
 
     fn reflectance(cosine: f32, refractive_index: f32) -> f32 {

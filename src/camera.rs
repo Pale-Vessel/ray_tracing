@@ -115,10 +115,10 @@ impl Camera {
                     break;
                 }
 
-                ray = if material.is_glass {
-                    material.refract(ray, &data)
+                if material.is_glass {
+                    material.refract(&mut ray, &data)
                 } else {
-                    material.lerp_reflect(ray, &data)
+                    material.lerp_reflect(&mut ray, &data)
                 };
 
                 accumulated *= material.texture.get_colour(u, v);
