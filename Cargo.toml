@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-clap = { version = "4.5.46", default-features = false, features = [
+clap = { version = "4.5.50", default-features = false, features = [
     "std",
     "derive",
 ] }
@@ -23,7 +23,7 @@ derive_more = { version = "2.0.1", features = [
 ] }
 enum_dispatch = "0.3.13"
 glam = "0.30.8"
-image = { version = "0.25.6", default-features = false, features = [
+image = { version = "0.25.8", default-features = false, features = [
     "png",
     "rayon",
 ] }
